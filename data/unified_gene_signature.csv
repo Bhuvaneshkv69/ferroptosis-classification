@@ -1,0 +1,36 @@
+gene,n_sources,category,supporting_sources,cross_study_recurrent
+ABCC1,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+ACSL4,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+AIFM2,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+AKR1C1,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+ALOX12,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+ATF3,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+ATG5,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+ATG7,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+ATP6V1G2,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+BID,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+CARS1,1,crc_prognostic_signature,"Wang Y, Xia H, Chen Z, Meng L, Xu A. Identification of a ferroptosis-related gene signature predictive model in colon cancer",False
+CDKN2A,1,crc_prognostic_signature,Shao Y et al. 2021 (Front Oncol); Wang Y et al. 2021 (World J Surg Oncol),False
+DRD4,1,crc_prognostic_signature,"Wang Y, Xia H, Chen Z, Meng L, Xu A. Identification of a ferroptosis-related gene signature predictive model in colon cancer",False
+FDFT1,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+GDF15,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+GPX4,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+HAMP,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+HOXC11,1,crc_prognostic_signature,"Shi C, Xie Y, Li X, Li G, Liu W, Pei W, Liu J, Yu X, Liu T. Identification of Ferroptosis-Related Genes Signature Predicting the Efficiency of Invasion and Metastasis Ability in Colon Adenocarcinoma",False
+LPCAT3,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+MMP7,1,crc_prognostic_signature,"Shi C, Xie Y, Li X, Li G, Liu W, Pei W, Liu J, Yu X, Liu T. Identification of Ferroptosis-Related Genes Signature Predicting the Efficiency of Invasion and Metastasis Ability in Colon Adenocarcinoma",False
+NCOA4,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+NFS1,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+NOS2,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+NOX4,1,crc_prognostic_signature,"Wang Y, Xia H, Chen Z, Meng L, Xu A. Identification of a ferroptosis-related gene signature predictive model in colon cancer",False
+PCOLCE2,1,crc_prognostic_signature,"Shi C, Xie Y, Li X, Li G, Liu W, Pei W, Liu J, Yu X, Liu T. Identification of Ferroptosis-Related Genes Signature Predicting the Efficiency of Invasion and Metastasis Ability in Colon Adenocarcinoma",False
+RRM2,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+SLC2A3,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+SLC39A8,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+SLC7A11,1,core_mechanism,"Jiang X, Stockwell BR, Conrad M. Ferroptosis: mechanisms, biology and role in disease",False
+TFAP2C,1,crc_prognostic_signature,"Shao Y, Jia H, Huang L, Li S, Wang C, Aikemu B, Yang G, Hong H, Yang X, Zhang S, Sun J, Zheng M. An Original Ferroptosis-Related Gene Signature Effectively Predicts the Prognosis and Clinical Status for Colorectal Cancer Patients",False
+TXNIP,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+VLDLR,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False
+WIPI1,1,crc_prognostic_signature,"Wang Y, Xia H, Chen Z, Meng L, Xu A. Identification of a ferroptosis-related gene signature predictive model in colon cancer",False
+YAP1,1,crc_prognostic_signature,"Shi C, Xie Y, Li X, Li G, Liu W, Pei W, Liu J, Yu X, Liu T. Identification of Ferroptosis-Related Genes Signature Predicting the Efficiency of Invasion and Metastasis Ability in Colon Adenocarcinoma",False
+ZFP69B,1,crc_prognostic_signature,"Qi X, Wang R, Lin Y, Yan D, Zuo J, Chen J, Shen B. A Ferroptosis-Related Gene Signature Identified as a Novel Prognostic Biomarker for Colon Cancer",False

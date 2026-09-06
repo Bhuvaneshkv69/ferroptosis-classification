@@ -1,0 +1,9 @@
+Colorectal (COAD/READ) GDSC cell lines with expression data: 49
+WARNING: 4 ferroptosis genes have no probe on this microarray platform and are excluded from GDSC features: ['ATP6V1G2', 'NCOA4', 'SLC2A3', 'TXNIP']
+GDSC ferroptosis expression matrix: 31 genes x 49 cell lines
+Raw GDSC2 colorectal dose-response records: 12538 (286 drugs x 46 lines)
+After requiring >= 40 tested cell lines per drug: 12325 records, 268 drugs
+Dropped 379 duplicate (drug, cell line) fitted-curve records
+After merging with ferroptosis expression: 11511 (drug, cell line) rows, 44 cell lines
+Dropped 0 rows with missing LN_IC50/AUC
+Saved processed GDSC dose-response dataset: (11511, 41) -> D:\small\data\processed\gdsc_colorectal_dose_response_processed.csv

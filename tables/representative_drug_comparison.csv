@@ -1,0 +1,9 @@
+MAE,RMSE,R2,pearson_r,spearman_r,drug,model,n
+1.919,2.496,-1.231,0.309,0.326,5-Fluorouracil,LinearRegression,44
+1.161,1.468,0.228,0.483,0.283,5-Fluorouracil,RandomForest,44
+2.136,2.848,-2.308,0.171,0.153,Oxaliplatin,LinearRegression,44
+1.123,1.392,0.21,0.459,0.458,Oxaliplatin,RandomForest,44
+2.534,3.815,-4.606,-0.067,-0.026,Irinotecan,LinearRegression,44
+1.043,1.327,0.322,0.568,0.484,Irinotecan,RandomForest,44
+1.785,2.136,-2.626,0.223,0.094,Sorafenib,LinearRegression,42
+0.777,0.987,0.226,0.482,0.453,Sorafenib,RandomForest,42

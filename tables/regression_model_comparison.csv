@@ -1,0 +1,7 @@
+MAE,RMSE,R2,pearson_r,spearman_r,target,model,best_params,n_train,n_test,n_test_cell_lines,experiment
+2.446,2.97,-0.263,0.349,0.271,LN_IC50,LinearRegression,{},9143,2368,9,pooled_LN_IC50
+1.283,1.636,0.617,0.792,0.659,LN_IC50,RandomForest,"{""model__max_depth"": null, ""model__n_estimators"": 400}",9143,2368,9,pooled_LN_IC50
+1.305,1.65,0.61,0.785,0.647,LN_IC50,XGBoost,"{""model__learning_rate"": 0.1, ""model__max_depth"": 5, ""model__n_estimators"": 200}",9143,2368,9,pooled_LN_IC50
+0.082,0.113,0.062,0.307,0.289,AUC,LinearRegression,{},9143,2368,9,pooled_AUC
+0.061,0.088,0.436,0.668,0.585,AUC,RandomForest,"{""model__max_depth"": null, ""model__n_estimators"": 400}",9143,2368,9,pooled_AUC
+0.063,0.089,0.427,0.657,0.56,AUC,XGBoost,"{""model__learning_rate"": 0.1, ""model__max_depth"": 5, ""model__n_estimators"": 200}",9143,2368,9,pooled_AUC

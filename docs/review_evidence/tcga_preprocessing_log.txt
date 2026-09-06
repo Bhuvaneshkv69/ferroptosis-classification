@@ -1,0 +1,7 @@
+Raw: 594 patients, 594 samples, 592 samples x 35 genes expression matrix
+Kept 594 primary-tumor samples (dropped 0 duplicate patient samples and 0 non-primary samples)
+After merging expression: 592 samples retained (lost 2 with no expression record)
+Per-gene missingness (top 5): {'ABCC1': 0.0, 'ACSL4': 0.0, 'AIFM2': 0.0, 'AKR1C1': 0.0, 'ALOX12': 0.0}
+Dropping 0 samples missing >20% of ferroptosis gene panel
+MSI MANTIS score available for 555/592 samples (37 excluded from the MSI classification task only)
+Saved processed TCGA dataset: (592, 102) -> D:\small\data\processed\tcga_coadread_processed.csv

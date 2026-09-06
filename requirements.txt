@@ -1,0 +1,14 @@
+numpy==2.5.2
+pandas==3.0.5
+scikit-learn==1.9.0
+scipy
+matplotlib
+openpyxl
+xgboost==3.4.1
+shap==0.52.0
+requests
+lifelines==0.30.3
+pytest
+jupyter
+nbconvert
+ipykernel
