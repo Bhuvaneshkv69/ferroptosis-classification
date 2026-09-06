@@ -40,6 +40,7 @@ from xgboost import XGBRegressor
 
 import evaluation as ev
 from preprocessing import split_gdsc
+from config import DATA_CONFIG, RANDOM_SEED
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -48,9 +49,8 @@ PROCESSED_DIR = ROOT / "data" / "processed"
 RESULTS_DIR = ROOT / "results"
 FIG_DIR = ROOT / "figures"
 TABLES_DIR = ROOT / "tables"
-RANDOM_SEED = 42
 
-REPRESENTATIVE_DRUGS = ["5-Fluorouracil", "Oxaliplatin", "Irinotecan", "Sorafenib"]
+REPRESENTATIVE_DRUGS = DATA_CONFIG["gdsc"]["representative_drugs"]
 
 
 def _pooled_model_pipeline(gene_cols, model):
@@ -79,6 +79,7 @@ def run_pooled_experiment(df, gene_cols, target_col):
 
     rows = []
     preds_for_plot = {}
+    fitted_models = {}
     gkf = GroupKFold(n_splits=5)
 
     for name, (model, grid) in models_grids.items():
@@ -99,6 +100,7 @@ def run_pooled_experiment(df, gene_cols, target_col):
                          "n_train": len(X_train), "n_test": len(X_test), "n_test_cell_lines": split["meta_test"]["COSMIC_ID"].nunique()})
         rows.append(metrics)
         preds_for_plot[name] = (y_test.values, y_pred)
+        fitted_models[name] = best
 
         ev.plot_predicted_vs_actual(y_test, y_pred, f"{target_col} - {name} (held-out cell lines)",
                                      FIG_DIR / f"predicted_vs_actual_{target_col}_{name}.png")
@@ -106,7 +108,7 @@ def run_pooled_experiment(df, gene_cols, target_col):
                           FIG_DIR / f"residuals_{target_col}_{name}.png")
 
     results_df = pd.DataFrame(rows)
-    return results_df, preds_for_plot
+    return results_df, preds_for_plot, fitted_models
 
 
 def run_representative_drug_models(df, gene_cols):
@@ -174,11 +176,11 @@ def main():
     gene_cols = meta["ferroptosis_genes_used"]
 
     print("=== Pooled dose-response regression: LN_IC50 ===")
-    r_ic50, preds_ic50 = run_pooled_experiment(df, gene_cols, "LN_IC50")
+    r_ic50, preds_ic50, models_ic50 = run_pooled_experiment(df, gene_cols, "LN_IC50")
     print(r_ic50[["model", "MAE", "RMSE", "R2", "pearson_r"]])
 
     print("\n=== Pooled dose-response regression: AUC ===")
-    r_auc, preds_auc = run_pooled_experiment(df, gene_cols, "AUC")
+    r_auc, preds_auc, models_auc = run_pooled_experiment(df, gene_cols, "AUC")
     print(r_auc[["model", "MAE", "RMSE", "R2", "pearson_r"]])
 
     print("\n=== Representative single-drug models (ferroptosis genes only, LOOCV) ===")
@@ -208,6 +210,12 @@ def main():
             print(f"  (skipped illustrative curve for {drug}: {e})")
 
     print(f"\nSaved regression results/figures/tables.")
+
+    return {
+        "pooled_LN_IC50": (r_ic50, models_ic50, gene_cols),
+        "pooled_AUC": (r_auc, models_auc, gene_cols),
+        "gene_cols": gene_cols,
+    }
 
 
 if __name__ == "__main__":

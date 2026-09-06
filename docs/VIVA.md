@@ -126,9 +126,14 @@ standard transform to stabilize variance and make the distribution more
 suitable for linear/distance-based models.
 
 **20. Why z-score the GDSC expression values per gene?**
-To standardize each gene's expression to comparable scale across the 44-49
-colorectal cell lines before combining with drug/pathway/concentration
-features and feeding into scale-sensitive models (Linear Regression, SVM).
+To standardize each gene's expression to comparable scale before combining
+with drug/pathway/concentration features and feeding into scale-sensitive
+models (Linear Regression, SVM). This standardization is applied inside the
+`sklearn.Pipeline`/`ColumnTransformer` used for modeling, fit on the training
+fold only for each split — an earlier version fit it across the full
+cell-line panel before the split, a mild leakage vector found and fixed
+this session (see `docs/DATA_LEAKAGE_AUDIT.md`); re-running after the fix
+reproduced identical metrics.
 
 **21. How did you handle duplicate samples/records?**
 TCGA: kept only "Primary" tumor samples, and the alphabetically first sample

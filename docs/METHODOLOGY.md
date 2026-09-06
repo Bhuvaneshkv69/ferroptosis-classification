@@ -63,7 +63,7 @@ as the accuracy-optimal cutoff for this exact score.
 
 1. **Filter** cell-line annotation to `Cancer Type (matching TCGA label) == "COAD/READ"` with expression data available.
 2. **Gene resolution**: each of the 35 signature genes is mapped to its Ensembl gene ID(s) via MyGene.info (`src/fetch_gene_maps.py`); every candidate ID is tried against the actual array, and whichever is physically present is kept (recovers e.g. DRD4 via its secondary Ensembl ID). Genes with no ID present on the array (4/35) are dropped and logged, not silently substituted.
-3. **Standardization**: each gene z-scored across the colorectal cell-line panel only (GDSC and TCGA expression are never scaled together).
+3. **No scaling at this stage** (data-leakage fix, see `docs/DATA_LEAKAGE_AUDIT.md`): raw log2-scale RMA expression values are stored as-is. Standardization is applied later, exclusively inside the `sklearn.Pipeline`/`ColumnTransformer` used for modeling (`src/dose_response.py`), fit on the training fold only. An earlier version of this pipeline z-scored each gene across the full colorectal cell-line panel *before* the train/test split — a mild leakage vector, found and fixed this session (re-running the pipeline after the fix reproduced identical metrics to 3 decimal places, since tree-based models are invariant to this kind of monotonic per-feature rescaling).
 4. **Drug coverage filter**: keep drugs screened on ≥ 40 of the 46 available colorectal lines, to avoid extremely sparse per-drug samples.
 5. **Duplicate handling**: drop duplicate (drug, cell line) fitted-curve rows, keep first.
 6. **Merge** dose-response with expression by `COSMIC_ID`; drop rows with missing `LN_IC50`/`AUC`.
@@ -80,7 +80,7 @@ as the accuracy-optimal cutoff for this exact score.
 
 **Classification** (`src/classification.py`): Logistic Regression, Random Forest, SVM (linear/RBF), XGBoost — each wrapped in a `StandardScaler` pipeline, tuned by `GridSearchCV` (5-fold stratified CV, `scoring="roc_auc"`) on the training set only, evaluated once on the held-out test set.
 
-**Regression** (`src/dose_response.py`): Linear Regression, Random Forest Regressor, XGBoost Regressor. Pooled model uses `ColumnTransformer` (gene z-scores + concentration range + one-hot drug pathway); hyperparameters tuned with `GroupKFold`(5) on the training cell lines only (never mixing folds across a cell line). Representative single-drug models use only the 31 ferroptosis genes with leave-one-out CV (samples per drug: 42–44, too small for a held-out split).
+**Regression** (`src/dose_response.py`): Linear Regression, Random Forest Regressor, XGBoost Regressor. Pooled model uses `ColumnTransformer` (`StandardScaler` on raw gene expression + concentration range, `OneHotEncoder` on drug pathway — all fit on the training fold only); hyperparameters tuned with `GroupKFold`(5) on the training cell lines only (never mixing folds across a cell line). Representative single-drug models use only the 31 ferroptosis genes with leave-one-out CV (samples per drug: 42–44, too small for a held-out split).
 
 ## 7. Evaluation
 

@@ -3,3 +3,8 @@ __pycache__/
 .pytest_cache/
 *.pyc
 .ipynb_checkpoints/
+
+# Large, regenerable model binaries (run scripts/train_and_persist.py to
+# recreate them). The registry metadata (models/registry.json) IS tracked.
+models/**/*.joblib
+

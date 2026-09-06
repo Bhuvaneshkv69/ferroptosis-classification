@@ -12,3 +12,7 @@ pytest
 jupyter
 nbconvert
 ipykernel
+pyyaml
+joblib
+streamlit
+jinja2

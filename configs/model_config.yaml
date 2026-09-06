@@ -1,0 +1,59 @@
+# Model configuration
+# Human-readable mirror of the hyperparameter search spaces actually used in
+# src/classification.py::_model_grid() and src/dose_response.py::run_pooled_experiment().
+# Hyperparameter grids stay defined in code (they instantiate sklearn/xgboost
+# estimator classes, which YAML cannot represent), but every value below is
+# kept in sync with the code and is the single source of truth for what
+# "the tuned model" means in this project -- if code and this file disagree,
+# the code wins and this file has a bug that should be fixed.
+
+random_seed: 42
+cv_folds: 5
+
+classification:
+  scoring: roc_auc
+  models:
+    LogisticRegression:
+      grid: { clf__C: [0.01, 0.1, 1.0, 10.0] }
+      class_weight: balanced
+    RandomForest:
+      grid: { clf__n_estimators: [200, 400], clf__max_depth: [3, 5, null] }
+      class_weight: balanced
+    SVM:
+      grid: { clf__C: [0.1, 1.0, 10.0], clf__kernel: [linear, rbf] }
+      class_weight: balanced
+      probability: true
+    XGBoost:
+      grid: { clf__n_estimators: [100, 200], clf__max_depth: [2, 3, 4], clf__learning_rate: [0.05, 0.1] }
+      eval_metric: logloss
+
+dose_response:
+  pooled_scoring: neg_mean_absolute_error
+  cv: GroupKFold(n_splits=5) by COSMIC_ID  # entire cell lines held out, never rows
+  models:
+    LinearRegression:
+      grid: {}
+    RandomForest:
+      grid: { model__n_estimators: [200, 400], model__max_depth: [5, 10, null] }
+    XGBoost:
+      grid: { model__n_estimators: [100, 200], model__max_depth: [3, 5], model__learning_rate: [0.05, 0.1] }
+  representative_drug_models:
+    cv: LeaveOneOut  # per-drug sample size (n~=44) too small for a held-out split
+    models: [LinearRegression, RandomForest]
+
+deployed_models:
+  # Which (experiment/target, model) combination the application uses for
+  # interactive inference. Chosen as the best-performing, scientifically
+  # non-circular option per task (see RESULTS.md); NOT necessarily the
+  # top-line number in every table (e.g. the circular risk-group experiment
+  # is intentionally excluded from interactive prediction).
+  classification:
+    experiment: exp1_msi_raw_genes
+    primary_model: LogisticRegression   # highest ROC-AUC, non-circular task
+  dose_response:
+    ln_ic50:
+      experiment: pooled_LN_IC50
+      primary_model: RandomForest
+    auc:
+      experiment: pooled_AUC
+      primary_model: RandomForest

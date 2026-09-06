@@ -1,0 +1,35 @@
+# Data configuration
+# Centralizes paths and thresholds that were previously hard-coded as Python
+# constants scattered across src/*.py. Values here MUST match what the
+# pipeline actually used to produce the results in results/ and figures/ --
+# if you change a value here, re-run `python main.py` and the test suite
+# before trusting any downstream number.
+
+paths:
+  data_dir: data
+  raw_dir: data/raw
+  processed_dir: data/processed
+  external_dir: data/external
+  metadata_dir: data/metadata
+  gene_signature: data/unified_gene_signature.csv
+  gene_signature_literature: data/ferroptosis_genes_literature.csv
+
+tcga:
+  study_id: coadread_tcga_pan_can_atlas_2018
+  msi_mantis_threshold: 0.4        # Kautto et al., Oncotarget 2017 (doi:10.18632/oncotarget.13918)
+  max_missing_gene_fraction: 0.20  # samples missing more than this fraction of the ferroptosis panel are dropped
+  test_size: 0.20
+  val_size: 0.125                  # relative to the 80% remaining after the test split (=> 10% overall)
+
+gdsc:
+  tcga_desc_dose_response: COREAD  # GDSC2_fitted_dose_response.csv TCGA_DESC label
+  tcga_desc_cell_lines: "COAD/READ"  # Cell_Lines_Details.xlsx label (different spelling, same disease)
+  min_drug_coverage: 40            # keep drugs tested on >= this many colorectal cell lines
+  representative_drugs:
+    - 5-Fluorouracil
+    - Oxaliplatin
+    - Irinotecan
+    - Sorafenib
+  test_size: 0.20
+
+random_seed: 42

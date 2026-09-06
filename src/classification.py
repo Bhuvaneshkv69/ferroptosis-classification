@@ -39,13 +39,13 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 
 import evaluation as ev
+from config import RANDOM_SEED
 
 ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = ROOT / "data" / "processed"
 RESULTS_DIR = ROOT / "results"
 FIG_DIR = ROOT / "figures"
 TABLES_DIR = ROOT / "tables"
-RANDOM_SEED = 42
 
 
 def _model_grid():
@@ -117,8 +117,9 @@ def run_experiment(df, feature_cols, target_col, pos_label, experiment_name, tes
     ev.plot_calibration(cal_inputs, pos_label, f"Calibration - {experiment_name}",
                         FIG_DIR / f"calibration_{experiment_name}.png")
 
+    neg_label = [c for c in sub[target_col].unique() if c != pos_label][0]
     results_df = pd.DataFrame(rows)
-    return results_df, fitted_models, (X_trainval, y_trainval, X_test, y_test)
+    return results_df, fitted_models, (X_trainval, y_trainval, X_test, y_test), {"pos_label": pos_label, "neg_label": neg_label}
 
 
 def main():
@@ -131,17 +132,17 @@ def main():
     all_results = []
 
     print("=== Experiment 1: MSI status, raw ferroptosis genes (baseline) ===")
-    r1, models1, split1 = run_experiment(tcga, raw_genes, "msi_label", "MSI-H", "exp1_msi_raw_genes")
+    r1, models1, split1, labels1 = run_experiment(tcga, raw_genes, "msi_label", "MSI-H", "exp1_msi_raw_genes")
     all_results.append(r1)
     print(r1[["model", "accuracy", "roc_auc", "f1"]])
 
     print("\n=== Experiment 2: MSI status, engineered ferroptosis signature score ===")
-    r2, models2, split2 = run_experiment(tcga, engineered_features, "msi_label", "MSI-H", "exp2_msi_engineered")
+    r2, models2, split2, labels2 = run_experiment(tcga, engineered_features, "msi_label", "MSI-H", "exp2_msi_engineered")
     all_results.append(r2)
     print(r2[["model", "accuracy", "roc_auc", "f1"]])
 
     print("\n=== Experiment 3 (exploratory/circular): ferroptosis risk group, raw genes ===")
-    r3, models3, split3 = run_experiment(tcga, raw_genes, "ferroptosis_risk_group", "High risk", "exp3_riskgroup_raw_genes")
+    r3, models3, split3, labels3 = run_experiment(tcga, raw_genes, "ferroptosis_risk_group", "High risk", "exp3_riskgroup_raw_genes")
     all_results.append(r3)
     print(r3[["model", "accuracy", "roc_auc", "f1"]])
 
@@ -164,9 +165,9 @@ def main():
           f"{TABLES_DIR/'classification_model_comparison.csv'}, figures in {FIG_DIR}")
 
     return {
-        "exp1": (r1, models1, split1, raw_genes),
-        "exp2": (r2, models2, split2, engineered_features),
-        "exp3": (r3, models3, split3, raw_genes),
+        "exp1": (r1, models1, split1, raw_genes, labels1),
+        "exp2": (r2, models2, split2, engineered_features, labels2),
+        "exp3": (r3, models3, split3, raw_genes, labels3),
     }
 
 

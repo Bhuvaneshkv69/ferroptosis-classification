@@ -32,6 +32,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from preprocessing import split_gdsc
+from config import RANDOM_SEED
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -39,7 +40,6 @@ ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = ROOT / "data" / "processed"
 FIG_DIR = ROOT / "figures"
 RESULTS_DIR = ROOT / "results"
-RANDOM_SEED = 42
 
 CAVEAT = (
     "Feature importance and SHAP values reflect ASSOCIATION with the model's "

@@ -23,14 +23,18 @@ import pandas as pd
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 import data_loader as dl
+from config import DATA_CONFIG, RANDOM_SEED
 
 ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = ROOT / "data" / "processed"
 DOCS_DIR = ROOT / "docs"
 
-RANDOM_SEED = 42
-MSI_MANTIS_THRESHOLD = 0.4  # Kautto et al., Oncotarget 2017 (doi:10.18632/oncotarget.13918)
-MIN_DRUG_COVERAGE = 40  # keep GDSC drugs tested on >= 40 of the 46 colorectal lines
+# Values below are read from configs/data_config.yaml (single source of
+# truth); the module-level names are kept for backward compatibility with
+# existing imports (e.g. tests/test_preprocessing.py::MSI_MANTIS_THRESHOLD).
+MSI_MANTIS_THRESHOLD = DATA_CONFIG["tcga"]["msi_mantis_threshold"]  # Kautto et al., Oncotarget 2017 (doi:10.18632/oncotarget.13918)
+MIN_DRUG_COVERAGE = DATA_CONFIG["gdsc"]["min_drug_coverage"]  # keep GDSC drugs tested on >= N colorectal lines
+MAX_MISSING_GENE_FRACTION = DATA_CONFIG["tcga"]["max_missing_gene_fraction"]
 
 
 # ---------------------------------------------------------------------------
@@ -87,8 +91,8 @@ def build_tcga_dataset(log_path=None):
     # sporadic missing values are median-imputed (fit on train fold only,
     # see split_tcga below, to avoid leakage).
     row_miss = df[gene_cols].isna().mean(axis=1)
-    keep_mask = row_miss <= 0.20
-    note(f"Dropping {(~keep_mask).sum()} samples missing >20% of ferroptosis gene panel")
+    keep_mask = row_miss <= MAX_MISSING_GENE_FRACTION
+    note(f"Dropping {(~keep_mask).sum()} samples missing >{MAX_MISSING_GENE_FRACTION:.0%} of ferroptosis gene panel")
     df = df[keep_mask].reset_index(drop=True)
 
     # --- log2 transform (RSEM values are right-skewed counts-like data) -----
@@ -130,7 +134,8 @@ def build_tcga_dataset(log_path=None):
     return df, gene_cols
 
 
-def split_tcga(df, target_col, feature_cols, test_size=0.2, val_size=0.125):
+def split_tcga(df, target_col, feature_cols,
+                test_size=DATA_CONFIG["tcga"]["test_size"], val_size=DATA_CONFIG["tcga"]["val_size"]):
     """
     Stratified 70/10/20 train/val/test split (val_size is expressed relative
     to the remaining 80% after the test split, i.e. 0.125*0.8 = 10% overall).
@@ -206,13 +211,20 @@ def build_gdsc_dose_response_dataset(log_path=None):
              f"microarray platform and are excluded from GDSC features: {unresolved}")
     note(f"GDSC ferroptosis expression matrix: {gene_expr.shape[0]} genes x {gene_expr.shape[1]} cell lines")
 
-    # z-score each gene across the colorectal cell-line panel (per-platform
-    # standardization; TCGA and GDSC expression are on different technologies
-    # and are NEVER pooled into one model -- see docs/METHODOLOGY.md).
-    gene_expr_z = gene_expr.sub(gene_expr.mean(axis=1), axis=0).div(gene_expr.std(axis=1), axis=0)
-    gene_expr_z = gene_expr_z.T  # cell lines x genes
-    gene_expr_z.index = gene_expr_z.index.astype(int)
-    gene_expr_z.index.name = "COSMIC_ID"
+    # NOTE (data-leakage fix, see docs/DATA_LEAKAGE_AUDIT.md): gene expression
+    # is intentionally left UNSCALED here (raw log2-scale RMA values from the
+    # brainarray CDF, which is already log2 by construction). Z-scoring used
+    # to be done here, across ALL colorectal cell lines (train + test)
+    # combined, before split_gdsc() performs the train/test split -- that is
+    # exactly the "scale before split" leakage pattern. All scaling now
+    # happens exclusively inside the sklearn Pipeline/ColumnTransformer in
+    # dose_response.py and interpretability.py, which is fit on the training
+    # fold only, so no test-fold statistics ever influence a training
+    # transformation.
+    gene_expr_raw = gene_expr.T  # cell lines x genes
+    gene_expr_raw.index = gene_expr_raw.index.astype(int)
+    gene_expr_raw.index.name = "COSMIC_ID"
+    gene_expr_z = gene_expr_raw  # kept name for the merge below
 
     dose_response = dl.load_gdsc_dose_response()
     note(f"Raw GDSC2 colorectal dose-response records: {len(dose_response)} "
@@ -268,7 +280,7 @@ def build_gdsc_dose_response_dataset(log_path=None):
     return merged, list(gene_expr_z.columns)
 
 
-def split_gdsc(df, feature_cols, target_col, test_size=0.2):
+def split_gdsc(df, feature_cols, target_col, test_size=DATA_CONFIG["gdsc"]["test_size"]):
     """
     Group-based split by COSMIC_ID: entire cell lines are held out for testing
     so the model is evaluated on cell lines it has never seen (prevents the

@@ -156,3 +156,14 @@ Rounded comparison tables: `tables/classification_model_comparison.csv`,
 `tables/regression_model_comparison.csv`,
 `tables/representative_drug_comparison.csv`,
 `tables/cox_risk_score_coefficients.csv`.
+
+## 8. These models are now persisted and interactively servable
+
+Every model in the tables above was re-trained and persisted to
+`models/registry.json` this session (`python scripts/train_and_persist.py`);
+the numbers did not change (a data-leakage fix to the GDSC preprocessing
+step — see `docs/DATA_LEAKAGE_AUDIT.md` — was verified to leave every metric
+above unchanged to the reported precision). The exact fitted objects behind
+these numbers are what the Streamlit application (`streamlit run
+app/main.py`) loads and scores new samples with — see `docs/MODEL_CARD.md`
+and `docs/DEMO_GUIDE.md`.

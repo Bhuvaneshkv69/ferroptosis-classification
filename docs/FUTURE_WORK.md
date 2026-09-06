@@ -2,6 +2,12 @@
 
 Listed in rough priority order for Project-II / a follow-on IEEE paper.
 
+**Update (this session):** item 10 (web demo / interactive dashboard) is now
+**done** -- see the Streamlit application (`app/`), `docs/DEMO_GUIDE.md`.
+Model persistence, a model registry, input validation, and a report
+generator were also added (none of these were on this list because the
+prior iteration did not yet have an application to persist models for).
+
 1. **External validation cohort.** Validate the MSI classifier on an
    independent public CRC cohort (e.g. a GEO colorectal expression series
    with MSI annotation) to test generalization beyond TCGA. Currently
@@ -36,8 +42,19 @@ Listed in rough priority order for Project-II / a follow-on IEEE paper.
    project's strongest, non-circular finding) as a short IEEE-conference-style
    paper submission — "Status: Pending — not yet submitted, no publication
    claimed" (see `docs/REVIEW_2_CONTENT.md`, Expected Outcome).
-10. **Web demo / interactive dashboard.** A lightweight Streamlit/Flask app
-    exposing model predictions and SHAP explanations for a user-supplied
-    expression profile, as a tangible "product" deliverable.
+10. ~~Web demo / interactive dashboard.~~ **Done this session** -- see `app/`.
+11. **Per-fold engineered-feature fitting.** `feature_engineering.py`
+    currently fits the PCA/z-score signature score and the Cox risk score on
+    the full TCGA cohort before Experiment 2/3's own train/test split (see
+    `docs/DATA_LEAKAGE_AUDIT.md` finding #1 -- low severity, does not change
+    either experiment's conclusion, but should be moved inside the CV loop
+    for full correctness).
+12. **Cross-dataset generalization checks.** Systematically test classifier
+    behavior under missing genes, distribution shift, and varying sample
+    counts (per the project brief's "dataset generalization" requirement),
+    beyond the missing-gene handling `src/validation.py` already performs at
+    input time.
 
-None of the above is claimed as completed anywhere else in this repository.
+None of the above is claimed as completed anywhere else in this repository
+(except item 10, marked done above and cross-referenced from
+`PROJECT_STATUS.md`).
