@@ -1,0 +1,5 @@
+accuracy,precision,recall,f1,roc_auc,pr_auc,experiment,model,best_params,n_genes_used,n_pca_components,n_train,n_test
+0.8319327731092437,0.46875,0.8333333333333334,0.6,0.9317931793179318,0.8343593824439928,exp4_msi_whole_transcriptome,LogisticRegression,"{""clf__C"": 0.01}",18302,50,473,119
+0.9411764705882353,0.9230769230769231,0.6666666666666666,0.7741935483870968,0.985973597359736,0.9311822436822438,exp4_msi_whole_transcriptome,RandomForest,"{""clf__max_depth"": null, ""clf__n_estimators"": 200}",18302,50,473,119
+0.9327731092436975,0.7272727272727273,0.8888888888888888,0.8,0.977997799779978,0.9193508343508345,exp4_msi_whole_transcriptome,SVM,"{""clf__C"": 0.1, ""clf__kernel"": ""rbf""}",18302,50,473,119
+0.9327731092436975,0.8125,0.7222222222222222,0.7647058823529411,0.9482948294829484,0.8132518330434998,exp4_msi_whole_transcriptome,XGBoost,"{""clf__learning_rate"": 0.05, ""clf__max_depth"": 4, ""clf__n_estimators"": 100}",18302,50,473,119

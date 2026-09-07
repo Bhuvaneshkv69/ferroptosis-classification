@@ -26,6 +26,13 @@ src/
   validation.py           input validation for user-supplied expression data
   reporting.py             builds a self-contained HTML report from real output files
   fetch_tcga.py, fetch_gene_maps.py   raw data acquisition (network calls)
+  fetch_external_validation.py, external_validation.py   independent CPTAC-2
+                          cohort fetch + no-refit scoring of persisted models
+  fetch_whole_transcriptome.py, whole_transcriptome_baseline.py   ~19,200-gene
+                          baseline classifier (PCA, train-fold-only) vs the
+                          35-gene ferroptosis panel
+  process_raw_dose_response.py   streams the 2.1GB raw GDSC file into real,
+                          measured dose-response curves for 4 drugs
 scripts/
   train_and_persist.py   runs classification.main()/dose_response.main() and registers every
                           fitted model -- the ONLY place models are written to models/

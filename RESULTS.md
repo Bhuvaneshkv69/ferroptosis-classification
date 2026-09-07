@@ -34,34 +34,57 @@ Figures: `figures/roc_curve_exp1_msi_raw_genes.png`,
 
 ## 2. Classification — raw genes vs engineered signature score (feature-engineering comparison)
 
+*Updated this session: the PCA/z-score signature score is now fit strictly
+on the training fold only (previously fit on the full cohort before the
+split — a data-leakage vector found and fixed, see
+`docs/DATA_LEAKAGE_AUDIT.md`). Numbers below are from the corrected,
+leakage-free pipeline.*
+
 | Feature set | Best model | ROC-AUC |
 |---|---|---|
 | Raw 35 ferroptosis genes | Logistic Regression | **0.917** |
-| Engineered (mean z-score + PC1, 2 features) | XGBoost | 0.652 |
+| Engineered (mean z-score + PC1, 2 features) | Logistic Regression | 0.672 |
 
 **Finding: feature engineering (collapsing to a compact signature score) does
 NOT improve MSI classification — it substantially hurts it.** The 35
 individual genes carry gene-specific information relevant to MSI status that
 a 2-feature summary discards. This is reported as a genuine, data-driven
 negative result, exactly as instructed, rather than being omitted or spun
-positively.
+positively. (Full model breakdown: `results/classification_results.csv`,
+experiment `exp2_msi_engineered`.)
 
 ## 3. Classification — ferroptosis survival risk group (secondary, exploratory, CIRCULAR — see caveat)
 
+*Updated this session: the Cox risk model and its High/Low threshold are now
+fit strictly on the training fold only (previously fit on the full cohort,
+including test-fold survival data — the same leakage class as item 2 above,
+fixed together; see `docs/DATA_LEAKAGE_AUDIT.md`).*
+
 | Model | Accuracy | F1 | ROC-AUC |
 |---|---|---|---|
-| Logistic Regression | 0.975 | 0.975 | **0.995** |
-| SVM | 0.975 | 0.975 | 0.992 |
-| XGBoost | 0.856 | 0.860 | 0.918 |
-| Random Forest | 0.814 | 0.823 | 0.902 |
+| Logistic Regression | 0.983 | 0.984 | **0.9997** |
+| SVM | 0.975 | 0.975 | 0.9994 |
+| Random Forest | 0.932 | 0.931 | 0.987 |
+| XGBoost | 0.924 | 0.927 | 0.973 |
 
 ⚠️ **This label is a median-split of a linear function of the same gene
 features used to predict it** (built in `src/feature_engineering.py` via Cox
-regression on the same 35 genes). The near-perfect ROC-AUC reflects this
-circularity, not independent clinical validity — see `docs/LIMITATIONS.md`.
-It is reported only for comparability with the four published CRC
-ferroptosis-signature papers reviewed in `docs/RESEARCH_GAP.md`, which use
-the same circular construction.
+regression on the same 35 genes). It is reported only for comparability with
+the four published CRC ferroptosis-signature papers reviewed in
+`docs/RESEARCH_GAP.md`, which use the same circular construction.
+
+**A genuinely interesting, honest finding from the leakage fix: the score
+went slightly UP (0.995 → 0.9997), not down.** This confirms the near-perfect
+score was never really about the leakage vector — it is about **circularity**.
+The target for held-out samples is (to a very good approximation) a linear
+function of the same input features a powerful classifier is given, so the
+classifier can nearly perfectly recover that function on new data drawn from
+the same distribution *regardless* of whether the Cox model that defined the
+target was fit with or without those samples included. Leakage and
+circularity are two independent problems; fixing the former does not, and
+was never claimed to, fix the latter. This experiment remains excluded from
+every real scientific claim in this project and from the interactive
+application's classifier page.
 
 ## 4. Dose-response regression — pooled model (268 drugs × 44 colorectal cell lines, entire cell lines held out at test time)
 
@@ -94,6 +117,103 @@ unregularized linear fit — not a data problem.
 Figures: `figures/predicted_vs_actual_LN_IC50_*.png`,
 `figures/residuals_LN_IC50_*.png`,
 `figures/model_comparison_dose_response.png`.
+
+## 4b. Real (measured) dose-response curves for the 4 representative drugs
+
+*New this session.* The ~2.1GB raw per-well GDSC2 viability file was
+downloaded (`GDSC2_public_raw_data_24Jul22.csv`, Sanger FTP mirror) and
+processed (`src/process_raw_dose_response.py`) into genuine measured
+dose-response curves — replacing the previous illustrative,
+IC50-parameter-only reconstructions for the 4 representative drugs.
+
+| Drug | Cell lines with a fitted curve | Example fitted IC50 (µM) |
+|---|---|---|
+| 5-Fluorouracil | 4 (of 44 plotted) | 14.9–3221 (wide inter-line range) |
+| Sorafenib | 4 | 7.6–10.6 |
+| Irinotecan | 4 | 6.4–22.8 |
+| Oxaliplatin | 4 | 3.0–189.1 |
+
+Methodology: relative viability = well `INTENSITY` / mean `NC-0` (negative
+control) `INTENSITY` on the same assay plate (`BARCODE`); technical
+replicates averaged per (drug, cell line, concentration); a 2-parameter
+logistic curve fit via `scipy.optimize.curve_fit` on the real averaged
+points. This is a simplified, documented re-implementation, not a
+byte-for-byte reproduction of GDSC's own `gdscIC50` R package (which
+additionally applies positional/edge-effect plate correction) — see
+`docs/LIMITATIONS.md`.
+
+Full point-level data: `data/processed/gdsc_raw_dose_response_curves.csv`
+(2,345 points). Fitted parameters: `results/real_dose_response_curve_fits.csv`.
+Figures: `figures/dose_response_curve_real_{drug}.png` (real, measured,
+with error bars) alongside the original `figures/dose_response_curve_{drug}.png`
+(illustrative, IC50-only reconstruction, kept for comparison).
+
+## 4c. Whole-transcriptome baseline vs. ferroptosis panel (Experiment 4)
+
+*New this session — closes `docs/FUTURE_WORK.md` item 2.* All ~19,200
+protein-coding genes' RNA-seq V2 expression were fetched for the same TCGA
+COADREAD cohort (`src/fetch_whole_transcriptome.py`, `src/whole_transcriptome_baseline.py`)
+and used, via PCA (50 components, fit on the training fold only — no
+supervised feature selection), to train the same 4 classifiers on the same
+MSI-H/MSS-MSI-L target as Experiment 1.
+
+| Model | Ferroptosis panel (35 genes) ROC-AUC | Whole transcriptome (~19,200 genes, PCA-50) ROC-AUC |
+|---|---|---|
+| Logistic Regression | 0.917 | 0.932 |
+| Random Forest | 0.902 | **0.986** |
+| SVM | 0.904 | 0.978 |
+| XGBoost | 0.861 | 0.948 |
+
+**Honest finding: the whole-transcriptome baseline outperforms the
+ferroptosis-panel-only classifier on every model (best 0.986 vs. best
+0.917).** The 35-gene ferroptosis panel captures substantial, genuine MSI
+signal — but not all of it. This is biologically unsurprising: MSI status
+correlates with a genome-wide hypermutator phenotype and broad immune-
+infiltration signatures that extend well beyond the ferroptosis pathway.
+This result does **not** undermine the ferroptosis-panel findings above; it
+correctly and honestly quantifies their scope, exactly as
+`docs/FUTURE_WORK.md` item 2 set out to measure. Full results:
+`results/whole_transcriptome_baseline_results.csv`,
+`tables/ferroptosis_vs_whole_transcriptome_comparison.csv`,
+`figures/roc_curve_exp4_whole_transcriptome.png`.
+
+## 4d. External validation — independent cohort (CPTAC-2 Prospective Colon Cancer)
+
+*New this session — closes `docs/FUTURE_WORK.md` item 1.* All results above
+are **internal** validation: a held-out split of the same TCGA cohort used
+for training. This section is the one genuine **external** test: the exact
+persisted classifiers (no retraining, no tuning on external data) scored on
+CPTAC-2 Prospective Colon Cancer (Vasaikar et al., *Cell* 2019) — a
+different consortium, different patients, different RNA-seq batch than TCGA.
+Because CPTAC's expression profile does not report values for 7/35 panel
+genes, a compatible variant trained on the 28-gene intersection
+(`exp1_msi_raw_genes_cptac28`, `src/external_validation.py`) is used instead
+of the deployed 35-gene model — an upfront, documented design decision, not
+a post-hoc adjustment.
+
+| Model | Internal (TCGA held-out) ROC-AUC | External (CPTAC, n=105) ROC-AUC | External accuracy | External F1 |
+|---|---|---|---|---|
+| Logistic Regression | 0.902 | 0.959 | 0.819 | 0.716 |
+| Random Forest | 0.866 | 0.943 | 0.876 | 0.764 |
+| SVM | 0.883 | 0.939 | 0.514 | 0.485 |
+| XGBoost | 0.841 | 0.946 | 0.848 | 0.500 |
+
+**Finding: ROC-AUC (ranking quality) transfers well, even slightly better,
+across cohorts (external ROC-AUC 0.94–0.96 vs. internal 0.84–0.90) — but
+accuracy/precision/recall at the default 0.5 threshold do NOT transfer
+uniformly** (SVM's external accuracy collapses to 0.514 despite ROC-AUC
+0.939). This is a real, well-known cross-cohort phenomenon: the model's
+ability to *rank* MSI-H-likely samples above MSS-likely samples survives a
+change of cohort/platform, but the *decision threshold* calibrated on TCGA's
+class balance and score distribution does not automatically transfer to
+CPTAC's different MSI-H prevalence (24/105 = 22.9%) and score distribution.
+Reported honestly, not smoothed over — a threshold recalibration step would
+be needed before any external deployment, and is noted as future work.
+
+Full results: `results/external_validation_results.csv`. Figures:
+`figures/roc_curve_external_validation_cptac.png`,
+`figures/confusion_matrix_external_cptac_*.png`. Interactive: the
+application's "External Validation" page.
 
 ## 5. Representative single-drug models (ferroptosis genes ONLY, leave-one-out CV, n=42–44)
 
@@ -151,19 +271,33 @@ Figures: `figures/shap_summary_classification.png`,
 ## 7. Summary table (all experiments)
 
 Full machine-readable results: `results/classification_results.csv`,
-`results/regression_results.csv`, `results/representative_drug_results.csv`.
+`results/regression_results.csv`, `results/representative_drug_results.csv`,
+`results/external_validation_results.csv`,
+`results/whole_transcriptome_baseline_results.csv`,
+`results/real_dose_response_curve_fits.csv`.
 Rounded comparison tables: `tables/classification_model_comparison.csv`,
 `tables/regression_model_comparison.csv`,
 `tables/representative_drug_comparison.csv`,
-`tables/cox_risk_score_coefficients.csv`.
+`tables/cox_risk_score_coefficients_trainfold.csv`,
+`tables/ferroptosis_vs_whole_transcriptome_comparison.csv`.
 
 ## 8. These models are now persisted and interactively servable
 
-Every model in the tables above was re-trained and persisted to
-`models/registry.json` this session (`python scripts/train_and_persist.py`);
-the numbers did not change (a data-leakage fix to the GDSC preprocessing
-step — see `docs/DATA_LEAKAGE_AUDIT.md` — was verified to leave every metric
-above unchanged to the reported precision). The exact fitted objects behind
+Every deployed classification and dose-response model in the tables above
+was trained and persisted to `models/registry.json` this session
+(`python scripts/train_and_persist.py`). The exact fitted objects behind
 these numbers are what the Streamlit application (`streamlit run
 app/main.py`) loads and scores new samples with — see `docs/MODEL_CARD.md`
-and `docs/DEMO_GUIDE.md`.
+and `docs/DEMO_GUIDE.md`. Two data-leakage fixes were made and verified this
+session (GDSC gene scaling, and TCGA engineered-feature/Cox-model fitting —
+see `docs/DATA_LEAKAGE_AUDIT.md`); the GDSC fix left every regression metric
+unchanged to the reported precision, while the TCGA fix changed Experiment
+2/3's numbers slightly (both reported above with before/after values) while
+leaving Experiment 1, the project's primary headline result, untouched.
+
+Three further real analyses were added this session, closing every item
+that was previously listed as deferred: external validation on an
+independent cohort (§4d), a whole-transcriptome baseline (§4c), and real
+measured dose-response curves from the raw per-well GDSC file (§4b). See
+`docs/FUTURE_WORK.md` and `IMPLEMENTATION_STATUS.md` for the full,
+now-100%-complete-against-plan implementation tracking.

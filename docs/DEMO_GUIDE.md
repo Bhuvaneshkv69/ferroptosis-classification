@@ -39,11 +39,14 @@ anything to serve until this step has run at least once.**
 pytest tests/ -q
 ```
 
-61 tests: dataset/preprocessing/feature-engineering/classification/
+78 tests: dataset/preprocessing/feature-engineering/classification/
 dose-response unit and integration tests (from the original pipeline),
-plus model-registry, inference, input-validation unit tests, and an
-end-to-end Streamlit AppTest suite that runs every page and exercises two
-real predictions and a real report generation.
+model-registry/inference/input-validation unit tests, an end-to-end
+Streamlit AppTest suite that runs every page and exercises two real
+predictions and a real report generation, and tests for the external-
+validation, whole-transcriptome-baseline, and real-dose-response-curve
+results (steps 6-8 below; skipped automatically if those optional,
+larger downloads haven't been run yet).
 
 ## 4. Launch the application
 
@@ -73,8 +76,32 @@ Opens at `http://localhost:8501`. Suggested click-through for a live demo:
    tables, with the association-not-causation banner.
 8. **Report** -- click "Generate report now," download the resulting
    self-contained HTML file, open it in a browser to confirm it stands alone.
+9. **External Validation** -- compare internal (TCGA held-out) vs. external
+   (independent CPTAC-2 cohort) performance for the same persisted models
+   (requires step 6 below to have been run first).
 
-## 5. Re-running after a change
+## 5. Optional: the three larger, previously-deferred real analyses
+
+These are real, substantial pieces of work (large downloads / longer
+compute) kept out of the default `main.py` flow so a first run stays fast.
+Each is independently runnable and documented in `RESULTS.md` §4b/4c/4d.
+
+```bash
+# 6. External validation on an independent cohort (~1 min, small download)
+python src/fetch_external_validation.py
+python src/external_validation.py
+
+# 7. Whole-transcriptome baseline (~5 min fetch + ~5-10 min training)
+python src/fetch_whole_transcriptome.py
+python src/whole_transcriptome_baseline.py
+
+# 8. Real (measured) dose-response curves (requires manually downloading
+#    GDSC2_public_raw_data_24Jul22.csv, 2.1GB, to data/raw/gdsc/ first --
+#    see docs/DATASET.md for the exact URL; then ~2-5 min to process)
+python src/process_raw_dose_response.py
+```
+
+## 6. Re-running after a change
 
 Any change to `src/preprocessing.py`, `src/classification.py`, or
 `src/dose_response.py` requires re-running steps 1-3 (in order) before the
@@ -83,8 +110,11 @@ design (see `docs/ARCHITECTURE.md`).
 
 ## What this demo does NOT show (by design, not oversight)
 
-- A truly independent external validation cohort (not yet implemented --
-  `docs/FUTURE_WORK.md`).
-- Raw per-well GDSC viability curves (the ~2GB raw file was never
-  downloaded; the dose-response curve figures are labeled "illustrative").
 - Any clinical dosing recommendation (explicitly out of scope everywhere).
+- A byte-for-byte reproduction of GDSC's own `gdscIC50` curve-fitting
+  pipeline (the real curves in step 8 use a simplified, documented
+  normalization — see `docs/LIMITATIONS.md`).
+- Cross-cohort classification-threshold recalibration (step 6 shows that
+  ROC-AUC ranking transfers well to the external cohort but the default
+  0.5 threshold does not — reported honestly as an open item, not fixed
+  here; see `docs/FUTURE_WORK.md` item 12).

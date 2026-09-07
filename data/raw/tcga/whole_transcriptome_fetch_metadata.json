@@ -1,0 +1,8 @@
+{
+  "study_id": "coadread_tcga_pan_can_atlas_2018",
+  "source": "cBioPortal REST API (https://www.cbioportal.org/api)",
+  "purpose": "Whole-transcriptome baseline for comparison against the 35-gene ferroptosis panel",
+  "retrieved_utc": "2026-09-06 19:09:15",
+  "n_genes_requested": 19222,
+  "n_rows_fetched": 10432472
+}

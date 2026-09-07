@@ -18,6 +18,11 @@ command and the reusable functions behind them.
 | `python src/dose_response.py` | Dose-response regression only (requires processed GDSC data) | `results/regression_results.csv`, `results/representative_drug_results.csv`, `figures/*dose_response*` |
 | `python src/interpretability.py` | Permutation importance + SHAP for both tasks | `results/feature_importance_*.csv`, `figures/shap_summary_*.png` |
 | `python scripts/train_and_persist.py` | Trains + persists every deployable model to `models/` and `models/registry.json` | `models/<task>/<experiment>/*.joblib`, `models/registry.json` |
+| `python src/fetch_external_validation.py` | Fetches the independent CPTAC-2 cohort from cBioPortal | `data/external/cptac_coad_2019/*` |
+| `python src/external_validation.py` | Trains the 28-gene intersection variant on TCGA, scores it on CPTAC (no refitting on external data) | `results/external_validation_results.csv`, `figures/roc_curve_external_validation_cptac.png` |
+| `python src/fetch_whole_transcriptome.py` | Fetches ~19,200 protein-coding genes' expression for the TCGA cohort (~5 min) | `data/raw/tcga/whole_transcriptome_expression_long.csv` |
+| `python src/whole_transcriptome_baseline.py` | Trains the whole-transcriptome (PCA-50) MSI baseline, compares to the ferroptosis panel | `results/whole_transcriptome_baseline_results.csv`, `tables/ferroptosis_vs_whole_transcriptome_comparison.csv` |
+| `python src/process_raw_dose_response.py` | Streams the 2.1GB raw GDSC file into real, measured dose-response curves (requires manually downloading `GDSC2_public_raw_data_24Jul22.csv` to `data/raw/gdsc/` first, see `docs/DATASET.md`) | `data/processed/gdsc_raw_dose_response_curves.csv`, `figures/dose_response_curve_real_*.png` |
 | `python -m src.model_registry` (or `python src/model_registry.py`) | Lists every persisted model artifact | stdout |
 | `pytest tests/ -q` | Runs the full test suite | pass/fail report |
 | `streamlit run app/main.py` | Launches the interactive application | web UI at `localhost:8501` |

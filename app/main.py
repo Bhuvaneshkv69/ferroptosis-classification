@@ -96,4 +96,5 @@ st.markdown("""
 6. **Model Performance** -- every model's real metrics, ROC/PR curves, confusion matrices, residuals
 7. **Interpretability** -- permutation importance and SHAP, with the association-not-causation caveat
 8. **Report** -- generate and download a self-contained HTML report from the current pipeline outputs
+9. **External Validation** -- the classifier scored on an independent cohort (CPTAC-2), no retraining
 """)

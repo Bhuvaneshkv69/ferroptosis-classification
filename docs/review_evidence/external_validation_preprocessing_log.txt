@@ -1,0 +1,5 @@
+Raw: 110 CPTAC-2 COAD samples, 105 with an MSI_STATUS label
+Expression matrix: 106 samples x 28 genes
+After merging clinical + expression: 106 samples
+Samples with a usable MSI_STATUS label (MSS or MSI-H): 105 / 106 (other values found: [])
+Saved processed external validation dataset: (105, 48) -> D:\small\data\processed\external_cptac_coad_2019_processed.csv

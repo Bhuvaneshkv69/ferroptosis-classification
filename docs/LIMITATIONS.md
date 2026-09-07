@@ -27,11 +27,14 @@ for patient treatment or clinical dosing decisions.
   GDSC cell-line expression lacks probes for 4/35 unified signature genes
   (`ATP6V1G2`, `NCOA4`, `SLC2A3`, `TXNIP`); all GDSC-side results use the
   remaining 31 genes only.
-- **No raw dose-response curves.** The ~2 GB raw per-well GDSC2 viability file
-  was not downloaded (see `DATASET.md`). The dose-response curve figures are
-  mathematically reconstructed from the fitted `LN_IC50` parameter for
-  illustration and are explicitly labeled as such; they are not measured
-  viability data.
+- **Real dose-response curves (added this session) use a simplified
+  normalization.** `src/process_raw_dose_response.py` normalizes each well's
+  raw intensity to its own plate's mean `NC-0` control intensity only. GDSC's
+  own `gdscIC50` R package additionally applies positional/edge-effect and
+  dye-based corrections; this project's curves are real, measured data but
+  not a byte-for-byte reproduction of GDSC's published fitting pipeline —
+  see `RESULTS.md` §4b. The original illustrative (IC50-only-reconstructed)
+  curves are kept alongside for comparison, clearly labeled as illustrative.
 - **No canonical ferroptosis-inducer drugs in GDSC.** Erastin and RSL3 (the
   textbook pharmacological ferroptosis inducers) are not part of the GDSC
   screening panel. Sorafenib (a documented ferroptosis inducer via system
@@ -47,16 +50,26 @@ for patient treatment or clinical dosing decisions.
   mirrors a known property of the published literature it is modeled on
   (see `docs/RESEARCH_GAP.md`) and is reported for comparability only — it is
   **not** the project's evidentiary claim.
-- **No external validation cohort.** Both classification tasks are evaluated
-  on a held-out split of the same TCGA cohort used for training, not an
-  independent GEO or other external CRC cohort. This is flagged explicitly as
-  future work (see `FUTURE_WORK.md`), not silently omitted.
-- **Feature scope limited to a documented gene panel.** All modeling uses the
-  35-gene literature-derived ferroptosis signature (see
-  `data/gene_selection_method.md`), not the whole transcriptome. This means
-  no whole-transcriptome vs ferroptosis-only baseline comparison is available
-  in this iteration (a genuine constraint of the network-fetch approach used
-  here, not a hidden gap — see `FUTURE_WORK.md`).
+- **External validation (added this session) uses a 28/35-gene intersection
+  variant, and its classification threshold does not transfer as cleanly as
+  its ranking does.** The MSI classifier was validated on CPTAC-2 Prospective
+  Colon Cancer, an independent cohort. CPTAC's expression profile lacks
+  values for 7 of the 35 panel genes, so a compatible model trained on the
+  28-gene intersection is used for this comparison (not the deployed 35-gene
+  model). ROC-AUC (ranking quality) transferred well (0.94–0.96 externally
+  vs. 0.84–0.90 internally for this variant); default-threshold accuracy did
+  not transfer uniformly (SVM's external accuracy was 0.51 despite ROC-AUC
+  0.94) — a real, honestly-reported cross-cohort calibration gap, not a
+  hidden failure. See `RESULTS.md` §4d, `docs/FUTURE_WORK.md` item 12.
+- **Feature scope limited to a documented gene panel (with a whole-
+  transcriptome baseline comparison added this session).** All classification/
+  regression modeling in this project uses the 35-gene literature-derived
+  ferroptosis signature (see `data/gene_selection_method.md`), not the whole
+  transcriptome. Experiment 4 (`RESULTS.md` §4c) shows a whole-transcriptome
+  (PCA-reduced) classifier meaningfully **outperforms** the ferroptosis-panel
+  classifier (ROC-AUC 0.986 vs. 0.917) — i.e. the panel captures real but
+  incomplete MSI signal. This baseline exists only for the MSI classification
+  task, not for the dose-response regression task.
 - **Association, not causation.** All feature-importance and SHAP results
   (`src/interpretability.py`) describe statistical association between a
   gene's expression and the model's output on this dataset. They are **not**

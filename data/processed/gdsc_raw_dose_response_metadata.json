@@ -1,0 +1,13 @@
+{
+  "source_file": "GDSC2_public_raw_data_24Jul22.csv",
+  "source_file_size_bytes": 2112924313,
+  "drugs": {
+    "1073": "5-Fluorouracil",
+    "1085": "Sorafenib",
+    "1088": "Irinotecan",
+    "1089": "Oxaliplatin"
+  },
+  "n_cell_lines": 44,
+  "n_points": 2345,
+  "normalization": "relative viability = well INTENSITY / mean(NC-0 INTENSITY on same BARCODE)"
+}

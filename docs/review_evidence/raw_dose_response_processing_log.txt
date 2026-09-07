@@ -1,0 +1,7 @@
+Streaming raw file (2.11 GB): pass 1 (dosed wells) ...
+Pass 1: 12439 dosed-well rows found for 44 cell lines x 4 drugs
+Streaming raw file: pass 2 (negative-control wells on the 616 relevant plates) ...
+Pass 2: 3696 negative-control-well rows found
+Dosed wells with no matching NC-0 control on their plate (dropped): 0
+Averaged to 2345 (drug, cell line, concentration) points across 44 cell lines
+Saved real (measured) dose-response points -> D:\small\data\processed\gdsc_raw_dose_response_curves.csv

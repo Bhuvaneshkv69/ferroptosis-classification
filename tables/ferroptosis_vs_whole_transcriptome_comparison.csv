@@ -1,0 +1,5 @@
+model,roc_auc_ferroptosis_panel_35_genes,accuracy_ferroptosis_panel,f1_ferroptosis_panel,roc_auc_whole_transcriptome_pca50,accuracy_whole_transcriptome,f1_whole_transcriptome
+LogisticRegression,0.917,0.849,0.64,0.932,0.832,0.6
+RandomForest,0.902,0.815,0.542,0.986,0.941,0.774
+SVM,0.904,0.765,0.517,0.978,0.933,0.8
+XGBoost,0.861,0.84,0.174,0.948,0.933,0.765

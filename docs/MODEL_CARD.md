@@ -88,6 +88,21 @@ profile in any capacity.
   individual predictions on that exact input) as an uncertainty proxy --
   explicitly NOT a formal statistical confidence interval.
 
+## Additional evaluation added this session
+
+- **Whole-transcriptome baseline (Experiment 4):** the same MSI target,
+  classified from ~19,200 genes (PCA-50, train-fold-only) instead of the
+  35-gene panel. Best ROC-AUC 0.986 (Random Forest) vs. 0.917 for the panel
+  — see `RESULTS.md` §4c. Not a deployed/interactive model; evaluation-only.
+- **External validation (`exp1_msi_raw_genes_cptac28`):** a 28-gene
+  intersection variant of Experiment 1, scored on the independent CPTAC-2
+  cohort with zero retraining/tuning on that cohort. External ROC-AUC
+  0.94–0.96; internal (TCGA) ROC-AUC for this same variant 0.84–0.90. See
+  `RESULTS.md` §4d and the application's External Validation page. This
+  variant is registered in `models/registry.json` under task
+  `classification`, experiment `exp1_msi_raw_genes_cptac28` — separate from,
+  and not used by, the deployed 35-gene Experiment 1 models.
+
 ## Caveats
 
 - Feature importance/SHAP/coefficient values describe association with the

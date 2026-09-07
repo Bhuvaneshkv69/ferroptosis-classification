@@ -23,6 +23,7 @@ PAGES = [
     APP_DIR / "pages" / "5_Model_Performance.py",
     APP_DIR / "pages" / "6_Interpretability.py",
     APP_DIR / "pages" / "7_Report.py",
+    APP_DIR / "pages" / "8_External_Validation.py",
 ]
 
 

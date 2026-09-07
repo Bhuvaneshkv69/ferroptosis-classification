@@ -23,35 +23,50 @@ any information from the validation/test fold or the target label itself.
 | Hyperparameter search (`GridSearchCV`, `StratifiedKFold` on train/val only) | Train/val only | None -- test set is never touched until the single final evaluation call |
 | Feature engineering (`ferroptosis_score_mean`, `ferroptosis_score_pc1`, Cox risk score) | **Fit on the FULL dataset** (`src/feature_engineering.py::add_engineered_features`, `build_ferroptosis_risk_score`) — see finding below | See below |
 
-**Finding (pre-existing, documented, not fixed this session):** the PCA and
-per-gene z-scoring used to build `ferroptosis_score_mean` /
-`ferroptosis_score_pc1` (Experiment 2) and the Cox-regression risk score
-(Experiment 3) are fit on the *entire* processed TCGA cohort, before any
-train/test split for those specific experiments. This is a mild leakage
-vector: the PCA axis and Cox coefficients are influenced by samples that
-later appear in Experiment 2/3's test fold.
+**Finding (found and FIXED this session):** the PCA and per-gene z-scoring
+used to build `ferroptosis_score_mean` / `ferroptosis_score_pc1`
+(Experiment 2) and the Cox-regression risk score (Experiment 3) used to be
+fit on the *entire* processed TCGA cohort, before any train/test split for
+those specific experiments. This was a mild leakage vector: the PCA axis and
+Cox coefficients were influenced by samples that later appeared in
+Experiment 2/3's test fold.
 
-Severity assessment: **low, and does not change either headline claim**.
-Experiment 2 already underperforms Experiment 1 (this is reported as a
-negative result); leakage would, if anything, inflate Experiment 2's score,
-making the true gap even larger, not smaller — so the negative-result
-conclusion is unaffected (fixing the leak could only strengthen it).
-Experiment 3 (`ferroptosis_risk_group`) is already flagged throughout this
-project as **circular by construction** (the label is a function of the
-same features used to predict it) and is explicitly excluded from every
-scientific claim this project makes; this leakage vector is a second,
-independent reason (in addition to circularity) not to treat Experiment 3's
-near-perfect score as evidence of anything, and is documented here rather
-than silently left unmentioned. **Not fixed this session** because doing so
-correctly requires re-deriving the Cox risk score per-fold inside the
-classification CV loop, which would meaningfully restructure
-`feature_engineering.py`; tracked as future work
-(`docs/FUTURE_WORK.md`) rather than rushed.
+**Fix:** `src/feature_engineering.py` now provides `fit_engineered_features()`
+/ `transform_engineered_features()` and `fit_risk_model()` / `score_risk()`,
+which fit strictly on a training fold and are applied (never refit) to the
+test fold — exactly like a real "score a new patient" workflow would. The
+old whole-cohort `add_engineered_features()` / `build_ferroptosis_risk_score()`
+functions are kept **only** for the descriptive/EDA output
+(`tcga_coadread_features.csv`, shown on the app's Data page), never for
+model training or evaluation. `src/classification.py::main()` now
+constructs its own train/test split *before* calling these fitting
+functions and passes the exact same split into `run_experiment()` via the
+new `split_indices` parameter, guaranteeing the classifier's test fold is
+never used to fit the upstream transform.
+
+**Impact of the fix, measured (not assumed):**
+
+| Experiment | Metric | Before fix | After fix |
+|---|---|---|---|
+| 2 (engineered features) | Best ROC-AUC | 0.652 (XGBoost) | 0.672 (Logistic Regression) |
+| 3 (risk group, circular) | Best ROC-AUC | 0.995 (Logistic Regression) | **0.9997** (Logistic Regression) |
+
+Experiment 3's score went slightly **up**, not down, after removing the
+leakage — a genuinely informative result: it confirms the near-perfect
+score was never really about this leakage vector at all. It is about
+**circularity** (the target is a near-deterministic linear function of the
+same input features), which a powerful classifier can recover almost
+perfectly regardless of whether the function that *defined* the target saw
+those exact test samples during its own fitting. Leakage and circularity are
+two independent problems; this session fixed the former and, as always,
+Experiment 3 remains excluded from every real scientific claim and from the
+interactive application's classifier page because of the latter (see
+`RESULTS.md` §3 for the full discussion).
 
 **Experiment 1 (the project's primary, headline result, ROC-AUC 0.917) uses
 none of these engineered features** — only the 35 raw genes, scaled inside
-each model's Pipeline on the training fold only — so it is unaffected by
-this finding.
+each model's Pipeline on the training fold only — so it was never affected
+by this finding.
 
 ## 2. GDSC dose-response pipeline
 
@@ -101,5 +116,5 @@ leakage vector improves methodological correctness without being a
 | Scaling before train/test split (GDSC dose-response) | **Found and fixed this session** |
 | Feature selection using test-set performance | Not present anywhere |
 | Hyperparameter tuning using the test set | Not present anywhere (CV always restricted to train fold) |
-| Target leaking into feature engineering | Present in the circular, explicitly-flagged Experiment 3 only (already excluded from all claims); low-severity variant also affects Experiment 2's engineered-feature fit (does not change its already-negative conclusion) |
+| Target/test-fold leaking into feature engineering (Experiments 2 & 3) | **Found and fixed this session** — see finding above |
 | Drug-response information leaking into its own input features | Not applicable — features are gene expression + drug pathway/concentration metadata, never the response value itself |

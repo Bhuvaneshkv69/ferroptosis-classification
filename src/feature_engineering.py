@@ -39,6 +39,13 @@ TABLES_DIR = ROOT / "tables"
 
 
 def add_engineered_features(df: pd.DataFrame, gene_cols: list[str]) -> pd.DataFrame:
+    """
+    WHOLE-COHORT version, kept for the descriptive/EDA output
+    (tcga_coadread_features.csv). NOT used to train or evaluate the exp2
+    classifier -- classification.py calls fit_engineered_features()/
+    transform_engineered_features() instead, fit on the training fold of
+    exp2's own split only (see docs/DATA_LEAKAGE_AUDIT.md).
+    """
     df = df.copy()
     z = StandardScaler().fit_transform(df[gene_cols])
     z_df = pd.DataFrame(z, columns=[f"{g}_z" for g in gene_cols], index=df.index)
@@ -52,7 +59,94 @@ def add_engineered_features(df: pd.DataFrame, gene_cols: list[str]) -> pd.DataFr
     return df, explained_var
 
 
+def fit_engineered_features(df_train: pd.DataFrame, gene_cols: list[str]) -> dict:
+    """Fits the z-scorer + PCA axis on TRAINING rows only. Use with
+    transform_engineered_features() so a test-fold sample's engineered
+    features never influence the fitted PCA axis (see
+    docs/DATA_LEAKAGE_AUDIT.md finding #1, fixed here)."""
+    scaler = StandardScaler().fit(df_train[gene_cols])
+    z_train = scaler.transform(df_train[gene_cols])
+    pca = PCA(n_components=1, random_state=42).fit(z_train)
+    return {"scaler": scaler, "pca": pca, "gene_cols": gene_cols}
+
+
+def transform_engineered_features(df: pd.DataFrame, fitted: dict) -> pd.DataFrame:
+    """Applies an already-fitted scaler/PCA (from fit_engineered_features)
+    to ANY rows (train or test) -- never refits."""
+    gene_cols = fitted["gene_cols"]
+    z = fitted["scaler"].transform(df[gene_cols])
+    out = df.copy()
+    out["ferroptosis_score_mean"] = z.mean(axis=1)
+    out["ferroptosis_score_pc1"] = fitted["pca"].transform(z).ravel()
+    return out
+
+
+def fit_risk_model(df_train: pd.DataFrame, gene_cols: list[str]):
+    """Fits the univariate-screen + multivariate Cox risk model on TRAINING
+    rows only (including the High/Low threshold, which is the TRAIN median,
+    not the full-cohort median). Use with score_risk() to apply it to held-
+    out rows exactly the way a real new-patient risk score would be
+    computed -- from an already-fitted model, never refit using the sample
+    being scored (see docs/DATA_LEAKAGE_AUDIT.md finding #1, fixed here)."""
+    surv = df_train[["OS_MONTHS", "OS_EVENT"] + gene_cols].dropna()
+    scaler = StandardScaler().fit(surv[gene_cols])
+    z = scaler.transform(surv[gene_cols])
+    z_df = pd.DataFrame(z, columns=gene_cols, index=surv.index)
+    cox_input = pd.concat([surv[["OS_MONTHS", "OS_EVENT"]], z_df], axis=1)
+
+    univariate_p = {}
+    for g in gene_cols:
+        cph = CoxPHFitter()
+        try:
+            cph.fit(cox_input[["OS_MONTHS", "OS_EVENT", g]], duration_col="OS_MONTHS", event_col="OS_EVENT")
+            univariate_p[g] = float(cph.summary.loc[g, "p"])
+        except Exception:
+            univariate_p[g] = 1.0
+
+    screened = [g for g, p in univariate_p.items() if p < 0.10]
+    if len(screened) < 2:
+        screened = sorted(univariate_p, key=univariate_p.get)[:5]
+
+    cph_multi = CoxPHFitter(penalizer=0.1)
+    cph_multi.fit(cox_input[["OS_MONTHS", "OS_EVENT"] + screened], duration_col="OS_MONTHS", event_col="OS_EVENT")
+    coefs = cph_multi.summary["coef"]
+
+    train_risk_score = z_df[screened].mul(coefs, axis=1).sum(axis=1)
+    threshold = float(train_risk_score.median())
+
+    fitted = {"scaler": scaler, "gene_cols": gene_cols, "screened": screened, "coefs": coefs, "threshold": threshold}
+    meta = {"univariate_p": univariate_p, "screened_genes": screened, "train_median_threshold": threshold}
+    coef_table = cph_multi.summary.reset_index().rename(columns={"index": "gene"})
+    return fitted, meta, coef_table
+
+
+def score_risk(df: pd.DataFrame, fitted: dict):
+    """Applies an already-fitted risk model (fit_risk_model) to ANY rows.
+    Returns (label_series, score_series) aligned to df.index; rows missing a
+    required gene get NaN in both, matching the original behavior."""
+    gene_cols = fitted["gene_cols"]
+    mask = df[gene_cols].notna().all(axis=1)
+    sub = df.loc[mask]
+    z = fitted["scaler"].transform(sub[gene_cols])
+    z_df = pd.DataFrame(z, columns=gene_cols, index=sub.index)
+    risk_score = z_df[fitted["screened"]].mul(fitted["coefs"], axis=1).sum(axis=1)
+    label = np.where(risk_score >= fitted["threshold"], "High risk", "Low risk")
+
+    score_full = pd.Series(np.nan, index=df.index)
+    score_full.loc[mask] = risk_score.values
+    label_full = pd.Series(index=df.index, dtype="object")
+    label_full.loc[mask] = label
+    return label_full, score_full
+
+
 def build_ferroptosis_risk_score(df: pd.DataFrame, gene_cols: list[str]):
+    """
+    WHOLE-COHORT version, kept for the descriptive/EDA output
+    (tcga_coadread_features.csv, used for dataset statistics display only).
+    NOT used to train or evaluate the exp3 classifier -- classification.py
+    calls fit_risk_model()/score_risk() instead, which fit strictly on the
+    training fold of exp3's own split (see docs/DATA_LEAKAGE_AUDIT.md).
+    """
     """
     Univariate Cox screen (p < 0.10) followed by a multivariate Cox model on
     the screened genes, mirroring the two-stage univariate-then-multivariate

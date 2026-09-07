@@ -146,12 +146,18 @@ docs/ (existing + new: ARCHITECTURE.md, DATA_LEAKAGE_AUDIT.md, MODEL_CARD.md,
 9. Honest completion percentage in the final report (not based on lines of
    code).
 
-Explicitly **not** attempted (and stated as such, not faked): a truly
-independent external validation cohort with its own MSI/expression pipeline
-is a multi-day undertaking (finding a second public CRC cohort with
-compatible clinical annotations, matching the same 35-gene coverage, and
-re-validating); it remains future work as already documented in
-`docs/FUTURE_WORK.md`. Molecular fingerprint/SMILES-based drug descriptors
-are out of scope — GDSC's own pathway/target/concentration-range annotations
-are used as the drug representation instead, which is scientifically
-defensible and already what the existing pooled dose-response model uses.
+**Update (phase 2 of this session):** external validation, a whole-
+transcriptome baseline, and real raw dose-response curves — all three
+originally scoped above as future work — were subsequently implemented in
+full following a request to close every remaining gap. See
+`docs/FUTURE_WORK.md`, `RESULTS.md` §4b/4c/4d, and
+`IMPLEMENTATION_STATUS.md` for what was actually done and the honest
+results (including two findings that cut against a simpler, more flattering
+narrative: the whole-transcriptome baseline outperforming the ferroptosis
+panel, and external-cohort classification thresholds not transferring as
+cleanly as ROC-AUC ranking does).
+
+Molecular fingerprint/SMILES-based drug descriptors remain out of scope —
+GDSC's own pathway/target/concentration-range annotations are used as the
+drug representation instead, which is scientifically defensible and already
+what the pooled dose-response model uses.

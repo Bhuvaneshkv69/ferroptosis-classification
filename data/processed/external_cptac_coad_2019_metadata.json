@@ -1,0 +1,8 @@
+{
+  "cohort": "CPTAC-2 Prospective Colon Cancer (Cell 2019)",
+  "n_samples": 105,
+  "msi_label_counts": {
+    "MSS": 81,
+    "MSI-H": 24
+  }
+}

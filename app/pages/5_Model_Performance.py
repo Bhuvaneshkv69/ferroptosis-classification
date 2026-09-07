@@ -51,6 +51,20 @@ with tab1:
         st.dataframe(exp3[["model", "accuracy", "roc_auc", "f1"]].set_index("model").round(3))
         figure("roc_curve_exp3_riskgroup_raw_genes.png")
 
+    wt_path = RESULTS_DIR / "whole_transcriptome_baseline_results.csv"
+    if wt_path.exists():
+        with st.expander("Experiment 4 -- whole-transcriptome baseline (~19,200 genes, PCA-50) vs. ferroptosis panel"):
+            comparison = load_csv("tables/ferroptosis_vs_whole_transcriptome_comparison.csv")
+            st.dataframe(comparison.set_index("model"), width="stretch")
+            st.info(
+                "Honest finding: the whole-transcriptome baseline OUTPERFORMS the ferroptosis-panel-only "
+                "classifier on every model (best ROC-AUC 0.986 vs. 0.917). The panel captures real but "
+                "incomplete MSI signal -- biologically expected, since MSI status correlates with a "
+                "genome-wide hypermutator phenotype extending well beyond ferroptosis. See RESULTS.md §4c.",
+                icon="🧬",
+            )
+            figure("roc_curve_exp4_whole_transcriptome.png")
+
 with tab2:
     reg_results = load_csv("results/regression_results.csv")
 
@@ -74,8 +88,21 @@ with tab2:
         st.caption("With ~44 cell lines and 31 genes (n≈p), unregularized Linear Regression fails badly "
                    "(strongly negative R²) while Random Forest recovers modest real signal -- an honest, "
                    "diagnostic finding about sample-size limits, not a hidden failure.")
-        drug_pick = st.selectbox("Illustrative dose-response curve:", ["5-Fluorouracil", "Oxaliplatin",
-                                                                        "Irinotecan", "Sorafenib"])
-        figure(f"dose_response_curve_{drug_pick}.png")
-        st.caption("Reconstructed from the fitted LN_IC50 for illustration -- NOT raw per-well viability "
-                   "data (the ~2GB raw GDSC2 file was not downloaded). See docs/LIMITATIONS.md.")
+        drug_pick = st.selectbox("Dose-response curve:", ["5-Fluorouracil", "Oxaliplatin",
+                                                            "Irinotecan", "Sorafenib"])
+        real_fig = FIG_DIR / f"dose_response_curve_real_{drug_pick}.png"
+        if real_fig.exists():
+            c1, c2 = st.columns(2)
+            with c1:
+                figure(f"dose_response_curve_real_{drug_pick}.png", "REAL measured (raw per-well viability)")
+            with c2:
+                figure(f"dose_response_curve_{drug_pick}.png", "Illustrative (fitted-IC50 reconstruction)")
+            st.caption("Real curves: normalized per-well viability from the 2.1GB raw GDSC2 file, averaged "
+                       "over technical replicates, fit with a 2-parameter logistic (src/process_raw_dose_response.py). "
+                       "A simplified re-implementation, not byte-identical to GDSC's own fitting pipeline -- "
+                       "see docs/LIMITATIONS.md.")
+        else:
+            figure(f"dose_response_curve_{drug_pick}.png")
+            st.caption("Reconstructed from the fitted LN_IC50 for illustration -- NOT raw per-well viability "
+                       "data. Run `python src/process_raw_dose_response.py` to add the real measured curves "
+                       "(requires the 2.1GB raw GDSC2 file). See docs/LIMITATIONS.md.")

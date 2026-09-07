@@ -126,8 +126,11 @@ r, Spearman ρ, predicted-vs-actual plot, residual plot. See
 ## Results (headline numbers — full detail in `RESULTS.md`)
 
 - **MSI classification** (primary, non-circular): Logistic Regression, ROC-AUC **0.917** using 35 raw ferroptosis genes.
-- **Feature-engineering finding**: collapsing 35 genes into a compact signature score *hurts* MSI classification (ROC-AUC drops to 0.65) — a genuine negative result.
+- **Feature-engineering finding**: collapsing 35 genes into a compact signature score *hurts* MSI classification (ROC-AUC drops to 0.67) — a genuine negative result.
+- **Whole-transcriptome baseline** (~19,200 genes, PCA-reduced): Random Forest ROC-AUC **0.986**, outperforming the ferroptosis-panel-only model — the panel captures real but incomplete MSI signal.
+- **External validation** (independent CPTAC-2 cohort, 28-gene intersection variant): ROC-AUC 0.94–0.96, matching or exceeding internal held-out performance, though default-threshold accuracy did not transfer as cleanly (see `RESULTS.md` §4d).
 - **Pooled dose-response regression**: Random Forest, R²=**0.617** (LN_IC50), R²=0.436 (AUC), on entirely held-out cell lines.
+- **Real (measured) dose-response curves**: fit from the raw 2.1GB GDSC per-well viability file for the 4 representative drugs, replacing the earlier illustrative reconstructions.
 - **Representative single-drug models** (ferroptosis genes only, n≈44, LOOCV): Random Forest R² 0.21–0.32 across 5-Fluorouracil, Oxaliplatin, Irinotecan, Sorafenib.
 - **Interpretability**: `SLC7A11` (a canonical core ferroptosis regulator) ranks among the top predictive genes in both the classification and regression tasks.
 

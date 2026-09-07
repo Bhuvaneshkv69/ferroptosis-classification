@@ -48,7 +48,7 @@ Raw snapshots: `data/raw/tcga/*.csv` + `fetch_metadata.json` (retrieval timestam
 
 **Known data-coverage limitation:** the expression array (`sanger1018_brainarray_ensemblgene_rma.txt.gz`, a 2013-era Affymetrix custom-CDF platform) does not include probes for 4 of the 35 unified signature genes (`ATP6V1G2`, `NCOA4`, `SLC2A3`, `TXNIP`) — verified by direct lookup, not a mapping bug. 31/35 genes are used for all GDSC-side modeling. See `LIMITATIONS.md`.
 
-**What was intentionally NOT downloaded:** `GDSC2_public_raw_data_24Jul22.csv` (~2 GB; per-well raw viability readings underlying the fitted curves) was not retrieved due to its size. This means the "dose-response curves" produced by this project (`figures/dose_response_curve_*.png`) are mathematically **reconstructed from the fitted IC50 parameter**, not plotted from raw viability measurements — clearly labeled as illustrative on the figures themselves and in `LIMITATIONS.md`.
+**Raw per-well viability data (added this session):** `GDSC2_public_raw_data_24Jul22.csv` (2.1 GB; per-well raw viability readings underlying the fitted curves) was downloaded from the same Sanger FTP mirror and streamed (never fully loaded into memory) by `src/process_raw_dose_response.py` to build genuine, measured dose-response curves for the 4 representative drugs — see `RESULTS.md` §4b. The original illustrative, IC50-parameter-only reconstruction (`figures/dose_response_curve_*.png`) is kept alongside the real curves (`figures/dose_response_curve_real_*.png`) for comparison; both are clearly labeled as to which is which.
 
 Retrieval: files were downloaded directly from the Sanger FTP mirror (`data/raw/gdsc/`); this is a manual one-time step documented here since it requires no authentication but is not re-triggered by `--fetch` (see `README.md` for the exact URLs).
 
@@ -77,3 +77,38 @@ methodology. Summary: `data/unified_gene_signature.csv` contains 35 genes —
 8 core mechanistic ferroptosis regulators (Jiang, Stockwell & Conrad, *Nat Rev
 Mol Cell Biol* 2021) plus the union of 27 genes appearing in four published
 2021 colon/colorectal-cancer ferroptosis prognostic-signature papers.
+
+---
+
+## Dataset C — CPTAC-2 Prospective Colon Cancer (external validation cohort, added this session)
+
+| Field | Value |
+|---|---|
+| Name | CPTAC-2 Prospective Colon Cancer |
+| Accession / study ID | `coad_cptac_2019` |
+| Access route | cBioPortal public REST API |
+| Citation | Vasaikar S. et al., "Proteogenomic Analysis of Human Colon Cancer Reveals New Therapeutic Opportunities," *Cell*, 2019 |
+| Biological context | Prospectively collected colon adenocarcinoma, profiled by the NCI Clinical Proteomic Tumor Analysis Consortium — a different consortium, patient population, and RNA-seq batch than TCGA |
+| Samples | 110 samples; 105 with an `MSI_STATUS` label (81 MSS, 24 MSI-H) and matched expression |
+| Features retrieved | RNA-seq V2 expression for the ferroptosis gene panel (28/35 genes report a value on this profile — see `docs/LIMITATIONS.md`); `MSI_STATUS` clinical attribute |
+| Purpose | Genuine external (cross-cohort) validation of the TCGA-trained MSI classifier — see `RESULTS.md` §4d, application "External Validation" page |
+| Why appropriate | Independently called MSI status (not derived from the same MANTIS-score pipeline as TCGA), different institution, no patient overlap with TCGA — a real test of cross-cohort generalization, not a re-split of the training cohort |
+| License / access | cBioPortal public access for research use, no login/DUA required |
+
+Retrieval script: `src/fetch_external_validation.py`. Raw snapshot:
+`data/external/cptac_coad_2019/`. Processing + scoring:
+`src/external_validation.py` → `data/processed/external_cptac_coad_2019_processed.csv`,
+`results/external_validation_results.csv`.
+
+## Whole-transcriptome data (baseline comparison, added this session)
+
+All ~19,200 protein-coding genes' RNA-seq V2 expression for the same TCGA
+COADREAD cohort (Dataset A), fetched via the same cBioPortal API in chunked
+batches, used only to train the whole-transcriptome baseline classifier
+(Experiment 4, `RESULTS.md` §4c) — never merged with or substituted for the
+ferroptosis-panel features used elsewhere in this project.
+
+Retrieval script: `src/fetch_whole_transcriptome.py`. Raw snapshot:
+`data/raw/tcga/whole_transcriptome_expression_long.csv` (10.4M rows) +
+`whole_transcriptome_gene_list.csv`. Not committed to version control by
+default (large); documented here so it is exactly reproducible.

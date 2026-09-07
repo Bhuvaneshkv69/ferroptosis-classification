@@ -8,3 +8,9 @@ __pycache__/
 # recreate them). The registry metadata (models/registry.json) IS tracked.
 models/**/*.joblib
 
+# Large, regenerable raw downloads (documented in docs/DATASET.md with the
+# exact fetch script/URL to recreate them). Small derived metadata/gene-list
+# files from the same fetches ARE tracked.
+data/raw/gdsc/GDSC2_public_raw_data_24Jul22.csv
+data/raw/tcga/whole_transcriptome_expression_long.csv
+

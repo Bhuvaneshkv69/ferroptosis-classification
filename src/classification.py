@@ -39,6 +39,7 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 
 import evaluation as ev
+import feature_engineering as fe
 from config import RANDOM_SEED
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -73,14 +74,30 @@ def _model_grid():
     }
 
 
-def run_experiment(df, feature_cols, target_col, pos_label, experiment_name, test_size=0.2):
-    """Runs all four models for one (feature set, target) combination."""
+def run_experiment(df, feature_cols, target_col, pos_label, experiment_name, test_size=0.2, split_indices=None):
+    """Runs all four models for one (feature set, target) combination.
+
+    split_indices: optional (train_idx, test_idx) POSITIONAL index arrays
+    into `sub` (df filtered to non-null target_col, reset to 0..n-1), used
+    when the caller must guarantee the classifier's train/test split exactly
+    matches a split already used to fit some upstream transform (e.g. the
+    Cox risk-score model in feature_engineering.py) -- otherwise a sample
+    could be in the classifier's test fold while its label was computed by
+    a transform fit including that very sample, which would silently
+    reintroduce leakage. When omitted, a fresh stratified split is drawn
+    here (the original, still leakage-safe-for-THIS-function behavior).
+    """
     sub = df[df[target_col].notna()].reset_index(drop=True)
     X, y = sub[feature_cols], sub[target_col].astype(str)
 
-    X_trainval, X_test, y_trainval, y_test = train_test_split(
-        X, y, test_size=test_size, stratify=y, random_state=RANDOM_SEED
-    )
+    if split_indices is not None:
+        train_idx, test_idx = split_indices
+        X_trainval, X_test = X.iloc[train_idx], X.iloc[test_idx]
+        y_trainval, y_test = y.iloc[train_idx], y.iloc[test_idx]
+    else:
+        X_trainval, X_test, y_trainval, y_test = train_test_split(
+            X, y, test_size=test_size, stratify=y, random_state=RANDOM_SEED
+        )
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_SEED)
     grids = _model_grid()
@@ -123,7 +140,13 @@ def run_experiment(df, feature_cols, target_col, pos_label, experiment_name, tes
 
 
 def main():
-    tcga = pd.read_csv(PROCESSED_DIR / "tcga_coadread_features.csv")
+    # tcga_coadread_features.csv carries WHOLE-COHORT engineered features
+    # (ferroptosis_score_mean/pc1, ferroptosis_risk_group) -- used only for
+    # descriptive/EDA display (e.g. the app's Data page). Experiments 2 and
+    # 3 below deliberately do NOT use these columns; they recompute
+    # leakage-free, train-fold-only versions of the same transforms (see
+    # docs/DATA_LEAKAGE_AUDIT.md finding #1).
+    tcga = pd.read_csv(PROCESSED_DIR / "tcga_coadread_processed.csv")
     with open(PROCESSED_DIR / "tcga_preprocessing_metadata.json") as f:
         meta = json.load(f)
     raw_genes = meta["ferroptosis_genes_used"]
@@ -136,15 +159,43 @@ def main():
     all_results.append(r1)
     print(r1[["model", "accuracy", "roc_auc", "f1"]])
 
-    print("\n=== Experiment 2: MSI status, engineered ferroptosis signature score ===")
-    r2, models2, split2, labels2 = run_experiment(tcga, engineered_features, "msi_label", "MSI-H", "exp2_msi_engineered")
+    print("\n=== Experiment 2: MSI status, engineered ferroptosis signature score (leakage-free: "
+          "PCA/z-score fit on the training fold only) ===")
+    sub2 = tcga[tcga["msi_label"].notna()].reset_index(drop=True)
+    train_idx2, test_idx2 = train_test_split(
+        np.arange(len(sub2)), test_size=0.2, stratify=sub2["msi_label"], random_state=RANDOM_SEED
+    )
+    fitted_eng = fe.fit_engineered_features(sub2.iloc[train_idx2], raw_genes)
+    sub2 = fe.transform_engineered_features(sub2, fitted_eng)
+    r2, models2, split2, labels2 = run_experiment(
+        sub2, engineered_features, "msi_label", "MSI-H", "exp2_msi_engineered",
+        split_indices=(train_idx2, test_idx2),
+    )
     all_results.append(r2)
     print(r2[["model", "accuracy", "roc_auc", "f1"]])
 
-    print("\n=== Experiment 3 (exploratory/circular): ferroptosis risk group, raw genes ===")
-    r3, models3, split3, labels3 = run_experiment(tcga, raw_genes, "ferroptosis_risk_group", "High risk", "exp3_riskgroup_raw_genes")
+    print("\n=== Experiment 3 (exploratory/circular): ferroptosis risk group, raw genes (leakage-free: "
+          "Cox model + High/Low threshold fit on the training fold only) ===")
+    survival_mask = tcga[["OS_MONTHS", "OS_EVENT"] + raw_genes].notna().all(axis=1)
+    sub3 = tcga[survival_mask].reset_index(drop=True)
+    train_idx3, test_idx3 = train_test_split(
+        np.arange(len(sub3)), test_size=0.2, stratify=sub3["OS_EVENT"], random_state=RANDOM_SEED
+    )
+    fitted_risk, cox_meta, coef_table = fe.fit_risk_model(sub3.iloc[train_idx3], raw_genes)
+    risk_label, risk_score = fe.score_risk(sub3, fitted_risk)
+    sub3["ferroptosis_risk_group"] = risk_label
+    sub3["ferroptosis_risk_score"] = risk_score
+    r3, models3, split3, labels3 = run_experiment(
+        sub3, raw_genes, "ferroptosis_risk_group", "High risk", "exp3_riskgroup_raw_genes",
+        split_indices=(train_idx3, test_idx3),
+    )
     all_results.append(r3)
     print(r3[["model", "accuracy", "roc_auc", "f1"]])
+
+    TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    coef_table.to_csv(TABLES_DIR / "cox_risk_score_coefficients_trainfold.csv", index=False)
+    with open(PROCESSED_DIR / "exp3_cox_model_metadata.json", "w") as f:
+        json.dump(cox_meta, f, indent=2, default=str)
 
     results_df = pd.concat(all_results, ignore_index=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
