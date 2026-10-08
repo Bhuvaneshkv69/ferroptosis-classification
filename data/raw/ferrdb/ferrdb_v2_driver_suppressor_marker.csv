@@ -1,0 +1,485 @@
+symbol,hgncid,name,experiments,gene_type
+ABCC1,HGNC:51,ATP binding cassette subfamily C member 1,1,driver
+ABCC5,HGNC:56,ATP binding cassette subfamily C member 5,1,suppressor
+ABHD12,HGNC:15868,"abhydrolase domain containing 12, lysophospholipase",1,suppressor
+ACADSB,HGNC:91,acyl-CoA dehydrogenase short/branched chain,1,driver
+ACO1,HGNC:117,aconitase 1,2,driver
+ACOT1,HGNC:33128,acyl-CoA thioesterase 1,1,suppressor
+ACSF2,HGNC:26101,acyl-CoA synthetase family member 2,1,driver
+ACSL1,HGNC:3569,acyl-CoA synthetase long chain family member 1,1,driver
+ACSL3,HGNC:3570,acyl-CoA synthetase long chain family member 3,1,suppressor
+ACSL4,HGNC:3571,acyl-CoA synthetase long chain family member 4,17,driver
+ACVR1B,HGNC:172,activin A receptor type 1B,1,driver
+ADAM23,HGNC:202,ADAM metallopeptidase domain 23,1,driver
+ADAMTS13,HGNC:1366,ADAM metallopeptidase with thrombospondin type 1 motif 13,1,suppressor
+ADIPOQ,HGNC:13633,"adiponectin, C1Q and collagen domain containing",1,suppressor
+AEBP2,HGNC:24051,AE binding protein 2,1,driver
+AGPAT3,HGNC:326,1-acylglycerol-3-phosphate O-acyltransferase 3,1,driver
+AGPS,HGNC:327,alkylglycerone phosphate synthase,1,driver
+AHCY,HGNC:343,adenosylhomocysteinase,1,suppressor
+AIFM2,HGNC:21411,apoptosis inducing factor mitochondria associated 2,3,suppressor
+AKR1C1,HGNC:384,aldo-keto reductase family 1 member C1,2,suppressor
+AKR1C2,HGNC:385,aldo-keto reductase family 1 member C2,2,suppressor
+AKR1C3,HGNC:386,aldo-keto reductase family 1 member C3,2,suppressor
+AKT1S1,HGNC:28426,AKT1 substrate 1,1,suppressor
+ALDH3A2,HGNC:403,aldehyde dehydrogenase 3 family member A2,1,suppressor
+ALOX12,HGNC:429,"arachidonate 12-lipoxygenase, 12S type",4,driver
+ALOX12B,HGNC:430,"arachidonate 12-lipoxygenase, 12R type",1,driver
+ALOX15,HGNC:433,arachidonate 15-lipoxygenase,5,driver
+ALOX15B,HGNC:434,arachidonate 15-lipoxygenase type B,1,driver
+ALOX5,HGNC:435,arachidonate 5-lipoxygenase,2,driver
+ALOXE3,HGNC:13743,arachidonate lipoxygenase 3,2,driver
+AMN,HGNC:14604,amnion associated transmembrane protein,1,driver
+ANO6,HGNC:25240,anoctamin 6,1,driver
+AQP3,HGNC:636,aquaporin 3 (Gill blood group),1,driver
+AQP5,HGNC:638,aquaporin 5,1,driver
+AQP8,HGNC:642,aquaporin 8,1,driver
+AR,HGNC:644,androgen receptor,1,suppressor
+ARF6,HGNC:659,ADP ribosylation factor 6,1,suppressor
+ARHGEF26-AS1,HGNC:41048,ARHGEF26 antisense RNA 1,1,driver
+ARNTL,HGNC:701,aryl hydrocarbon receptor nuclear translocator like,1,suppressor
+ASAH2,HGNC:18860,N-acylsphingosine amidohydrolase 2,1,suppressor
+ASMTL-AS1,HGNC:25811,ASMTL antisense RNA 1,1,driver
+ATF2,HGNC:784,activating transcription factor 2,1,suppressor
+ATF3,HGNC:785,activating transcription factor 3,3,driver
+ATF4,HGNC:786,activating transcription factor 4,1,driver|suppressor
+ATG13,HGNC:29091,autophagy related 13,1,driver
+ATG16L1,HGNC:21498,autophagy related 16 like 1,1,driver
+ATG3,HGNC:20962,autophagy related 3,1,driver
+ATG4D,HGNC:20789,autophagy related 4D cysteine peptidase,1,driver
+ATG5,HGNC:589,autophagy related 5,2,driver
+ATG7,HGNC:16935,autophagy related 7,1,driver
+ATM,HGNC:795,ATM serine/threonine kinase,2,driver
+ATP5MC3,HGNC:843,ATP synthase membrane subunit c locus 3,1,driver
+BACH1,HGNC:935,BTB domain and CNC homolog 1,2,driver
+BAP1,HGNC:950,BRCA1 associated protein 1,2,driver
+BCAT2,HGNC:977,branched chain amino acid transaminase 2,1,suppressor
+BECN1,HGNC:1034,beclin 1,4,driver
+BEX1,HGNC:1036,brain expressed X-linked 1,1,suppressor
+BID,HGNC:1050,BH3 interacting domain death agonist,1,driver
+BRD2,HGNC:1103,bromodomain containing 2,1,suppressor
+BRD3,HGNC:1104,bromodomain containing 3,1,suppressor
+BRD4,HGNC:13575,bromodomain containing 4,2,suppressor
+BRD7,HGNC:14310,bromodomain containing 7,1,driver
+BRDT,HGNC:1105,bromodomain testis associated,1,suppressor
+BRPF1,HGNC:14255,bromodomain and PHD finger containing 1,1,driver
+CA9,HGNC:1383,carbonic anhydrase 9,1,suppressor
+CAMKK2,HGNC:1470,calcium/calmodulin dependent protein kinase kinase 2,1,suppressor
+CARS1,HGNC:1493,cysteinyl-tRNA synthetase 1,1,driver
+CAV1,HGNC:1527,caveolin 1,2,suppressor
+CBS,HGNC:1550,cystathionine beta-synthase,4,suppressor
+CCDC6,HGNC:18782,coiled-coil domain containing 6,1,driver
+CD44,HGNC:1681,CD44 molecule (Indian blood group),1,suppressor
+CD82,HGNC:6210,CD82 molecule,1,driver
+CDC25A,HGNC:1725,cell division cycle 25A,1,suppressor
+CDCA3,HGNC:14624,cell division cycle associated 3,1,driver
+CDH1,HGNC:1748,cadherin 1,3,suppressor
+CDKN1A,HGNC:1784,cyclin dependent kinase inhibitor 1A,2,suppressor
+CDKN2A,HGNC:1787,cyclin dependent kinase inhibitor 2A,1,driver
+CDO1,HGNC:1795,cysteine dioxygenase type 1,1,driver
+CFL1,HGNC:1874,cofilin 1,1,driver
+CGAS,HGNC:21367,cyclic GMP-AMP synthase,1,driver
+CHAC1,HGNC:28680,ChaC glutathione specific gamma-glutamylcyclotransferase 1,2,driver|marker
+CHMP1A,HGNC:8740,charged multivesicular body protein 1A,1,suppressor
+CHMP5,HGNC:26942,charged multivesicular body protein 5,2,suppressor
+CHMP6,HGNC:25675,charged multivesicular body protein 6,2,suppressor
+CHP1,HGNC:17433,calcineurin like EF-hand protein 1,1,driver
+CIRBP,HGNC:1982,cold inducible RNA binding protein,1,driver
+CISD1,HGNC:30880,CDGSH iron sulfur domain 1,1,suppressor
+CISD2,HGNC:24212,CDGSH iron sulfur domain 2,2,suppressor
+CISD3,HGNC:27578,CDGSH iron sulfur domain 3,1,suppressor
+CLTRN,HGNC:29437,"collectrin, amino acid transport regulator",1,driver
+COPZ1,HGNC:2243,COPI coat complex subunit zeta 1,1,suppressor
+COX4I2,HGNC:16232,cytochrome c oxidase subunit 4I2,1,driver
+CP,HGNC:2295,ceruloplasmin,1,suppressor
+CPEB1,HGNC:21744,cytoplasmic polyadenylation element binding protein 1,1,driver
+CREB1,HGNC:2345,cAMP responsive element binding protein 1,1,suppressor
+CREB3,HGNC:2347,cAMP responsive element binding protein 3,1,suppressor
+CREB5,HGNC:16844,cAMP responsive element binding protein 5,1,suppressor
+CS,HGNC:2422,citrate synthase,1,driver
+CTSB,HGNC:2527,cathepsin B,2,driver
+CYB5R1,HGNC:13397,cytochrome b5 reductase 1,1,driver
+CYBB,HGNC:2578,cytochrome b-245 beta chain,1,driver
+CYGB,HGNC:16505,cytoglobin,1,driver
+CYP4F8,HGNC:2648,cytochrome P450 family 4 subfamily F member 8,1,driver
+CircFNDC3B,_NA_,No HGNC record,1,suppressor
+CircIL4R,_NA_,No HGNC record,1,suppressor
+CircKDM4C,_NA_,No HGNC record,1,driver
+CircPVT1,_NA_,No HGNC record,1,suppressor
+DAZAP1,HGNC:2683,DAZ associated protein 1,1,suppressor
+DCAF7,HGNC:30915,DDB1 and CUL4 associated factor 7,1,driver
+DDR2,HGNC:2731,discoidin domain receptor tyrosine kinase 2,1,driver
+DECR1,HGNC:2753,"2,4-dienoyl-CoA reductase 1",1,suppressor
+DHODH,HGNC:2867,dihydroorotate dehydrogenase (quinone),1,suppressor
+DLD,HGNC:2898,dihydrolipoamide dehydrogenase,1,driver
+DNAJB6,HGNC:14888,DnaJ heat shock protein family (Hsp40) member B6,2,driver
+DPEP1,HGNC:3002,dipeptidase 1,1,driver
+DPP4,HGNC:3009,dipeptidyl peptidase 4,1,driver
+DUOX1,HGNC:3062,dual oxidase 1,1,driver
+DUOX2,HGNC:13273,dual oxidase 2,1,driver
+ECH1,HGNC:3149,enoyl-CoA hydratase 1,1,suppressor
+EGFR,HGNC:3236,epidermal growth factor receptor,1,driver
+EGLN2,HGNC:14660,egl-9 family hypoxia inducible factor 2,1,driver
+EGR1,HGNC:3238,early growth response 1,1,driver
+ELAVL1,HGNC:3312,ELAV like RNA binding protein 1,2,driver
+ELOVL5,HGNC:21308,ELOVL fatty acid elongase 5,1,driver
+EMC2,HGNC:28963,ER membrane protein complex subunit 2,1,driver
+ENO3,HGNC:3354,enolase 3,1,suppressor
+ENPP2,HGNC:3357,ectonucleotide pyrophosphatase/phosphodiesterase 2,2,suppressor
+EPAS1,HGNC:3374,endothelial PAS domain protein 1,2,driver
+EPT1,_NA_,No HGNC record,1,driver
+ETV4,HGNC:3493,ETS variant transcription factor 4,1,suppressor
+EZH2,HGNC:3527,enhancer of zeste 2 polycomb repressive complex 2 subunit,1,suppressor
+FABP4,HGNC:3559,fatty acid binding protein 4,1,suppressor
+FADS1,HGNC:3574,fatty acid desaturase 1,1,driver
+FADS2,HGNC:3575,fatty acid desaturase 2,1,driver|suppressor
+FANCD2,HGNC:3585,FA complementation group D2,1,suppressor
+FAR1,HGNC:26222,fatty acyl-CoA reductase 1,2,driver
+FBXW7,HGNC:16712,F-box and WD repeat domain containing 7,2,driver
+FGF21,HGNC:3678,fibroblast growth factor 21,1,suppressor
+FH,HGNC:3700,fumarate hydratase,1,suppressor
+FLT3,HGNC:3765,fms related receptor tyrosine kinase 3,1,driver
+FNDC5,HGNC:20240,fibronectin type III domain containing 5,1,suppressor
+FOXO4,HGNC:7139,forkhead box O4,1,driver
+FTH1,HGNC:3976,ferritin heavy chain 1,5,suppressor|marker
+FTL,HGNC:3999,ferritin light chain,2,suppressor
+FTMT,HGNC:17345,ferritin mitochondrial,4,suppressor
+FURIN,HGNC:8568,"furin, paired basic amino acid cleaving enzyme",1,suppressor
+FXN,HGNC:3951,frataxin,3,suppressor
+FZD7,HGNC:4045,frizzled class receptor 7,1,suppressor
+Fer1HCH,_NA_,No HGNC record,1,suppressor
+G6PD,HGNC:4057,glucose-6-phosphate dehydrogenase,1,driver|suppressor
+G6PDX,_NA_,No HGNC record,1,driver
+GABARAPL1,HGNC:4068,GABA type A receptor associated protein like 1,1,driver
+GABARAPL2,HGNC:13291,GABA type A receptor associated protein like 2,1,driver
+GALNT14,HGNC:22946,polypeptide N-acetylgalactosaminyltransferase 14,1,suppressor
+GCH1,HGNC:4193,GTP cyclohydrolase 1,1,suppressor
+GCLC,HGNC:4311,glutamate-cysteine ligase catalytic subunit,2,suppressor
+GDF15,HGNC:30142,growth differentiation factor 15,1,suppressor
+GJA1,HGNC:4274,gap junction protein alpha 1,1,driver
+GLRX5,HGNC:20134,glutaredoxin 5,1,suppressor
+GLS2,HGNC:29570,glutaminase 2,3,driver
+GOT1,HGNC:4432,glutamic-oxaloacetic transaminase 1,2,driver|suppressor
+GPAT4,HGNC:20880,glycerol-3-phosphate acyltransferase 4,1,driver
+GPX4,HGNC:4556,glutathione peroxidase 4,16,suppressor|marker
+GRIA3,HGNC:4573,glutamate ionotropic receptor AMPA type subunit 3,1,driver
+GSK3B,HGNC:4617,glycogen synthase kinase 3 beta,2,driver
+GSTM1,HGNC:4632,glutathione S-transferase mu 1,1,suppressor
+GSTZ1,HGNC:4643,glutathione S-transferase zeta 1,1,driver
+H19,HGNC:4713,H19 imprinted maternally expressed transcript,1,driver
+HCAR1,HGNC:4532,hydroxycarboxylic acid receptor 1,1,suppressor
+HDDC3,HGNC:30522,HD domain containing 3,1,driver
+HELLS,HGNC:4861,"helicase, lymphoid specific",1,suppressor
+HIF1A,HGNC:4910,hypoxia inducible factor 1 subunit alpha,1,driver|suppressor
+HILPDA,HGNC:28859,hypoxia inducible lipid droplet associated,1,driver
+HMGB1,HGNC:4983,high mobility group box 1,2,driver
+HMOX1,HGNC:5013,heme oxygenase 1,6,driver|suppressor
+HOTAIR,HGNC:33510,HOX transcript antisense RNA,1,driver
+HRAS,HGNC:5173,"HRas proto-oncogene, GTPase",1,driver
+HSF1,HGNC:5224,heat shock transcription factor 1,3,suppressor
+HSPA5,HGNC:5238,heat shock protein family A (Hsp70) member 5,3,suppressor
+HSPB1,HGNC:5246,heat shock protein family B (small) member 1,2,suppressor|marker
+IDH1,HGNC:5382,isocitrate dehydrogenase (NADP(+)) 1,1,driver
+IDH2,HGNC:5383,isocitrate dehydrogenase (NADP(+)) 2,1,suppressor
+IDO1,HGNC:6059,"indoleamine 2,3-dioxygenase 1",1,driver
+IFNA1,HGNC:5417,interferon alpha 1,1,driver
+IFNA10,HGNC:5418,interferon alpha 10,1,driver
+IFNA13,HGNC:5419,interferon alpha 13,1,driver
+IFNA14,HGNC:5420,interferon alpha 14,1,driver
+IFNA16,HGNC:5421,interferon alpha 16,1,driver
+IFNA17,HGNC:5422,interferon alpha 17,1,driver
+IFNA2,HGNC:5423,interferon alpha 2,1,driver
+IFNA21,HGNC:5424,interferon alpha 21,1,driver
+IFNA4,HGNC:5425,interferon alpha 4,1,driver
+IFNA5,HGNC:5426,interferon alpha 5,1,driver
+IFNA6,HGNC:5427,interferon alpha 6,1,driver
+IFNA7,HGNC:5428,interferon alpha 7,1,driver
+IFNA8,HGNC:5429,interferon alpha 8,1,driver
+IFNG,HGNC:5438,interferon gamma,3,driver
+IL1B,HGNC:5992,interleukin 1 beta,1,driver
+IL6,HGNC:6018,interleukin 6,2,driver|suppressor
+INTS2,HGNC:29241,integrator complex subunit 2,1,driver
+IREB2,HGNC:6115,iron responsive element binding protein 2,5,driver
+ISCU,HGNC:29882,iron-sulfur cluster assembly enzyme,1,suppressor
+JUN,HGNC:6204,"Jun proto-oncogene, AP-1 transcription factor subunit",1,suppressor
+KDM3B,HGNC:1337,lysine demethylase 3B,1,suppressor
+KDM4A,HGNC:22978,lysine demethylase 4A,1,suppressor
+KDM5A,HGNC:9886,lysine demethylase 5A,1,driver
+KDM5C,HGNC:11114,lysine demethylase 5C,1,driver
+KDM6B,HGNC:29012,lysine demethylase 6B,1,driver
+KEAP1,HGNC:23177,kelch like ECH associated protein 1,4,driver
+KIF20A,HGNC:9787,kinesin family member 20A,1,suppressor
+KLF2,HGNC:6347,Kruppel like factor 2,1,driver
+KLHDC3,HGNC:20704,kelch domain containing 3,1,suppressor
+KMT2D,HGNC:7133,lysine methyltransferase 2D,1,driver
+KRAS,HGNC:6407,"KRAS proto-oncogene, GTPase",1,driver
+LAMP2,HGNC:6501,lysosomal associated membrane protein 2,2,suppressor
+LCE2C,HGNC:29460,late cornified envelope 2C,1,driver
+LCN2,HGNC:6526,lipocalin 2,3,suppressor
+LGMN,HGNC:9472,legumain,1,driver
+LIFR,HGNC:6597,LIF receptor subunit alpha,1,driver
+LIG3,HGNC:6600,DNA ligase 3,1,driver
+LINC00336,HGNC:33813,long intergenic non-protein coding RNA 336,1,suppressor
+LINC00472,HGNC:21380,long intergenic non-protein coding RNA 472,1,driver
+LINC00618,HGNC:20110,long intergenic non-protein coding RNA 618,1,driver
+LINC01833,HGNC:52644,long intergenic non-protein coding RNA 1833,1,suppressor
+LONP1,HGNC:9479,"lon peptidase 1, mitochondrial",2,driver
+LPCAT3,HGNC:30244,lysophosphatidylcholine acyltransferase 3,3,driver
+LPIN1,HGNC:13345,lipin 1,1,driver
+LYRM1,HGNC:25074,LYR motif containing 1,1,driver
+MAP1LC3A,HGNC:6838,microtubule associated protein 1 light chain 3 alpha,1,driver
+MAP3K11,HGNC:6850,mitogen-activated protein kinase kinase kinase 11,1,driver
+MAP3K14,HGNC:6853,mitogen-activated protein kinase kinase kinase 14,1,driver
+MAPK1,HGNC:6871,mitogen-activated protein kinase 1,2,driver
+MAPK14,HGNC:6876,mitogen-activated protein kinase 14,1,driver
+MAPK3,HGNC:6877,mitogen-activated protein kinase 3,2,driver
+MAPK8,HGNC:6881,mitogen-activated protein kinase 8,2,driver
+MAPK9,HGNC:6886,mitogen-activated protein kinase 9,1,driver
+MAPKAP1,HGNC:18752,MAPK associated protein 1,1,suppressor
+MARCHF5,HGNC:26025,membrane associated ring-CH-type finger 5,1,suppressor
+MDM2,HGNC:6973,MDM2 proto-oncogene,1,driver
+MDM4,HGNC:6974,MDM4 regulator of p53,1,driver
+MEF2C,HGNC:6996,myocyte enhancer factor 2C,1,suppressor
+MEG3,HGNC:14575,maternally expressed 3,1,driver
+MEG8,HGNC:14574,"maternally expressed 8, small nucleolar RNA host gene",1,suppressor
+METTL14,HGNC:29330,"methyltransferase 14, N6-adenosine-methyltransferase subunit",1,driver
+MFN2,HGNC:16877,mitofusin 2,1,driver
+MGST1,HGNC:7061,microsomal glutathione S-transferase 1,1,suppressor
+MIB1,HGNC:21086,MIB E3 ubiquitin protein ligase 1,1,driver
+MIB2,HGNC:30577,MIB E3 ubiquitin protein ligase 2,1,driver
+MICU1,HGNC:1530,mitochondrial calcium uptake 1,1,driver
+MIOX,HGNC:14522,myo-inositol oxygenase,1,driver
+MIR130B,HGNC:31515,microRNA 130b,1,suppressor
+MIR135B,HGNC:31760,microRNA 135b,1,driver
+MIR137,HGNC:31523,microRNA 137,1,suppressor
+MIR15A,HGNC:31543,microRNA 15a,2,driver
+MIR17,HGNC:31547,microRNA 17,1,suppressor
+MIR18A,HGNC:31548,microRNA 18a,1,suppressor
+MIR190A,HGNC:31560,microRNA 190a,1,suppressor
+MIR212,HGNC:31589,microRNA 212,1,suppressor
+MIR214,HGNC:31591,microRNA 214,1,driver|suppressor
+MIR27A,HGNC:31613,microRNA 27a,1,suppressor
+MIR302A,HGNC:31623,microRNA 302a,1,driver
+MIR324,HGNC:31767,microRNA 324,1,driver
+MIR335,HGNC:31773,microRNA 335,1,driver
+MIR375,HGNC:31868,microRNA 375,1,driver
+MIR424,HGNC:31881,microRNA 424,1,suppressor
+MIR4443,HGNC:41830,microRNA 4443,1,suppressor
+MIR5096,HGNC:41611,No HGNC record,1,driver
+MIR522,HGNC:32127,microRNA 522,1,suppressor
+MIR539,HGNC:32529,microRNA 539,1,driver
+MIR545,HGNC:32531,microRNA 545,1,suppressor
+MIR670,HGNC:37304,microRNA 670,1,suppressor
+MIR6852,HGNC:49993,microRNA 6852,1,driver
+MIR761,HGNC:37305,microRNA 761,1,driver
+MIR9-1,HGNC:31641,microRNA 9-1,1,suppressor
+MIR9-2,HGNC:31642,microRNA 9-2,1,suppressor
+MIR9-3,HGNC:31646,microRNA 9-3,1,suppressor
+MIR9-3HG,HGNC:27388,MIR9-3 host gene,1,suppressor
+MLLT1,HGNC:7134,MLLT1 super elongation complex subunit,1,driver
+MLST8,HGNC:24825,"MTOR associated protein, LST8 homolog",2,suppressor
+MMD,HGNC:7153,monocyte to macrophage differentiation associated,1,driver
+MPC1,HGNC:21606,mitochondrial pyruvate carrier 1,1,suppressor
+MS4A15,HGNC:28573,membrane spanning 4-domains A15,1,suppressor
+MT1DP,HGNC:7396,"metallothionein 1D, pseudogene",1,driver
+MT1G,HGNC:7399,metallothionein 1G,1,suppressor
+MTCH1,HGNC:17586,mitochondrial carrier 1,1,driver
+MTDH,HGNC:29608,metadherin,1,driver
+MTF1,HGNC:7428,metal regulatory transcription factor 1,1,suppressor
+MTOR,HGNC:3942,mechanistic target of rapamycin kinase,4,suppressor
+MUC1,HGNC:7508,"mucin 1, cell surface associated",1,suppressor
+MYB,HGNC:7545,"MYB proto-oncogene, transcription factor",1,driver
+MYCN,HGNC:7559,"MYCN proto-oncogene, bHLH transcription factor",1,driver
+NCOA3,HGNC:7670,nuclear receptor coactivator 3,1,suppressor
+NCOA4,HGNC:7671,nuclear receptor coactivator 4,4,driver
+NDRG1,HGNC:7679,N-myc downstream regulated 1,1,driver
+NEAT1,HGNC:30815,nuclear paraspeckle assembly transcript 1,1,suppressor
+NEDD4,HGNC:7727,NEDD4 E3 ubiquitin protein ligase,1,suppressor
+NEDD4L,HGNC:7728,NEDD4 like E3 ubiquitin protein ligase,1,suppressor
+NF2,HGNC:7773,"NF2, moesin-ezrin-radixin like (MERLIN) tumor suppressor",2,suppressor
+NFE2L2,HGNC:7782,NFE2 like bZIP transcription factor 2,16,suppressor|marker
+NFS1,HGNC:15910,NFS1 cysteine desulfurase,1,suppressor
+NOS2,HGNC:7873,nitric oxide synthase 2,1,suppressor
+NOX1,HGNC:7889,NADPH oxidase 1,1,driver
+NOX3,HGNC:7890,NADPH oxidase 3,1,driver
+NOX4,HGNC:7891,NADPH oxidase 4,5,driver
+NOX5,HGNC:14874,NADPH oxidase 5,1,driver
+NQO1,HGNC:2874,NAD(P)H quinone dehydrogenase 1,1,suppressor
+NR1D1,HGNC:7962,nuclear receptor subfamily 1 group D member 1,2,driver
+NR1D2,HGNC:7963,nuclear receptor subfamily 1 group D member 2,1,driver
+NR4A1,HGNC:7980,nuclear receptor subfamily 4 group A member 1,1,suppressor
+NR5A2,HGNC:7984,nuclear receptor subfamily 5 group A member 2,1,suppressor
+NRAS,HGNC:7989,"NRAS proto-oncogene, GTPase",1,driver
+NT5DC2,HGNC:25717,5'-nucleotidase domain containing 2,1,suppressor
+NUPR1,HGNC:29990,"nuclear protein 1, transcriptional regulator",1,suppressor
+OIP5-AS1,HGNC:43563,OIP5 antisense RNA 1,1,suppressor
+OSBPL9,HGNC:16386,oxysterol binding protein like 9,1,driver
+OTUB1,HGNC:23077,"OTU deubiquitinase, ubiquitin aldehyde binding 1",2,suppressor
+P4HB,HGNC:8548,prolyl 4-hydroxylase subunit beta,1,suppressor
+PANX1,HGNC:8599,pannexin 1,1,driver
+PANX2,HGNC:8600,pannexin 2,1,suppressor
+PAQR3,HGNC:30130,progestin and adipoQ receptor family member 3,1,driver
+PARK7,HGNC:16369,Parkinsonism associated deglycase,2,suppressor
+PARP1,HGNC:270,poly(ADP-ribose) polymerase 1,1,suppressor
+PARP10,HGNC:25895,poly(ADP-ribose) polymerase family member 10,1,suppressor
+PARP11,HGNC:1186,poly(ADP-ribose) polymerase family member 11,1,suppressor
+PARP12,HGNC:21919,poly(ADP-ribose) polymerase family member 12,1,suppressor
+PARP14,HGNC:29232,poly(ADP-ribose) polymerase family member 14,1,suppressor
+PARP15,HGNC:26876,poly(ADP-ribose) polymerase family member 15,1,suppressor
+PARP16,HGNC:26040,poly(ADP-ribose) polymerase family member 16,1,suppressor
+PARP2,HGNC:272,poly(ADP-ribose) polymerase 2,1,suppressor
+PARP3,HGNC:273,poly(ADP-ribose) polymerase family member 3,1,suppressor
+PARP4,HGNC:271,poly(ADP-ribose) polymerase family member 4,1,suppressor
+PARP6,HGNC:26921,poly(ADP-ribose) polymerase family member 6,1,suppressor
+PARP8,HGNC:26124,poly(ADP-ribose) polymerase family member 8,1,suppressor
+PARP9,HGNC:24118,poly(ADP-ribose) polymerase family member 9,1,suppressor
+PDK4,HGNC:8812,pyruvate dehydrogenase kinase 4,1,suppressor
+PDSS2,HGNC:23041,decaprenyl diphosphate synthase subunit 2,1,suppressor
+PEBP1,HGNC:8630,phosphatidylethanolamine binding protein 1,2,driver
+PEDS1,HGNC:16735,plasmanylethanolamine desaturase 1,1,suppressor
+PEX10,HGNC:8851,peroxisomal biogenesis factor 10,1,driver
+PEX12,HGNC:8854,peroxisomal biogenesis factor 12,1,driver
+PEX2,HGNC:9717,peroxisomal biogenesis factor 2,1,driver
+PEX3,HGNC:8858,peroxisomal biogenesis factor 3,1,driver
+PEX6,HGNC:8859,peroxisomal biogenesis factor 6,1,driver
+PGD,HGNC:8891,phosphogluconate dehydrogenase,1,driver
+PGRMC1,HGNC:16090,progesterone receptor membrane component 1,1,driver
+PHF21A,HGNC:24156,PHD finger protein 21A,1,driver
+PHKG2,HGNC:8931,phosphorylase kinase catalytic subunit gamma 2,1,driver
+PIEZO1,HGNC:28993,piezo type mechanosensitive ion channel component 1,1,driver
+PIK3CA,HGNC:8975,"phosphatidylinositol-4,5-bisphosphate 3-kinase catalytic subunit alpha",1,driver|suppressor
+PIR,HGNC:30048,pirin,1,suppressor
+PLA2G6,HGNC:9039,phospholipase A2 group VI,3,suppressor
+PLIN2,HGNC:248,perilipin 2,1,suppressor
+PML,HGNC:9113,PML nuclear body scaffold,1,suppressor
+POM121L12,HGNC:25369,POM121 transmembrane nucleoporin like 12,1,driver
+POR,HGNC:9208,cytochrome p450 oxidoreductase,2,driver
+PPARA,HGNC:9232,peroxisome proliferator activated receptor alpha,1,suppressor
+PPARD,HGNC:9235,peroxisome proliferator activated receptor delta,1,suppressor
+PPARG,HGNC:9236,peroxisome proliferator activated receptor gamma,1,driver
+PPP1R13L,HGNC:18838,protein phosphatase 1 regulatory subunit 13 like,1,suppressor
+PRDX1,HGNC:9352,peroxiredoxin 1,1,suppressor
+PRDX6,HGNC:16753,peroxiredoxin 6,2,suppressor
+PRKAA1,HGNC:9376,protein kinase AMP-activated catalytic subunit alpha 1,1,driver
+PRKAA2,HGNC:9377,protein kinase AMP-activated catalytic subunit alpha 2,2,driver|suppressor
+PRKCA,HGNC:9393,protein kinase C alpha,1,driver
+PROK2,HGNC:18455,prokineticin 2,1,suppressor
+PROM2,HGNC:20685,prominin 2,2,suppressor
+PRR5,HGNC:31682,proline rich 5,1,suppressor
+PTEN,HGNC:9588,phosphatase and tensin homolog,1,driver
+PTGS2,HGNC:9605,prostaglandin-endoperoxide synthase 2,1,marker
+PTPN18,HGNC:9649,protein tyrosine phosphatase non-receptor type 18,1,suppressor
+PTPN6,HGNC:9658,protein tyrosine phosphatase non-receptor type 6,1,driver
+PVT1,HGNC:9709,Pvt1 oncogene,1,driver
+QSOX1,HGNC:9756,quiescin sulfhydryl oxidase 1,1,driver
+RARRES2,HGNC:9868,retinoic acid receptor responder 2,1,suppressor
+RB1,HGNC:9884,RB transcriptional corepressor 1,1,suppressor
+RBMS1,HGNC:9907,RNA binding motif single stranded interacting protein 1,1,suppressor
+RELA,HGNC:9955,"RELA proto-oncogene, NF-kB subunit",1,suppressor
+RHEBP1,HGNC:10010,RHEB pseudogene 1,1,suppressor
+RICTOR,HGNC:28611,RPTOR independent companion of MTOR complex 2,1,suppressor
+RNF113A ,HGNC:12974,ring finger protein 113A,1,suppressor
+RPL8,HGNC:10368,ribosomal protein L8,1,driver
+RPTOR,HGNC:30287,regulatory associated protein of MTOR complex 1,2,suppressor
+RRM2,HGNC:10452,ribonucleotide reductase regulatory subunit M2,2,suppressor
+SAT1,HGNC:10540,spermidine/spermine N1-acetyltransferase 1,1,driver
+SCD,HGNC:10571,stearoyl-CoA desaturase,5,suppressor
+SCP2,HGNC:10606,sterol carrier protein 2,1,driver
+SENP1,HGNC:17927,SUMO specific peptidase 1,1,suppressor
+SESN2,HGNC:20746,sestrin 2,2,suppressor
+SIAH2,HGNC:10858,siah E3 ubiquitin protein ligase 2,1,suppressor
+SIRT1,HGNC:14929,sirtuin 1,3,driver|suppressor
+SIRT2,HGNC:10886,sirtuin 2,1,suppressor
+SIRT3,HGNC:14931,sirtuin 3,2,driver|suppressor
+SIRT6,HGNC:14934,sirtuin 6,1,suppressor
+SLC11A2,HGNC:10908,solute carrier family 11 member 2,2,driver
+SLC16A1,HGNC:10922,solute carrier family 16 member 1,1,suppressor
+SLC1A5,HGNC:10943,solute carrier family 1 member 5,2,driver
+SLC25A28,HGNC:23472,solute carrier family 25 member 28,1,driver
+SLC38A1,HGNC:13447,solute carrier family 38 member 1,3,driver
+SLC39A14,HGNC:20858,solute carrier family 39 member 14,1,driver
+SLC39A7,HGNC:4927,solute carrier family 39 member 7,1,driver
+SLC3A2,HGNC:11026,solute carrier family 3 member 2,1,suppressor
+SLC40A1,HGNC:10909,solute carrier family 40 member 1,3,suppressor|marker
+SLC7A11,HGNC:11059,solute carrier family 7 member 11,1,driver|suppressor
+SMAD7,HGNC:6773,SMAD family member 7,1,driver
+SMG9,HGNC:25763,SMG9 nonsense mediated mRNA decay factor,1,driver
+SMPD1,HGNC:11120,sphingomyelin phosphodiesterase 1,1,driver|suppressor
+SNCA,HGNC:11138,synuclein alpha,1,driver
+SNX4,HGNC:11175,sorting nexin 4,1,driver
+SNX5,HGNC:14969,sorting nexin 5,1,driver
+SOCS1,HGNC:19383,suppressor of cytokine signaling 1,1,driver
+SOX2,HGNC:11195,SRY-box transcription factor 2,1,suppressor
+SQSTM1,HGNC:11280,sequestosome 1,3,suppressor
+SRC,HGNC:11283,"SRC proto-oncogene, non-receptor tyrosine kinase",1,suppressor
+SREBF1,HGNC:11289,sterol regulatory element binding transcription factor 1,1,suppressor
+SREBF2,HGNC:11290,sterol regulatory element binding transcription factor 2,1,suppressor
+SRSF9,HGNC:10791,serine and arginine rich splicing factor 9,2,suppressor
+STAT3,HGNC:11364,signal transducer and activator of transcription 3,3,suppressor
+STING1,HGNC:27962,stimulator of interferon response cGAMP interactor 1,2,driver
+STK11,HGNC:11389,serine/threonine kinase 11,1,suppressor
+SUV39H1,HGNC:11479,SUV39H1 histone lysine methyltransferase,1,suppressor
+TAFAZZIN,HGNC:11577,"tafazzin, phospholipid-lysophospholipid transacylase",2,driver
+TBK1,HGNC:11584,TANK binding kinase 1,1,driver
+TERT,HGNC:11730,telomerase reverse transcriptase,1,suppressor
+TF,HGNC:11740,transferrin,2,driver|suppressor|marker
+TFAM,HGNC:11741,"transcription factor A, mitochondrial",1,suppressor
+TFAP2A,HGNC:11742,transcription factor AP-2 alpha,1,suppressor
+TFR2,HGNC:11762,transferrin receptor 2,1,driver
+TFRC,HGNC:11763,transferrin receptor,4,driver|suppressor|marker
+TGFB1,HGNC:11766,transforming growth factor beta 1,1,driver
+TGFBR1,HGNC:11772,transforming growth factor beta receptor 1,1,driver
+TIMM9,HGNC:11819,translocase of inner mitochondrial membrane 9,1,driver
+TIMP1,HGNC:11820,TIMP metallopeptidase inhibitor 1,1,driver
+TLR4,HGNC:11850,toll like receptor 4,2,driver
+TMBIM4,HGNC:24257,transmembrane BAX inhibitor motif containing 4,1,suppressor
+TMEM161B-DT,HGNC:43839,TMEM161B divergent transcript,1,suppressor
+TMSB4X,HGNC:11881,thymosin beta 4 X-linked,1,suppressor
+TMSB4Y,HGNC:11882,thymosin beta 4 Y-linked,1,suppressor
+TNFAIP3,HGNC:11896,TNF alpha induced protein 3,1,driver
+TOR2A,HGNC:11996,torsin family 2 member A,1,driver
+TP53,HGNC:11998,tumor protein p53,9,driver|suppressor
+TP63,HGNC:15979,tumor protein p63,1,suppressor
+TRIB2,HGNC:30809,tribbles pseudokinase 2,1,suppressor
+TRIM21,HGNC:11312,tripartite motif containing 21,1,driver
+TRIM26,HGNC:12962,tripartite motif containing 26,1,driver
+TRIM46,HGNC:19019,tripartite motif containing 46,1,driver
+TSC1,HGNC:12362,TSC complex subunit 1,1,driver
+TTPA,HGNC:12404,alpha tocopherol transfer protein,1,driver
+TXN,HGNC:12435,thioredoxin,1,suppressor
+TYRO3,HGNC:12446,TYRO3 protein tyrosine kinase,1,suppressor
+ULK1,HGNC:12558,unc-51 like autophagy activating kinase 1,1,driver
+ULK2,HGNC:13480,unc-51 like autophagy activating kinase 2,1,driver
+USP11,HGNC:12609,ubiquitin specific peptidase 11,1,driver|suppressor
+USP35,HGNC:20061,ubiquitin specific peptidase 35,1,suppressor
+USP7,HGNC:12630,ubiquitin specific peptidase 7,1,driver
+VCP,HGNC:12666,valosin containing protein,1,suppressor
+VDAC2,HGNC:12672,voltage dependent anion channel 2,1,driver|suppressor
+VDR,HGNC:12679,vitamin D receptor,1,suppressor
+WIPI1,HGNC:25471,"WD repeat domain, phosphoinositide interacting 1",1,driver
+WIPI2,HGNC:32225,"WD repeat domain, phosphoinositide interacting 2",1,driver
+WWTR1,HGNC:24042,WW domain containing transcription regulator 1,1,driver
+YAP1,HGNC:16262,Yes1 associated transcriptional regulator,2,driver
+YTHDC2,HGNC:24721,YTH domain containing 2,1,driver
+YY1AP1,HGNC:30935,YY1 associated protein 1,1,driver
+ZEB1,HGNC:11642,zinc finger E-box binding homeobox 1,2,driver
+ZFAS1,HGNC:33101,ZNFX1 antisense RNA 1,2,driver
+ZFP36,HGNC:12862,ZFP36 ring finger protein,2,suppressor
+circ-TTBK2,HGNC:19141,tau tubulin kinase 2,1,suppressor
+circ0097009,_NA_,No HGNC record,1,suppressor
+circDTL,_NA_,No HGNC record,1,suppressor
+circEPSTI1,_NA_,No HGNC record,1,suppressor
+circGFRA1,_NA_,No HGNC record,1,suppressor
+circKIF4A,_NA_,No HGNC record,1,suppressor
+circPSEN1,_NA_,No HGNC record,1,driver
+circRHBG,_NA_,No HGNC record,1,suppressor
+circRHOT1,_NA_,No HGNC record,1,suppressor
+circRNA1615,_NA_,No HGNC record,1,suppressor
+circ_0007142,_NA_,No HGNC record,1,suppressor
+circ_0067934,_NA_,No HGNC record,1,suppressor
+hsa_circ_0008367,_NA_,No HGNC record,1,driver
+lncRNA AABR07017145.1,_NA_,No HGNC record,1,driver
+miR-182-5p,_NA_,No HGNC record,1,driver
+miR-378a-3p,_NA_,No HGNC record,1,driver
+miR-7-5p,_NA_,No HGNC record,1,suppressor
+mmu_circRNA_0000309,_NA_,No HGNC record,1,suppressor

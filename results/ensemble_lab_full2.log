@@ -1,0 +1,32 @@
+[core] finished earlier: reusing stored results (locked test is not scored again)
+[core_plus_mmr] finished earlier: reusing stored results (locked test is not scored again)
+[extended_molecular] 53 features; dev 416, test 139
+[extended_molecular] base learner logreg_l2
+[extended_molecular] base learner logreg_elasticnet
+[extended_molecular] base learner svm_linear
+[extended_molecular] base learner svm_rbf
+[extended_molecular] base learner random_forest
+[extended_molecular] base learner extra_trees
+[extended_molecular] base learner hist_gradient_boosting
+[extended_molecular] base learner gradient_boosting
+[extended_molecular] base learner xgboost
+[extended_molecular] base learner lightgbm
+[extended_molecular] ensemble 'reference' members ['logreg_l2', 'svm_rbf', 'random_forest', 'extra_trees', 'xgboost']
+[extended_molecular] ensemble 'auto' members ['svm_linear', 'logreg_elasticnet', 'logreg_l2', 'extra_trees', 'xgboost']
+[extended_molecular] best single: logreg_l2; CV-gate-passing ensembles: 2; chosen for test check: auto:soft_equal
+[extended_molecular] fitting candidates on the development set; scoring the locked test set
+[extended_molecular] leakage canary + reproducibility check for the chosen ensemble
+[extended_molecular] external CPTAC-2: refit on 43/53 shared genes
+[whole_transcriptome] 16266 features; dev 416, test 139
+[whole_transcriptome] selection strategy wt_f x logreg_l2
+[whole_transcriptome] selection strategy wt_f x svm_rbf
+[whole_transcriptome] selection strategy wt_f x extra_trees
+[whole_transcriptome] selection strategy wt_mutual_info x logreg_l2
+[whole_transcriptome] selection strategy wt_mutual_info x svm_rbf
+[whole_transcriptome] selection strategy wt_mutual_info x extra_trees
+[whole_transcriptome] selection strategy wt_l1 x logreg_l2
+[whole_transcriptome] selection strategy wt_l1 x svm_rbf
+[whole_transcriptome] selection strategy wt_l1 x extra_trees
+[whole_transcriptome] selection strategy wt_elastic_net x logreg_l2
+[whole_transcriptome] selection strategy wt_elastic_net x svm_rbf
+[whole_transcriptome] selection strategy wt_elastic_net x extra_trees

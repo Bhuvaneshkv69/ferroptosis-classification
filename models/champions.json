@@ -1,0 +1,29 @@
+{
+  "classification": {
+    "name": "reference_soft_equal",
+    "version": "v20261007_091355",
+    "experiment": "msi_benchmark",
+    "promoted_at": "2026-10-07T15:45:20.434190+00:00",
+    "reason": "ensemble passed the full ensemble gate (CV, balanced accuracy, recall, stability, complementarity, locked test, leakage, reproducibility)",
+    "previous": {
+      "name": "logreg_l2",
+      "version": "v20261007_063847"
+    }
+  },
+  "dose_response": {
+    "name": "extra_trees",
+    "version": "v20261007_071618",
+    "experiment": "dose_response_benchmark",
+    "promoted_at": "2026-10-07T07:16:19.101103+00:00",
+    "reason": "no comparable incumbent: first validated model is promoted",
+    "previous": null
+  },
+  "classification_extended": {
+    "name": "logreg_l2",
+    "version": "v20261007_093328",
+    "experiment": "classification_extended_benchmark",
+    "promoted_at": "2026-10-07T15:45:20.437083+00:00",
+    "reason": "Extended-model choice by CV: top roc_auc = extended_molecular (0.924); winner core_plus_mmr (0.920 +/- 0.030); chosen as the simplest candidate within 1 SE (0.011) of the best",
+    "previous": null
+  }
+}

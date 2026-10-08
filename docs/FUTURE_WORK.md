@@ -9,9 +9,15 @@ persistence, a model registry, input validation, and a report generator
 were also added (none were on this list because the prior iteration did
 not yet have an application to persist models for).
 
+**Update (this session, 2026-09-17):** item 7 is now **done** — see below
+and `RESULTS.md` §5. A new drug-resistance classification module
+(`src/drug_resistance.py`, not on this list because it did not exist as a
+concept in the prior iteration) was also added, motivated by newly added
+literature (`docs/REFERENCES.md`, papers 6-7); see `RESULTS.md` §6.
+
 1. ~~**External validation cohort.**~~ **Done this session.** Validated the
    MSI classifier on CPTAC-2 Prospective Colon Cancer (Cell 2019), an
-   independent cohort/consortium. External ROC-AUC (0.94–0.96) matched or
+   independent cohort/consortium. External ROC-AUC (earlier pipeline: 0.94–0.96) matched or
    exceeded internal TCGA held-out ROC-AUC, but decision-threshold accuracy
    did not transfer as cleanly (see `RESULTS.md` §4d for the honest
    discussion, including SVM's threshold miscalibration on the external
@@ -41,10 +47,16 @@ not yet have an application to persist models for).
 6. **Multi-omics integration.** Incorporate TCGA copy-number, methylation, or
    mutation data (already available via the same cBioPortal study) alongside
    expression for a richer feature set.
-7. **Formal survival analysis reporting.** Add Kaplan-Meier curves and
-   log-rank tests for the Cox-derived risk groups (currently only the
-   Cox model coefficients and median-split classification are reported) to
-   more fully mirror and critique the published literature's validation style.
+7. ~~**Formal survival analysis reporting.**~~ **Done this session.** Added
+   `feature_engineering.evaluate_prognosis()` (concordance index) and
+   `plot_kaplan_meier()` (log-rank test + KM curves), evaluated on a
+   held-out patient test fold using a risk model fit on the training fold
+   only — a genuinely non-circular check of the Cox risk score's actual
+   prognostic value, distinct from Experiment 3's label-recovery accuracy.
+   Result: concordance index 0.692, log-rank p=0.039 on 118 held-out
+   patients (see `RESULTS.md` §5, `results/prognosis_validation.json`,
+   the app's Results → Prognosis tab). Motivated by the newly added
+   literature review (`docs/REFERENCES.md`, papers 1-3).
 8. **Multiple-testing correction.** Apply Benjamini-Hochberg FDR correction to
    the univariate Cox gene screen instead of a raw p < 0.10 cutoff.
 9. **Manuscript preparation.** Package the MSI-classification result (the

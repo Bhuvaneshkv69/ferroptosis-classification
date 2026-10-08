@@ -29,7 +29,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from lifelines import CoxPHFitter
+from lifelines import CoxPHFitter, KaplanMeierFitter
+from lifelines.statistics import logrank_test
+from lifelines.utils import concordance_index
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -137,6 +139,84 @@ def score_risk(df: pd.DataFrame, fitted: dict):
     label_full = pd.Series(index=df.index, dtype="object")
     label_full.loc[mask] = label
     return label_full, score_full
+
+
+def evaluate_prognosis(df_test: pd.DataFrame, fitted: dict) -> dict:
+    """
+    Non-circular validation of the Cox ferroptosis risk score's actual
+    prognostic value on held-out patients: does the score (fit on the
+    TRAINING fold only, via fit_risk_model) correctly order held-out
+    patients' real survival outcomes?
+
+    This answers a different question from classification.py's Experiment 3
+    (which asks "can gene expression predict the risk-group LABEL back" --
+    partly circular by construction, since the label is thresholded from a
+    score built from those same genes). The concordance index and log-rank
+    test below instead compare the risk score/group directly against
+    patients' ACTUAL observed survival time and event indicator -- the
+    standard validation style used by the published ferroptosis-signature
+    literature this experiment mirrors (docs/REFERENCES.md, papers 1-3).
+    """
+    gene_cols = fitted["gene_cols"]
+    needed = ["OS_MONTHS", "OS_EVENT"] + gene_cols
+    sub = df_test.dropna(subset=needed)
+    if len(sub) < 10:
+        return {"n_test": int(len(sub)), "concordance_index": None, "logrank_p": None,
+                "note": "Too few held-out patients with complete survival + gene data for a stable estimate."}
+
+    label, score = score_risk(sub, fitted)
+    valid = score.notna()
+    sub, label, score = sub.loc[valid], label.loc[valid], score.loc[valid]
+
+    c_index = concordance_index(sub["OS_MONTHS"], -score, sub["OS_EVENT"])
+
+    high = sub[label == "High risk"]
+    low = sub[label == "Low risk"]
+    logrank_p = None
+    if len(high) >= 3 and len(low) >= 3:
+        result = logrank_test(high["OS_MONTHS"], low["OS_MONTHS"], high["OS_EVENT"], low["OS_EVENT"])
+        logrank_p = float(result.p_value)
+
+    return {
+        "n_test": int(len(sub)),
+        "n_high_risk": int(len(high)),
+        "n_low_risk": int(len(low)),
+        "concordance_index": float(c_index),
+        "logrank_p": logrank_p,
+    }
+
+
+def plot_kaplan_meier(df_test: pd.DataFrame, fitted: dict, path: Path):
+    """Kaplan-Meier survival curves for the held-out test fold's High-risk vs
+    Low-risk groups (label assigned by a risk model fit on the training fold
+    only) -- the standard figure the published ferroptosis-signature papers
+    (docs/REFERENCES.md, papers 1-3) use to visualize risk-group separation."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    gene_cols = fitted["gene_cols"]
+    needed = ["OS_MONTHS", "OS_EVENT"] + gene_cols
+    sub = df_test.dropna(subset=needed)
+    label, score = score_risk(sub, fitted)
+    valid = score.notna()
+    sub, label = sub.loc[valid], label.loc[valid]
+
+    fig, ax = plt.subplots(figsize=(7, 5))
+    kmf = KaplanMeierFitter()
+    for group, color in [("High risk", "#d03b3b"), ("Low risk", "#2a78d6")]:
+        mask = label == group
+        if mask.sum() < 2:
+            continue
+        kmf.fit(sub.loc[mask, "OS_MONTHS"], sub.loc[mask, "OS_EVENT"], label=f"{group} (n={int(mask.sum())})")
+        kmf.plot_survival_function(ax=ax, color=color)
+    ax.set_xlabel("Overall survival (months)")
+    ax.set_ylabel("Survival probability")
+    ax.set_title("Kaplan-Meier survival by ferroptosis risk group\n"
+                  "(held-out test-fold patients; risk model fit on the training fold only)")
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
 
 
 def build_ferroptosis_risk_score(df: pd.DataFrame, gene_cols: list[str]):

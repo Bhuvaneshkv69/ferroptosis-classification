@@ -1,5 +1,11 @@
 # Results
 
+> **Superseded for classification and drug response by `docs/MODEL_SELECTION.md` (generated from
+> `results/benchmark/`) and `ML_AUDIT.md`.** The sections below are the earlier single-split pipeline: they were
+> produced before 37 unlabelled patients were removed from the MSI-negative class, and the deployed model was
+> chosen on the test set. Treat them as history, not as the project's headline numbers. Section 3
+> (risk group) is circular by construction.
+
 All numbers below are read directly from `results/*.csv` produced by an
 actual run of the pipeline (`python main.py`) on the real datasets described
 in `docs/DATASET.md`. Nothing here is estimated or fabricated.
@@ -85,6 +91,11 @@ circularity are two independent problems; fixing the former does not, and
 was never claimed to, fix the latter. This experiment remains excluded from
 every real scientific claim in this project and from the interactive
 application's classifier page.
+
+**The genuinely non-circular prognostic-value check is §9 below** — it does
+not use this risk-group label as a classification target at all; it checks
+the underlying risk *score* directly against held-out patients' actual
+survival time and event indicator.
 
 ## 4. Dose-response regression — pooled model (268 drugs × 44 colorectal cell lines, entire cell lines held out at test time)
 
@@ -301,3 +312,79 @@ independent cohort (§4d), a whole-transcriptome baseline (§4c), and real
 measured dose-response curves from the raw per-well GDSC file (§4b). See
 `docs/FUTURE_WORK.md` and `IMPLEMENTATION_STATUS.md` for the full,
 now-100%-complete-against-plan implementation tracking.
+
+## 9. Prognosis Prediction validation (non-circular) — new this session (2026-09-17)
+
+Motivated by `docs/REFERENCES.md` papers 1–3. §3 above reports how well
+gene expression predicts the risk-*group label* back — a question that is
+partly circular by construction. This section asks a different, genuinely
+non-circular question instead: **does the risk *score* (fit on a training
+fold of patients only) correctly order held-out patients' actual survival?**
+
+| Metric | Value | n (held-out patients) |
+|---|---|---|
+| Concordance index | **0.692** | 118 |
+| Log-rank test p-value (High-risk vs. Low-risk survival) | **0.039** | 60 high-risk / 58 low-risk |
+
+A concordance index of 0.5 is random; 1.0 is perfect. 0.692 indicates real,
+moderate prognostic signal in the ferroptosis risk score on patients it was
+never fit on. The log-rank p-value (0.039 < 0.05) indicates the High- and
+Low-risk groups (thresholded using only the training fold's median) have a
+statistically detectable survival difference among held-out patients —
+the standard validation style the reviewed literature (papers 1–3) uses.
+
+This is reported as a genuine, moderate positive finding — not as strong as
+the (non-circular) primary MSI classification result (§1, ROC-AUC 0.917),
+and it should not be read as clinical prognostic validity for any
+individual patient. Implementation: `feature_engineering.evaluate_prognosis()`,
+`feature_engineering.plot_kaplan_meier()`; raw output:
+`results/prognosis_validation.json`, `figures/kaplan_meier_risk_group.png`.
+Shown in the application under Results → Prognosis.
+
+## 10. Drug-resistance classification (Resistant / Sensitive) — new this session (2026-09-17)
+
+Motivated by `docs/REFERENCES.md` papers 6–7 (ferroptosis and chemoresistance
+in colorectal cancer, and oxaliplatin resistance specifically). This project
+did not have verified access to those papers' exact resistance thresholds or
+gene panels, so "Resistant"/"Sensitive" is defined transparently from this
+project's own GDSC data: a (cell line, drug) pair is Resistant if its
+LN_IC50 is at or above that drug's **training-fold-only** median across
+tested colorectal cell lines, Sensitive otherwise (`src/drug_resistance.py`).
+
+**Pooled model** (all well-covered drugs, ferroptosis genes + drug
+pathway/concentration-range, entire cell lines held out):
+
+| Model | Accuracy | ROC-AUC | F1 |
+|---|---|---|---|
+| Random Forest | 0.500 | 0.537 | 0.254 |
+| Logistic Regression | 0.459 | 0.446 | 0.461 |
+
+**Honest negative finding:** the pooled model performs close to chance.
+Defining "resistant" relative to each drug's own median makes it inherently
+drug-relative, and pooling dozens of different drug mechanisms into one
+shared feature space appears to wash out any consistent cross-drug signal
+recoverable from the ferroptosis panel alone.
+
+**Oxaliplatin-specific model** (paper 7's specific focus; ferroptosis genes
+only, leave-one-out CV, n=44 — same small-n treatment as the representative
+single-drug dose-response regressions in §5):
+
+| Model | Accuracy | ROC-AUC | F1 |
+|---|---|---|---|
+| Logistic Regression | 0.705 | 0.676 | 0.711 |
+| Random Forest | 0.568 | 0.599 | 0.558 |
+
+Restricting to a single, well-studied drug and the ferroptosis panel
+(which includes `SLC7A11` and `GPX4`, the axis papers 6–7 specifically
+implicate in oxaliplatin resistance) recovers real signal where the pooled,
+cross-drug model does not — mirroring the same pattern already seen in §5
+for dose-response regression (per-drug models outperforming what a purely
+pooled ferroptosis-only model could do for that drug).
+
+Raw output: `results/drug_resistance_results.csv`,
+`results/oxaliplatin_resistance_results.csv`,
+`data/processed/drug_resistance_thresholds.json`. The pooled model is
+persisted to `models/registry.json` (task `drug_resistance`) and served
+live by the application (Drug Response page, "Resistance classification"
+section; Results → Drug resistance for the full picture; Models → Drug
+resistance for registry details).

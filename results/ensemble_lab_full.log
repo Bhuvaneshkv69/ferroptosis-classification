@@ -1,0 +1,115 @@
+[core] 35 features; dev 416, test 139
+[core] base learner logreg_l2
+[core] base learner logreg_elasticnet
+[core] base learner svm_linear
+[core] base learner svm_rbf
+[core] base learner random_forest
+[core] base learner extra_trees
+[core] base learner hist_gradient_boosting
+[core] base learner gradient_boosting
+[core] base learner xgboost
+[core] base learner lightgbm
+[core] base learner catboost
+[core] ensemble 'reference' members ['logreg_l2', 'svm_rbf', 'random_forest', 'extra_trees', 'xgboost']
+[core] ensemble 'auto' members ['logreg_elasticnet', 'logreg_l2', 'svm_linear', 'extra_trees', 'catboost']
+[core] best single: logreg_l2; CV-gate-passing ensembles: 4; chosen for test check: reference:soft_equal
+[core] fitting candidates on the development set; scoring the locked test set
+[core] leakage canary + reproducibility check for the chosen ensemble
+[core] external CPTAC-2: refit on 28/35 shared genes
+[core_plus_mmr] 39 features; dev 416, test 139
+[core_plus_mmr] base learner logreg_l2
+[core_plus_mmr] base learner logreg_elasticnet
+[core_plus_mmr] base learner svm_linear
+[core_plus_mmr] base learner svm_rbf
+[core_plus_mmr] base learner random_forest
+[core_plus_mmr] base learner extra_trees
+[core_plus_mmr] base learner hist_gradient_boosting
+[core_plus_mmr] base learner gradient_boosting
+[core_plus_mmr] base learner xgboost
+[core_plus_mmr] base learner lightgbm
+[core_plus_mmr] ensemble 'reference' members ['logreg_l2', 'svm_rbf', 'random_forest', 'extra_trees', 'xgboost']
+[core_plus_mmr] ensemble 'auto' members ['logreg_l2', 'logreg_elasticnet', 'svm_linear', 'random_forest', 'extra_trees']
+[core_plus_mmr] best single: logreg_l2; CV-gate-passing ensembles: 0
+[core_plus_mmr] fitting candidates on the development set; scoring the locked test set
+[core_plus_mmr] external CPTAC-2: refit on 32/39 shared genes
+[extended_molecular] 53 features; dev 416, test 139
+[extended_molecular] base learner logreg_l2
+[extended_molecular] base learner logreg_elasticnet
+[extended_molecular] base learner svm_linear
+[extended_molecular] base learner svm_rbf
+[extended_molecular] base learner random_forest
+[extended_molecular] base learner extra_trees
+[extended_molecular] base learner hist_gradient_boosting
+[extended_molecular] base learner gradient_boosting
+[extended_molecular] base learner xgboost
+[extended_molecular] base learner lightgbm
+[extended_molecular] ensemble 'reference' members ['logreg_l2', 'svm_rbf', 'random_forest', 'extra_trees', 'xgboost']
+[extended_molecular] ensemble 'auto' members ['svm_linear', 'logreg_elasticnet', 'logreg_l2', 'extra_trees', 'xgboost']
+[extended_molecular] best single: logreg_l2; CV-gate-passing ensembles: 2; chosen for test check: auto:soft_equal
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "D:\small\.venv\Lib\site-packages\joblib\externals\loky\process_executor.py", line 490, in _process_worker
+    r = call_item()
+  File "D:\small\.venv\Lib\site-packages\joblib\externals\loky\process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 607, in __call__
+    return [func(*args, **kwargs) for func, args, kwargs in self.items]
+            ~~~~^^^^^^^^^^^^^^^^^
+  File "D:\small\src\ensemble_lab.py", line 148, in _suite_fold
+    out["methods"][m] = {o: (bm.clf_metrics(y[te], sc, s.predict_method(Xte, m, o)),
+                             ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\small\src\benchmark.py", line 144, in clf_metrics
+    "brier": brier_score_loss(y, proba),
+             ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "D:\small\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+  File "D:\small\.venv\Lib\site-packages\sklearn\metrics\_classification.py", line 3838, in brier_score_loss
+    transformed_labels, y_proba = _validate_binary_probabilistic_prediction(
+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        y_true, y_proba, sample_weight, pos_label
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\small\.venv\Lib\site-packages\sklearn\metrics\_classification.py", line 3676, in _validate_binary_probabilistic_prediction
+    raise ValueError(f"y_prob contains values greater than 1: {xp.max(y_prob)}")
+ValueError: y_prob contains values greater than 1: 1.0000000000000002
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\small\scripts\run_ensemble_lab.py", line 28, in <module>
+    main()
+    ~~~~^^
+  File "D:\small\scripts\run_ensemble_lab.py", line 24, in main
+    ensemble_lab.run_ensemble_lab(feature_sets=a.sets)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\small\src\ensemble_lab.py", line 537, in run_ensemble_lab
+    summaries[fs] = run_feature_set(fs, df, y, dev, test, lock_path, cfg, progress, quick)
+                    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\small\src\ensemble_lab.py", line 369, in run_feature_set
+    r = nested_suite(member_sets["reference"], features, imbalance, Xdev, ydev, cfg, c["outer_repeats"], cal,
+                     tag="lab")
+  File "D:\small\src\ensemble_lab.py", line 166, in nested_suite
+    folds = Parallel(n_jobs=min(n_jobs, len(splits)))(
+        delayed(_suite_fold)(member_names, features, imbalance, names, cfg, calibration, X, y, tr, te)
+        for tr, te in splits)
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 2098, in __call__
+    return output if self.return_generator else list(output)
+                                                ~~~~^^^^^^^^
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 1704, in _get_outputs
+    yield from self._retrieve()
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 1806, in _retrieve
+    self._raise_error_fast()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 1885, in _raise_error_fast
+    error_job.get_result(self.timeout)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 780, in get_result
+    return self._return_or_raise()
+           ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\small\.venv\Lib\site-packages\joblib\parallel.py", line 795, in _return_or_raise
+    raise self._result
+ValueError: y_prob contains values greater than 1: 1.0000000000000002

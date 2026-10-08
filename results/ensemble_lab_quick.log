@@ -1,0 +1,9 @@
+[core] 35 features; dev 416, test 139
+[core] base learner logreg_l2
+[core] base learner svm_rbf
+[core] base learner random_forest
+[core] base learner extra_trees
+[core] base learner xgboost
+[core] ensemble 'reference' members ['logreg_l2', 'svm_rbf', 'random_forest', 'extra_trees', 'xgboost']
+[core] ensemble 'auto' members ['logreg_l2', 'extra_trees', 'xgboost', 'svm_rbf', 'random_forest']
+[core] best single: logreg_l2; CV-gate-passing ensembles: 4; chosen for test check: reference:soft_equal

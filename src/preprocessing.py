@@ -104,7 +104,12 @@ def build_tcga_dataset(log_path=None):
     has_msi = df["MSI_SCORE_MANTIS"].notna()
     note(f"MSI MANTIS score available for {has_msi.sum()}/{len(df)} samples "
          f"({(~has_msi).sum()} excluded from the MSI classification task only)")
+    # NaN >= threshold is False, so a bare np.where would silently label every
+    # patient WITHOUT a MANTIS score as "MSS/MSI-L" (found in the ML audit:
+    # 37 mislabelled patients). Unscored patients get a missing label and are
+    # excluded from the MSI task by every `msi_label.notna()` filter downstream.
     df["msi_label"] = np.where(df["MSI_SCORE_MANTIS"] >= MSI_MANTIS_THRESHOLD, "MSI-H", "MSS/MSI-L")
+    df.loc[~has_msi, "msi_label"] = np.nan
 
     # --- survival fields for the complementary ferroptosis-risk experiment --
     df["OS_MONTHS"] = pd.to_numeric(df["OS_MONTHS"], errors="coerce")

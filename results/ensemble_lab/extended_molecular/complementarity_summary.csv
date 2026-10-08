@@ -1,0 +1,11 @@
+model,mean_proba_corr,mean_disagreement,mean_error_overlap
+logreg_l2,0.7974,0.0425,0.5586
+logreg_elasticnet,0.8192,0.0323,0.6405
+svm_linear,0.8082,0.0371,0.6152
+svm_rbf,0.8108,0.0353,0.6315
+random_forest,0.7762,0.035,0.6324
+extra_trees,0.7862,0.0387,0.607
+hist_gradient_boosting,0.6451,0.0355,0.6344
+gradient_boosting,0.6829,0.0331,0.6445
+xgboost,0.8043,0.0342,0.6197
+lightgbm,0.758,0.0326,0.6427

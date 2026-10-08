@@ -35,7 +35,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
+from model_zoo import PlattSVC
 from xgboost import XGBClassifier
 
 import evaluation as ev
@@ -62,8 +62,7 @@ def _model_grid():
             {"clf__n_estimators": [200, 400], "clf__max_depth": [3, 5, None]},
         ),
         "SVM": (
-            Pipeline([("scaler", StandardScaler()), ("clf", SVC(
-                probability=True, class_weight="balanced", random_state=RANDOM_SEED))]),
+            Pipeline([("scaler", StandardScaler()), ("clf", PlattSVC(class_weight="balanced", random_state=RANDOM_SEED))]),
             {"clf__C": [0.1, 1.0, 10.0], "clf__kernel": ["linear", "rbf"]},
         ),
         "XGBoost": (
@@ -192,13 +191,21 @@ def main():
     all_results.append(r3)
     print(r3[["model", "accuracy", "roc_auc", "f1"]])
 
+    print("\n=== Prognosis Prediction validation (non-circular): concordance index + log-rank test of the "
+          "Cox risk score against actual held-out survival, not the risk-group label) ===")
+    prognosis_metrics = fe.evaluate_prognosis(sub3.iloc[test_idx3], fitted_risk)
+    print(prognosis_metrics)
+    fe.plot_kaplan_meier(sub3.iloc[test_idx3], fitted_risk, FIG_DIR / "kaplan_meier_risk_group.png")
+
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     coef_table.to_csv(TABLES_DIR / "cox_risk_score_coefficients_trainfold.csv", index=False)
     with open(PROCESSED_DIR / "exp3_cox_model_metadata.json", "w") as f:
         json.dump(cox_meta, f, indent=2, default=str)
+    with open(RESULTS_DIR / "prognosis_validation.json", "w") as f:
+        json.dump(prognosis_metrics, f, indent=2, default=str)
 
     results_df = pd.concat(all_results, ignore_index=True)
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     results_df.to_csv(RESULTS_DIR / "classification_results.csv", index=False)
 
     # Experiment 4: model comparison chart for the primary (Experiment 1) task

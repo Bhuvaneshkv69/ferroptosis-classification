@@ -128,3 +128,84 @@ if __name__ == "__main__":
         print("Registry is empty. Run scripts/train_and_persist.py to populate it.")
     for e in entries:
         print(f"{e['task']}/{e['experiment']}/{e['name']} {e['version']} -> {e['path']}")
+
+
+# ---------------------------------------------------------------------------
+# Champion tracking + rich benchmark entries (added with the model-selection engine)
+#
+# registry.json stays append-only. Which model is "current best" for a task is
+# recorded separately in models/champions.json, written ONLY by
+# promote_champion() -- so the application discovers the production model from
+# data, and a retrained model never replaces it unless the promotion gate in
+# src/benchmark.py passes.
+# ---------------------------------------------------------------------------
+CHAMPIONS_PATH = MODELS_DIR / "champions.json"
+
+
+def _load_champions() -> dict:
+    if not CHAMPIONS_PATH.exists():
+        return {}
+    with open(CHAMPIONS_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def register_benchmark_model(*, task: str, name: str, display_name: str, model_object, feature_columns: list[str],
+                             feature_pipeline: str, dataset: str, hyperparameters: dict, cv_metrics: dict,
+                             test_metrics: dict, external_metrics: dict | None, calibration: str,
+                             extra: dict | None = None, version: str | None = None, seed: int = 42) -> dict:
+    """Persists a fitted model bundle and appends a rich registry entry
+    (name, version, feature pipeline, dataset, training date, CV / locked-test / external metrics,
+    hyper-parameters, features, calibration status, model file)."""
+    version = version or new_version()
+    experiment = "msi_benchmark" if task == "classification" else f"{task}_benchmark"
+    subdir = MODELS_DIR / task / experiment
+    subdir.mkdir(parents=True, exist_ok=True)
+    path = subdir / f"{name}__{version}.joblib"
+    if path.exists():
+        raise FileExistsError(f"Refusing to overwrite existing model artifact: {path}")
+    joblib.dump(model_object, path)
+    entry = {
+        "name": name, "display_name": display_name, "version": version, "task": task, "experiment": experiment,
+        "dataset": dataset, "feature_pipeline": feature_pipeline, "feature_columns": list(feature_columns),
+        "hyperparameters": hyperparameters, "calibration": calibration,
+        "cv_metrics": cv_metrics, "test_metrics": test_metrics, "external_metrics": external_metrics or {},
+        "metrics": test_metrics,  # legacy key read by older code paths: always the LOCKED-TEST metrics
+        "random_seed": seed, "trained_at": datetime.now(timezone.utc).isoformat(),
+        "path": str(path.relative_to(ROOT)).replace("\\", "/"), "schema": 2,
+    }
+    if extra:
+        entry["extra"] = extra
+    entries = _load_registry()
+    entries.append(entry)
+    _save_registry(entries)
+    return entry
+
+
+def promote_champion(task: str, entry: dict, reason: str) -> None:
+    if entry.get("task") != task:
+        raise ValueError(f"cannot promote a '{entry.get('task')}' model into the '{task}' slot")
+    if not (ROOT / entry["path"]).exists():       # last line of defence, independent of any caller's gate
+        raise FileNotFoundError(f"refusing to promote: model artifact missing on disk: {entry['path']}")
+    ch = _load_champions()
+    previous = ch.get(task)
+    ch[task] = {"name": entry["name"], "version": entry["version"], "experiment": entry["experiment"],
+                "promoted_at": datetime.now(timezone.utc).isoformat(), "reason": reason,
+                "previous": ({"name": previous["name"], "version": previous["version"]} if previous else None)}
+    MODELS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(CHAMPIONS_PATH, "w", encoding="utf-8") as f:
+        json.dump(ch, f, indent=2)
+
+
+def current_best(task: str) -> dict | None:
+    """The registry entry currently serving `task`, looked up from champions.json (never hard-coded)."""
+    rec = _load_champions().get(task)
+    if not rec:
+        return None
+    for e in reversed(_load_registry()):
+        if e["task"] == task and e["name"] == rec["name"] and e["version"] == rec["version"]:
+            return e
+    return None
+
+
+def champion_history() -> dict:
+    return _load_champions()

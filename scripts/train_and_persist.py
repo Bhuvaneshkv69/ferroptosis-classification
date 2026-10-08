@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / "src"))
 def main():
     import classification
     import dose_response
+    import drug_resistance
     import model_registry as reg
     from config import RANDOM_SEED
 
@@ -87,6 +88,33 @@ def main():
             )
             registered.append(entry)
             print(f"  registered {entry['task']}/{entry['experiment']}/{entry['name']} -> {entry['path']}")
+
+    print("\n" + "=" * 70)
+    print("Drug-resistance classification model (pooled, median-split LN_IC50)")
+    print("=" * 70)
+    dr_res_out = drug_resistance.main()
+    r_res, models_res, gene_cols_res, labels_res = dr_res_out["pooled_resistance"]
+    for model_name, fitted in models_res.items():
+        row = r_res[r_res["model"] == model_name].iloc[0]
+        metrics = {k: row[k] for k in ["accuracy", "precision", "recall", "f1", "roc_auc", "pr_auc",
+                                        "n_train", "n_test"]}
+        feature_cols = gene_cols_res + ["MIN_CONC", "MAX_CONC", "PATHWAY_NAME"]
+        entry = reg.register_model(
+            name=model_name,
+            task="drug_resistance",
+            experiment="pooled_resistance",
+            model_object=fitted,
+            feature_columns=feature_cols,
+            metrics=metrics,
+            hyperparameters=row["best_params"],
+            dataset="gdsc_colorectal_dose_response_processed",
+            random_seed=RANDOM_SEED,
+            version=version,
+            extra={"pos_label": labels_res["pos_label"], "neg_label": labels_res["neg_label"],
+                   "pos_label_encoding": 1, "neg_label_encoding": 0},
+        )
+        registered.append(entry)
+        print(f"  registered {entry['task']}/{entry['experiment']}/{entry['name']} -> {entry['path']}")
 
     elapsed = time.time() - t0
     print(f"\nDone in {elapsed/60:.1f} min. {len(registered)} model artifacts registered under version {version}.")

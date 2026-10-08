@@ -1,0 +1,7 @@
+{
+  "n_test": 118,
+  "n_high_risk": 60,
+  "n_low_risk": 58,
+  "concordance_index": 0.6919881305637983,
+  "logrank_p": 0.0392935606100254
+}

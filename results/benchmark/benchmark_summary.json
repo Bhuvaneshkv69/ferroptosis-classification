@@ -1,0 +1,255 @@
+{
+  "quick": false,
+  "created_at": "2026-10-07T07:37:37.510068+00:00",
+  "primary_metric": "roc_auc",
+  "n_total": 555,
+  "n_dev": 416,
+  "n_test": 139,
+  "prevalence_msi_h": 0.16036036036036036,
+  "feature_strategy": "raw",
+  "imbalance": "none",
+  "champion": "logreg_l2",
+  "champion_spec": {
+    "kind": "single",
+    "learner": "logreg_l2",
+    "features": "raw",
+    "imbalance": "none",
+    "calibration": "sigmoid"
+  },
+  "selection": {
+    "features": "top roc_auc = rfe (0.891); winner raw (0.883 +/- 0.039); chosen as the simplest candidate within 1 SE (0.018) of the best",
+    "imbalance": "top roc_auc = class_weight (0.883); winner none (0.878 +/- 0.037); chosen as the simplest candidate within 1 SE (0.017) of the best",
+    "model": "top roc_auc = logreg_elasticnet (0.886); winner logreg_l2 (0.880 +/- 0.031); chosen as the simplest candidate within 1 SE (0.010) of the best; 1 candidate(s) excluded by the stability gate (std > 0.08)",
+    "calibration": "sigmoid (top brier = sigmoid (0.086); winner sigmoid (0.086 +/- 0.009))"
+  },
+  "skipped_learners": [],
+  "cv_metrics": {
+    "n_folds": 10,
+    "secs_per_fold": 1.4,
+    "roc_auc_mean": 0.8767553978112984,
+    "roc_auc_std": 0.03218848213753101,
+    "pr_auc_mean": 0.6887558997681389,
+    "pr_auc_std": 0.06290123351921943,
+    "f1_mean": 0.5908602926863796,
+    "f1_std": 0.0934418518538481,
+    "balanced_accuracy_mean": 0.7471595795508839,
+    "balanced_accuracy_std": 0.0588925720956681,
+    "mcc_mean": 0.5301642944350509,
+    "mcc_std": 0.09795742960863477,
+    "accuracy_mean": 0.8797762478485371,
+    "accuracy_std": 0.021348544035702976,
+    "recall_mean": 0.5516483516483517,
+    "recall_std": 0.12676321537500332,
+    "specificity_mean": 0.9426708074534161,
+    "specificity_std": 0.025265859772619862,
+    "brier_mean": 0.0861650360134772,
+    "brier_std": 0.008506104552374353,
+    "ece_mean": 0.05237433982936899,
+    "ece_std": 0.020070113782173694
+  },
+  "locked_test_metrics": {
+    "accuracy": 0.8705035971223022,
+    "precision": 0.7,
+    "recall": 0.3181818181818182,
+    "specificity": 0.9743589743589743,
+    "f1": 0.4375,
+    "balanced_accuracy": 0.6462703962703963,
+    "mcc": 0.41323381220911876,
+    "roc_auc": 0.8259518259518259,
+    "pr_auc": 0.5521122612880875,
+    "brier": 0.10080139256836468,
+    "ece": 0.025088528157191745,
+    "tp": 7.0,
+    "fp": 3.0,
+    "tn": 114.0,
+    "fn": 15.0,
+    "ci95": {
+      "accuracy": [
+        0.8345323741007195,
+        0.9064748201438849
+      ],
+      "roc_auc": [
+        0.7233877233877234,
+        0.9106546231546231
+      ],
+      "pr_auc": [
+        0.38611385177013585,
+        0.7488836303366188
+      ],
+      "f1": [
+        0.20689655172413793,
+        0.6285714285714286
+      ],
+      "balanced_accuracy": [
+        0.5510878010878011,
+        0.7414529914529915
+      ],
+      "mcc": [
+        0.17053577201571227,
+        0.6067798762169179
+      ],
+      "recall": [
+        0.13636363636363635,
+        0.5
+      ],
+      "specificity": [
+        0.9401709401709402,
+        1.0
+      ]
+    },
+    "n": 139,
+    "n_positive": 22
+  },
+  "external_validation": {
+    "cohort": "CPTAC-2 colon (Cell 2019)",
+    "n": 105,
+    "n_msi_h": 24,
+    "n_shared_genes": 28,
+    "missing_genes": [
+      "ALOX12",
+      "ATP6V1G2",
+      "DRD4",
+      "HAMP",
+      "HOXC11",
+      "PCOLCE2",
+      "TFAP2C"
+    ],
+    "majority_accuracy": 0.7714285714285715,
+    "metrics": {
+      "accuracy": 0.8857142857142857,
+      "precision": 1.0,
+      "recall": 0.5,
+      "specificity": 1.0,
+      "f1": 0.6666666666666666,
+      "balanced_accuracy": 0.75,
+      "mcc": 0.6599120175960898,
+      "roc_auc": 0.970164609053498,
+      "pr_auc": 0.918734053692817,
+      "brier": 0.10992482442778867,
+      "ece": 0.12428262546939617,
+      "tp": 12,
+      "fp": 0,
+      "tn": 81,
+      "fn": 12
+    },
+    "ci95": {
+      "accuracy": [
+        0.8380952380952381,
+        0.9333333333333333
+      ],
+      "roc_auc": [
+        0.9356995884773663,
+        0.9933127572016461
+      ],
+      "pr_auc": [
+        0.8410845095242858,
+        0.9798573319842707
+      ],
+      "f1": [
+        0.45161290322580644,
+        0.8292682926829268
+      ],
+      "balanced_accuracy": [
+        0.6458333333333334,
+        0.8541666666666667
+      ],
+      "mcc": [
+        0.49099025303098287,
+        0.8074581328859325
+      ],
+      "recall": [
+        0.2916666666666667,
+        0.7083333333333334
+      ],
+      "specificity": [
+        1.0,
+        1.0
+      ]
+    },
+    "note": "Procedure refit on development data restricted to the shared genes; the external cohort was never used for any choice. Platform/batch shift is real."
+  },
+  "leakage_checks": {
+    "permutation_auc": [
+      0.46052078356426185,
+      0.5298698609878734
+    ],
+    "permutation_auc_mean": 0.4951953222760676,
+    "permutation_pass": true,
+    "dev_test_sample_overlap": 0,
+    "patient_overlap": 0,
+    "site_grouped_cv": {
+      "roc_auc_mean": 0.8682264917322609,
+      "roc_auc_std": 0.05530021317208539,
+      "mcc_mean": 0.4740011367194471,
+      "mcc_std": 0.12538204314491383,
+      "accuracy_mean": 0.8620074441998827,
+      "accuracy_std": 0.016762008383364127
+    },
+    "preprocessing_inside_cv": true,
+    "smote_inside_training_fold_only": true,
+    "feature_selection_inside_cv": true,
+    "passed": true
+  },
+  "verdict": {
+    "target": 0.9,
+    "majority_baseline_accuracy": 0.8396396396396396,
+    "cv_accuracy_mean": 0.8797762478485371,
+    "locked_test_accuracy": 0.8705035971223022,
+    "locked_test_accuracy_ci95": [
+      0.8345323741007195,
+      0.9064748201438849
+    ],
+    "external_accuracy": 0.8857142857142857,
+    "achieved": false,
+    "statement": "90% target not achieved"
+  },
+  "locked_test_uses": [
+    {
+      "at": "2026-10-07T06:34:40.735839+00:00",
+      "tag": "benchmark_20261007_063440",
+      "note": "champion=logreg_l2; 15 candidates reported (not used for selection)"
+    },
+    {
+      "at": "2026-10-07T06:38:14.251073+00:00",
+      "tag": "benchmark_20261007_063814",
+      "note": "champion=logreg_l2; 15 candidates reported (not used for selection)"
+    },
+    {
+      "at": "2026-10-07T07:35:52.711558+00:00",
+      "tag": "benchmark_20261007_073552",
+      "note": "champion=logreg_l2; 15 candidates reported (not used for selection)"
+    }
+  ],
+  "decision_threshold": 0.4386909195438648,
+  "hyperparameters": {
+    "clf__C": 0.0745934328572655
+  },
+  "rejected": {
+    "logreg_l1": "more complex than the champion",
+    "logreg_elasticnet": "more complex than the champion",
+    "svm_linear": "roc_auc 0.870 vs champion 0.880 (gap 0.010, within 1 SE); more complex than the champion",
+    "svm_rbf": "roc_auc 0.865 vs champion 0.880 (gap 0.014, beyond 1 SE); more complex than the champion",
+    "random_forest": "roc_auc 0.861 vs champion 0.880 (gap 0.018, beyond 1 SE); more complex than the champion",
+    "extra_trees": "roc_auc 0.869 vs champion 0.880 (gap 0.011, beyond 1 SE); more complex than the champion",
+    "hist_gradient_boosting": "roc_auc 0.848 vs champion 0.880 (gap 0.032, beyond 1 SE); more complex than the champion",
+    "gradient_boosting": "roc_auc 0.841 vs champion 0.880 (gap 0.039, beyond 1 SE); more complex than the champion",
+    "xgboost": "roc_auc 0.867 vs champion 0.880 (gap 0.013, within 1 SE); more complex than the champion",
+    "lightgbm": "roc_auc 0.854 vs champion 0.880 (gap 0.025, beyond 1 SE); more complex than the champion",
+    "catboost": "roc_auc 0.868 vs champion 0.880 (gap 0.012, beyond 1 SE); more complex than the champion",
+    "mlp": "unstable (fold std 0.113 > 0.08); roc_auc 0.788 vs champion 0.880 (gap 0.092, beyond 1 SE); more complex than the champion",
+    "voting": "more complex than the champion",
+    "stacking": "more complex than the champion"
+  },
+  "runtime_min": 12.696010569731394,
+  "registry_entry": {
+    "name": "logreg_l2",
+    "version": "v20261007_073737",
+    "path": "models/classification/msi_benchmark/logreg_l2__v20261007_073737.joblib"
+  },
+  "promotion": {
+    "promoted": false,
+    "reasons": [
+      "CV roc_auc 0.877 vs incumbent 0.877: improvement < 0.005"
+    ]
+  }
+}

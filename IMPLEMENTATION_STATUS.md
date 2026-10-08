@@ -46,6 +46,24 @@ count of genuinely finished items, re-verified at the end of this session.
 | 25 | Real (measured) per-well dose-response curves | Yes | Yes | Yes (`tests/test_raw_dose_response.py`) | Yes | `data/processed/gdsc_raw_dose_response_curves.csv`, `figures/dose_response_curve_real_*.png` |
 | 26 | Full test suite (combined) | Yes | Yes | **78/78 passing** | Yes | `pytest tests/ -q` |
 
+## UI/UX overhaul + literature-driven additions (session 2026-09-17)
+
+| # | Module | Planned | Implemented | Tested | Demonstrated | Evidence |
+|---|---|---|---|---|---|---|
+| 27 | Guided "Research Sample Input" manual-entry form (no CSV required) | Yes | Yes | Yes (`tests/test_app_smoke.py::test_*_manual_entry_runs_a_real_prediction`) | Yes | `app/common.py::manual_gene_entry_form`, New Analysis + Drug Response pages |
+| 28 | Visible run progress + plain-language "What does this mean?" panels | Yes | Yes | Yes (`tests/test_app_smoke.py`) | Yes | `app/pages/analysis.py`, `app/pages/drug_response.py` |
+| 29 | `docs/CSV_FORMAT.md`, `docs/REFERENCES.md` (7-paper literature basis + honest mapping) | Yes | Yes | N/A (documentation) | Yes | `docs/CSV_FORMAT.md`, `docs/REFERENCES.md` |
+| 30 | Non-circular Prognosis Prediction validation (concordance index + log-rank/KM) | Yes | Yes | Yes (`tests/test_feature_engineering.py`, 5 new tests) | Yes | `results/prognosis_validation.json`, `figures/kaplan_meier_risk_group.png`, app Results → Prognosis |
+| 31 | Drug-resistance classification module (pooled + oxaliplatin-specific) | Yes | Yes | Yes (`tests/test_drug_resistance.py`, `tests/test_inference.py`, 10 new tests) | Yes | `src/drug_resistance.py`, `models/registry.json` (task `drug_resistance`), app Results/Models/Drug Response pages |
+| 32 | Full test suite (combined, including all of the above) | Yes | Yes | **95/95 passing** | Yes | `pytest tests/ -q` |
+
+Honest results for 30 and 31 (not smoothed over): the prognosis check found
+real but moderate signal (concordance index 0.692, not close to the primary
+MSI classifier's strength); the pooled resistance classifier performs close
+to chance (ROC-AUC 0.45–0.54) and is reported as such in the application
+itself, not hidden — only the oxaliplatin-specific variant recovers real
+signal. See `RESULTS.md` §9–10 and `docs/LIMITATIONS.md`.
+
 ## Honest implementation percentage
 
 **26 of 26 planned components are fully implemented, tested, and

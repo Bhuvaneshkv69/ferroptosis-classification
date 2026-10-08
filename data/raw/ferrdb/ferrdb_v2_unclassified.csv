@@ -1,0 +1,111 @@
+symbol,hgncid,name,experiments,gene_type
+ACSF2,HGNC:26101,acyl-CoA synthetase family member 2,1,unclassified
+AGPAT3,HGNC:326,1-acylglycerol-3-phosphate O-acyltransferase 3,1,unclassified
+ALB,HGNC:399,albumin,1,unclassified
+ALOX12,HGNC:429,"arachidonate 12-lipoxygenase, 12S type",1,unclassified
+ALOX15,HGNC:433,arachidonate 15-lipoxygenase,1,unclassified
+ALOX5,HGNC:435,arachidonate 5-lipoxygenase,2,unclassified
+ANGPTL7,HGNC:24078,angiopoietin like 7,1,unclassified
+ARRDC3,HGNC:29263,arrestin domain containing 3,1,unclassified
+ASNS,HGNC:753,asparagine synthetase (glutamine-hydrolyzing),1,unclassified
+ATF3,HGNC:785,activating transcription factor 3,1,unclassified
+ATF4,HGNC:786,activating transcription factor 4,2,unclassified
+ATP5MC3,HGNC:843,ATP synthase membrane subunit c locus 3,1,unclassified
+ATP6V1G2,HGNC:862,ATPase H+ transporting V1 subunit G2,1,unclassified
+AURKA,HGNC:11393,aurora kinase A,1,unclassified
+BLOC1S5-TXNDC5,HGNC:42001,BLOC1S5-TXNDC5 readthrough (NMD candidate),1,unclassified
+BNIP3,HGNC:1084,BCL2 interacting protein 3,1,unclassified
+CAPG,HGNC:1474,"capping actin protein, gelsolin like",1,unclassified
+CBR1,HGNC:1548,carbonyl reductase 1,1,unclassified
+CBS,HGNC:1550,cystathionine beta-synthase,1,unclassified
+CEBPG,HGNC:1837,CCAAT enhancer binding protein gamma,1,unclassified
+CXCL2,HGNC:4603,C-X-C motif chemokine ligand 2,1,unclassified
+DDIT3,HGNC:2726,DNA damage inducible transcript 3,1,unclassified
+DDIT4,HGNC:24944,DNA damage inducible transcript 4,1,unclassified
+DRD4,HGNC:3025,dopamine receptor D4,1,unclassified
+DRD5,HGNC:3026,dopamine receptor D5,1,unclassified
+DUSP1,HGNC:3064,dual specificity phosphatase 1,1,unclassified
+EIF2AK4,HGNC:19687,eukaryotic translation initiation factor 2 alpha kinase 4,1,unclassified
+EIF2S1,HGNC:3265,eukaryotic translation initiation factor 2 subunit alpha,2,unclassified
+ELAVL1,HGNC:3312,ELAV like RNA binding protein 1,1,unclassified
+FTH1,HGNC:3976,ferritin heavy chain 1,1,unclassified
+FTL,HGNC:3999,ferritin light chain,1,unclassified
+GABPB1,HGNC:4074,GA binding protein transcription factor subunit beta 1,1,unclassified
+GDF15,HGNC:30142,growth differentiation factor 15,1,unclassified
+GLUT13,_NA_,No HGNC record,1,unclassified
+GPT2,HGNC:18062,glutamic--pyruvic transaminase 2,1,unclassified
+GPX2,HGNC:4554,glutathione peroxidase 2,1,unclassified
+GPX4,HGNC:4556,glutathione peroxidase 4,1,unclassified
+HAMP,HGNC:15598,hepcidin antimicrobial peptide,1,unclassified
+HBA1,HGNC:4823,hemoglobin subunit alpha 1,1,unclassified
+HERPUD1,HGNC:13744,homocysteine inducible ER protein with ubiquitin like domain 1,1,unclassified
+HIC1,HGNC:4909,HIC ZBTB transcriptional repressor 1,1,unclassified
+HMGB1,HGNC:4983,high mobility group box 1,1,unclassified
+HMOX1,HGNC:5013,heme oxygenase 1,2,unclassified
+HNF4A,HGNC:5024,hepatocyte nuclear factor 4 alpha,1,unclassified
+HSD17B11,HGNC:22960,hydroxysteroid 17-beta dehydrogenase 11,1,unclassified
+IL33,HGNC:16028,interleukin 33,1,unclassified
+IL6,HGNC:6018,interleukin 6,1,unclassified
+IREB2,HGNC:6115,iron responsive element binding protein 2,1,unclassified
+JDP2,HGNC:17546,Jun dimerization protein 2,1,unclassified
+KIM-1,_NA_,No HGNC record,1,unclassified
+KLHL24,HGNC:25947,kelch like family member 24,1,unclassified
+LOC284561,_NA_,No HGNC record,1,unclassified
+LOC390705,_NA_,No HGNC record,1,unclassified
+LRRFIP1,HGNC:6702,LRR binding FLII interacting protein 1,1,unclassified
+LURAP1L,HGNC:31452,leucine rich adaptor protein 1 like,1,unclassified
+MAFG,HGNC:6781,MAF bZIP transcription factor G,1,unclassified
+MAP3K5,HGNC:6857,mitogen-activated protein kinase kinase kinase 5,1,unclassified
+MAPK14,HGNC:6876,mitogen-activated protein kinase 14,1,unclassified
+MIR30B,HGNC:31625,microRNA 30b,1,unclassified
+MIR4715,HGNC:41666,microRNA 4715,1,unclassified
+MMP13,HGNC:7159,matrix metallopeptidase 13,1,unclassified
+MT3,HGNC:7408,metallothionein 3,1,unclassified
+NCF2,HGNC:7661,neutrophil cytosolic factor 2,1,unclassified
+NFE2L2,HGNC:7782,NFE2 like bZIP transcription factor 2,1,unclassified
+NGB,HGNC:14077,neuroglobin,1,unclassified
+NNMT,HGNC:7861,nicotinamide N-methyltransferase,1,unclassified
+NOS2,HGNC:7873,nitric oxide synthase 2,1,unclassified
+OXSR1,HGNC:8508,oxidative stress responsive kinase 1,1,unclassified
+PCK2,HGNC:8725,"phosphoenolpyruvate carboxykinase 2, mitochondrial",1,unclassified
+PLIN4,HGNC:29393,perilipin 4,1,unclassified
+PRDX1,HGNC:9352,peroxiredoxin 1,1,unclassified
+PSAT1,HGNC:19129,phosphoserine aminotransferase 1,1,unclassified
+RELA,HGNC:9955,"RELA proto-oncogene, NF-kB subunit",1,unclassified
+RGS4,HGNC:10000,regulator of G protein signaling 4,1,unclassified
+RIPK1,HGNC:10019,receptor interacting serine/threonine kinase 1,1,unclassified
+RPL8,HGNC:10368,ribosomal protein L8,1,unclassified
+RRM2,HGNC:10452,ribonucleotide reductase regulatory subunit M2,1,unclassified
+SELENOS,HGNC:30396,selenoprotein S,1,unclassified
+SESN2,HGNC:20746,sestrin 2,1,unclassified
+SETD1B,HGNC:29187,"SET domain containing 1B, histone lysine methyltransferase",1,unclassified
+SLC1A4,HGNC:10942,solute carrier family 1 member 4,1,unclassified
+SLC2A1,HGNC:11005,solute carrier family 2 member 1,1,unclassified
+SLC2A12,HGNC:18067,solute carrier family 2 member 12,1,unclassified
+SLC2A14,HGNC:18301,solute carrier family 2 member 14,1,unclassified
+SLC2A3,HGNC:11007,solute carrier family 2 member 3,1,unclassified
+SLC2A6,HGNC:11011,solute carrier family 2 member 6,1,unclassified
+SLC2A8,HGNC:13812,solute carrier family 2 member 8,1,unclassified
+SLC3A2,HGNC:11026,solute carrier family 3 member 2,2,unclassified
+SLC7A11,HGNC:11059,solute carrier family 7 member 11,2,unclassified
+SLC7A5,HGNC:11063,solute carrier family 7 member 5,1,unclassified
+SNORA16A,HGNC:32605,"small nucleolar RNA, H/ACA box 16A",1,unclassified
+SP1,HGNC:11205,Sp1 transcription factor,1,unclassified
+SRXN1,HGNC:16132,sulfiredoxin 1,1,unclassified
+STEAP3,HGNC:24592,STEAP3 metalloreductase,1,unclassified
+STMN1,HGNC:6510,stathmin 1,1,unclassified
+TF,HGNC:11740,transferrin,1,unclassified
+TFAP2C,HGNC:11744,transcription factor AP-2 gamma,1,unclassified
+TFRC,HGNC:11763,transferrin receptor,1,unclassified
+TRIB3,HGNC:16228,tribbles pseudokinase 3,1,unclassified
+TSC22D3,HGNC:3051,TSC22 domain family member 3,1,unclassified
+TUBE1,HGNC:20775,tubulin epsilon 1,1,unclassified
+TXNIP,HGNC:16952,thioredoxin interacting protein,1,unclassified
+TXNRD1,HGNC:12437,thioredoxin reductase 1,1,unclassified
+UBC,HGNC:12468,ubiquitin C,1,unclassified
+VEGFA,HGNC:12680,vascular endothelial growth factor A,1,unclassified
+VLDLR,HGNC:12698,very low density lipoprotein receptor,1,unclassified
+XBP1,HGNC:12801,X-box binding protein 1,1,unclassified
+YWHAE,HGNC:12851,tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein epsilon,1,unclassified
+ZFP69B,HGNC:28053,ZFP69 zinc finger protein B,1,unclassified
+ZNF419,HGNC:20648,zinc finger protein 419,1,unclassified

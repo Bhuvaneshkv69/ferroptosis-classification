@@ -1,0 +1,91 @@
+{
+  "created_at": "2026-10-07T15:45:20.437423+00:00",
+  "runtime_min": 0.0010256767272949219,
+  "routing": {
+    "core": {
+      "promoted": true,
+      "reason": [
+        "ensemble passed the full ensemble gate (CV, balanced accuracy, recall, stability, complementarity, locked test, leakage, reproducibility)"
+      ]
+    },
+    "extended": {
+      "promoted": "core_plus_mmr",
+      "reason": "top roc_auc = extended_molecular (0.924); winner core_plus_mmr (0.920 +/- 0.030); chosen as the simplest candidate within 1 SE (0.011) of the best"
+    }
+  },
+  "table": [
+    {
+      "feature_set": "core",
+      "label": "Ferroptosis core (35 genes)",
+      "n_features": 35,
+      "final": "reference:soft_equal",
+      "kind": "ensemble",
+      "cv_accuracy": 0.8773952954675848,
+      "cv_accuracy_std": 0.03186653840665558,
+      "cv_auc": 0.8802957704821059,
+      "cv_balanced_accuracy": 0.7434543717152413,
+      "cv_recall": 0.5456043956043957,
+      "test_accuracy": 0.8633093525179856,
+      "test_auc": 0.8317793317793317,
+      "test_recall": 0.36363636363636365,
+      "test_mcc": 0.40227109468231176,
+      "best_single": "logreg_l2",
+      "single_cv_accuracy": 0.8797762478485371,
+      "single_test_accuracy": 0.8705035971223022,
+      "external_accuracy": 0.819047619047619,
+      "external_auc": 0.9711934156378601
+    },
+    {
+      "feature_set": "core_plus_mmr",
+      "label": "35 genes + mismatch repair",
+      "n_features": 39,
+      "final": "single",
+      "kind": "single",
+      "cv_accuracy": 0.9302925989672979,
+      "cv_accuracy_std": 0.01673387427037043,
+      "cv_auc": 0.9204967806520603,
+      "cv_balanced_accuracy": 0.8165727026596592,
+      "cv_recall": 0.648901098901099,
+      "test_accuracy": 0.9136690647482014,
+      "test_auc": 0.8861693861693861,
+      "test_recall": 0.5454545454545454,
+      "test_mcc": 0.640789833417799,
+      "best_single": "logreg_l2",
+      "single_cv_accuracy": 0.9302925989672979,
+      "single_test_accuracy": 0.9136690647482014,
+      "external_accuracy": 0.9619047619047619,
+      "external_auc": 0.9974279835390947
+    },
+    {
+      "feature_set": "extended_molecular",
+      "label": "Extended molecular model",
+      "n_features": 53,
+      "final": "auto:soft_equal",
+      "kind": "ensemble",
+      "cv_accuracy": 0.9314974182444062,
+      "cv_accuracy_std": 0.024088055246384906,
+      "cv_auc": 0.9235822355698133,
+      "cv_balanced_accuracy": 0.8209786590221373,
+      "cv_recall": 0.6576923076923077,
+      "test_accuracy": 0.920863309352518,
+      "test_auc": 0.8861693861693862,
+      "test_recall": 0.5909090909090909,
+      "test_mcc": 0.675024835873189,
+      "best_single": "logreg_l2",
+      "single_cv_accuracy": 0.918344807802639,
+      "single_test_accuracy": 0.9280575539568345,
+      "external_accuracy": 0.9809523809523809,
+      "external_auc": 0.9969135802469136
+    }
+  ],
+  "majority_baseline": 0.8396396396396396,
+  "target": 0.9,
+  "not_completed": [
+    {
+      "feature_set": "whole_transcriptome",
+      "label": "Whole transcriptome (research)",
+      "status": "not_completed",
+      "reason": "experiment did not finish; no metrics are reported for it"
+    }
+  ]
+}

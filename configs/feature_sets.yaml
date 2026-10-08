@@ -1,0 +1,34 @@
+# Feature sets for the MSI classifier. Gene lists are fixed from the literature BEFORE any modelling
+# (never chosen from this dataset), so the lists themselves cannot leak.
+core:
+  label: Ferroptosis core (35 genes)
+  description: The 35-gene ferroptosis panel only. This is the scientifically focused model.
+mmr:
+  label: Mismatch-repair genes
+  genes: [MLH1, MSH2, MSH6, PMS2]
+  justification: >
+    MSI-H is, by definition, a mismatch-repair deficiency phenotype (MLH1 silencing, MSH2/MSH6/PMS2 loss).
+    Their expression is therefore an expected, biologically direct correlate of the label, not a
+    ferroptosis feature. The label itself is DNA-based (MANTIS), not computed from expression.
+immune:
+  label: Immune / interferon-gamma genes
+  genes: [CD274, PDCD1, CTLA4, LAG3, TIGIT, HAVCR2, CD8A, CD8B, GZMA, GZMB, PRF1, IFNG, CXCL9, CXCL10]
+  justification: >
+    MSI-H colorectal tumours carry a dense cytotoxic T-cell / interferon-gamma infiltrate with compensatory
+    checkpoint expression (Llosa et al., Cancer Discovery 2015; Mlecnik et al., Immunity 2016; Le et al.,
+    Science 2017). Checkpoints, cytotoxic effectors and IFN-gamma-induced chemokines are standard markers.
+extended_molecular:
+  label: Extended molecular model
+  composition: [core, mmr, immune]
+  note: NOT a ferroptosis classifier; it adds mismatch-repair and immune genes to the ferroptosis core.
+core_plus_mmr:
+  label: 35 genes + mismatch repair
+  composition: [core, mmr]
+whole_transcriptome:
+  label: Whole transcriptome
+  description: >
+    About 18k protein-coding genes. Genes with more than 5% missing values in the DEVELOPMENT set are dropped
+    (label-blind); everything else (imputation, variance filter, supervised selection) happens inside
+    each training fold. Research benchmark only: not served in the app (a CSV with 18k columns is impractical).
+  max_missing_fraction_dev: 0.05
+  variance_filter_top_k: 2000

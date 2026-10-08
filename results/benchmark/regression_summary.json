@@ -1,0 +1,104 @@
+{
+  "quick": false,
+  "champion": "extra_trees",
+  "selection": "top mae = lightgbm (1.003); winner extra_trees (1.009 +/- 0.168); chosen as the simplest candidate within 1 SE (0.062) of the best",
+  "skipped_learners": [],
+  "cv": {
+    "name": "extra_trees",
+    "variant": "drug_identity",
+    "n_folds": 5,
+    "secs_per_fold": 457.9,
+    "mae_mean": 1.0093562000462846,
+    "mae_std": 0.16759967997356093,
+    "rmse_mean": 1.3241929157164136,
+    "rmse_std": 0.22724566432743218,
+    "r2_mean": 0.7520286412655015,
+    "r2_std": 0.0645492774819283,
+    "pearson_mean": 0.8724833661269393,
+    "pearson_std": 0.0359756378322829,
+    "spearman_mean": 0.837486848873537,
+    "spearman_std": 0.04073329185862973
+  },
+  "baseline_drug_mean_cv": {
+    "name": "drug_mean_baseline",
+    "variant": "drug_only",
+    "n_folds": 5,
+    "secs_per_fold": 0.0,
+    "mae_mean": 1.0700264559431034,
+    "mae_std": 0.1772272101353011,
+    "rmse_mean": 1.3992507669680794,
+    "rmse_std": 0.2462085794103703,
+    "r2_mean": 0.7228466389462109,
+    "r2_std": 0.07515212792815468,
+    "pearson_mean": 0.8566938113984566,
+    "pearson_std": 0.04185490239680937,
+    "spearman_mean": 0.8170042530791759,
+    "spearman_std": 0.048129775978427686
+  },
+  "expression_value_added": {
+    "champion_vs_drug_mean_mae_gain_mean": 0.060670255896818806,
+    "champion_vs_drug_mean_mae_gain_std": 0.037530734308722995,
+    "folds_where_expression_helped": 5,
+    "n_folds": 5
+  },
+  "n_cell_lines_total": 44,
+  "caution": "Only 44 colorectal cell lines: effective sample size for expression-driven effects is tiny; the locked test set holds only a handful of lines.",
+  "locked_test_metrics": {
+    "mae": 0.8658329246875238,
+    "rmse": 1.1278849058407943,
+    "r2": 0.8177313155784832,
+    "pearson": 0.9084709521319543,
+    "spearman": 0.8789775189005161,
+    "ci95": {
+      "mae": [
+        0.7576255603002231,
+        0.972947588324742
+      ],
+      "rmse": [
+        0.9987912373410001,
+        1.2451338710109052
+      ],
+      "r2": [
+        0.7874170491321374,
+        0.8432349908470501
+      ],
+      "pearson": [
+        0.8971653285952096,
+        0.9221961263715704
+      ],
+      "spearman": [
+        0.8678146900848727,
+        0.8928151916024482
+      ]
+    },
+    "n_rows": 2368,
+    "n_cell_lines": 9,
+    "baseline_drug_mean": {
+      "mae": 0.8677610336680309,
+      "rmse": 1.1349166479092478,
+      "r2": 0.8154515410876121,
+      "pearson": 0.9045945811024718,
+      "spearman": 0.8765272891562944
+    },
+    "mae_gain_vs_drug_mean": 0.0022219354242687945
+  },
+  "created_at": "2026-10-07T07:16:18.762479+00:00",
+  "hyperparameters": {
+    "model__max_depth": null,
+    "model__max_features": "sqrt",
+    "model__min_samples_leaf": 1,
+    "model__n_estimators": 353
+  },
+  "runtime_min": 5.871412964661916,
+  "registry_entry": {
+    "name": "extra_trees",
+    "version": "v20261007_071618",
+    "path": "models/dose_response/dose_response_benchmark/extra_trees__v20261007_071618.joblib"
+  },
+  "promotion": {
+    "promoted": true,
+    "reasons": [
+      "no comparable incumbent: first validated model is promoted"
+    ]
+  }
+}

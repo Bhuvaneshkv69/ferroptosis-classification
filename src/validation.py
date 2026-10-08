@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -115,3 +114,37 @@ def make_template_csv(required_genes: list[str] | None = None, example_values: d
     example_values = example_values or {}
     row = {g: example_values.get(g, "") for g in required_genes}
     return pd.DataFrame([row])
+
+
+def validate_training_dataframe(df: pd.DataFrame, required_genes: list[str] | None = None,
+                                min_samples: int = 150, min_positives: int = 25) -> dict:
+    """Validates a user-supplied TRAINING table for the Train / Compare workflow (log2-scale gene columns,
+    `sampleId`, `patientId`, `msi_label` in {MSI-H, MSS/MSI-L}). Returns {is_valid, errors, warnings}."""
+    required_genes = required_genes or load_required_gene_panel()
+    errors, warnings = [], []
+    for col in ("sampleId", "patientId", "msi_label"):
+        if col not in df.columns:
+            errors.append(f"Missing required column '{col}'.")
+    missing = sorted(set(required_genes) - set(df.columns))
+    if missing:
+        errors.append(f"Missing gene columns: {missing}")
+    if not errors:
+        if df["sampleId"].duplicated().any():
+            errors.append("Duplicate sampleId values.")
+        if df["patientId"].duplicated().any():
+            errors.append("patientId repeats: one row per patient is required so patients cannot straddle "
+                          "the train/test split.")
+        labels = set(df["msi_label"].dropna().unique())
+        if not labels <= {"MSI-H", "MSS/MSI-L"}:
+            errors.append(f"msi_label must be 'MSI-H' or 'MSS/MSI-L'; found {sorted(labels)}.")
+        lab = df.dropna(subset=["msi_label"])
+        if len(lab) < min_samples:
+            errors.append(f"Only {len(lab)} labelled samples; at least {min_samples} are needed.")
+        if (lab["msi_label"] == "MSI-H").sum() < min_positives:
+            errors.append(f"Fewer than {min_positives} MSI-H samples; nested cross-validation would be unreliable.")
+        genes = df[required_genes].apply(pd.to_numeric, errors="coerce")
+        if genes.isna().any().any():
+            errors.append("Gene columns contain missing or non-numeric values.")
+        elif genes.to_numpy().max() > 40:
+            warnings.append("Gene values look un-logged (max > 40); training expects log2(x+1) values.")
+    return {"is_valid": not errors, "errors": errors, "warnings": warnings}

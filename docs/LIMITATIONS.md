@@ -56,7 +56,7 @@ for patient treatment or clinical dosing decisions.
   Colon Cancer, an independent cohort. CPTAC's expression profile lacks
   values for 7 of the 35 panel genes, so a compatible model trained on the
   28-gene intersection is used for this comparison (not the deployed 35-gene
-  model). ROC-AUC (ranking quality) transferred well (0.94–0.96 externally
+  model). ROC-AUC (ranking quality) transferred well (earlier September pipeline: 0.94–0.96 externally
   vs. 0.84–0.90 internally for this variant); default-threshold accuracy did
   not transfer uniformly (SVM's external accuracy was 0.51 despite ROC-AUC
   0.94) — a real, honestly-reported cross-cohort calibration gap, not a
@@ -80,6 +80,25 @@ for patient treatment or clinical dosing decisions.
   Cox screening step (p < 0.10, no multiple-testing correction) mirrors the
   published literature's own approach but is statistically permissive; it is
   used only to build the exploratory, explicitly-caveated risk score.
+- **Prognosis validation is moderate, not strong (added this session).** The
+  non-circular check of the Cox risk score against held-out patient survival
+  (`RESULTS.md` §9) gives a concordance index of 0.692 and a log-rank
+  p-value of 0.039 on 118 held-out patients — real, statistically detectable
+  signal, but well short of the primary MSI classification result's strength
+  (ROC-AUC 0.917) and based on a modest held-out sample size. It should be
+  read as "this risk score carries real but moderate prognostic signal,"
+  not as a validated clinical prognostic tool.
+- **The pooled drug-resistance classifier performs close to chance (added
+  this session).** `src/drug_resistance.py`'s cross-drug pooled model
+  (ROC-AUC 0.45–0.54, `RESULTS.md` §10) does not reliably distinguish
+  Resistant from Sensitive when many different drug mechanisms are pooled
+  together; only the oxaliplatin-specific, evaluation-only variant recovers
+  real signal (ROC-AUC ~0.68). The pooled model is still deployed/servable
+  for completeness, and the application surfaces this limitation directly
+  rather than hiding it (Results → Drug resistance). Its "Resistant"/
+  "Sensitive" labels are also this project's own median-split definition,
+  not a value reproduced from the literature that motivated the analysis
+  (`docs/REFERENCES.md` papers 6-7) -- see that document for why.
 
 ## Scope statement (dose-response)
 
@@ -89,3 +108,13 @@ Everywhere in this project, "dose-response prediction" means predicting an
 cancer cell line from its ferroptosis-related gene expression. It does **not**
 mean, and this project never claims, prediction of a human patient's clinical
 drug dosage or treatment recommendation.
+
+## Addendum — model-selection redesign
+
+- Only 22 MSI-H patients in the locked test set; all positive-class metrics have wide intervals (see `docs/MODEL_SELECTION.md`).
+- At the MCC-tuned threshold sensitivity is low (7/22 on the locked test). Do not use the classifier to rule MSI-High out.
+- The 35-gene panel caps performance; the 90% accuracy target was not achieved (majority baseline 84%).
+- External validation uses a refit on the 28 genes shared with CPTAC-2, not the production 35-gene model.
+- Drug response: 44 cell lines; model ≈ per-compound mean on held-out lines; tumour RNA-seq to cell-line microarray mapping is exploratory and unvalidated.
+- `SVC(probability=True)` is deprecated in scikit-learn 1.9 (removed in 1.11); the SVM candidates need migrating then.
+- The `drug_resistance` classifier (AUC ≈ chance) and the circular risk-group models are no longer exposed in the app.

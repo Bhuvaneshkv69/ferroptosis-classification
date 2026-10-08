@@ -1,0 +1,5 @@
+objective,threshold,cv_accuracy,cv_recall,cv_balanced_accuracy,cv_mcc,test_accuracy,test_recall,test_balanced_accuracy,test_mcc,test_precision,test_specificity
+accuracy,0.445,0.9351,0.6567,0.8226,0.7424,0.9209,0.5909,0.7869,0.675,0.8667,0.9829
+balanced_accuracy,0.26,0.9207,0.7761,0.8623,0.7119,0.9137,0.6364,0.8011,0.6546,0.7778,0.9658
+f1,0.44,0.9351,0.6567,0.8226,0.7424,0.9209,0.5909,0.7869,0.675,0.8667,0.9829
+mcc,0.44,0.9351,0.6567,0.8226,0.7424,0.9209,0.5909,0.7869,0.675,0.8667,0.9829

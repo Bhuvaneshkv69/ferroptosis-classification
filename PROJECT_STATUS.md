@@ -3,7 +3,7 @@
 **Project:** Designing a Pipeline for Ferroptosis Classification and Dose-Response Prediction
 **Team:** Mayank Bhardwaj (23BKT0106), Sovan Sekar Sarma (23BKT0057), Bhuvanesh K.V. (23BKT0138)
 **Faculty Guide:** Dr. Adrija Bhattacharya
-**Status date:** 2026-09-07 (this session's end-to-end system upgrade, phases 1 and 2)
+**Status date:** 2026-09-17 (UI/UX overhaul + literature-driven additions; see below)
 
 ## History
 
@@ -11,16 +11,32 @@
   acquisition, preprocessing, classification, dose-response regression,
   interpretability, 29 tests, documentation) starting from an empty
   directory.
-- **This session, phase 1:** audited that pipeline (`PROJECT_AUDIT.md`),
+- **Session 2026-09-07, phase 1:** audited that pipeline (`PROJECT_AUDIT.md`),
   fixed a data-leakage issue found in GDSC preprocessing, and built the
   application/persistence/registry/reporting layer (Streamlit app, model
   registry, inference, validation, reporting modules).
-- **This session, phase 2 (following a request to close every remaining
+- **Session 2026-09-07, phase 2 (following a request to close every remaining
   gap):** fixed a second, subtler leakage issue in the TCGA engineered-
   feature pipeline; implemented genuine external validation on an
   independent cohort; fetched and trained a whole-transcriptome baseline;
   downloaded and processed the 2.1GB raw GDSC file into real, measured
   dose-response curves.
+- **Session 2026-09-17:** turned the application into a guided,
+  result-focused product (see `UI_AUDIT.md`): a "Research Sample Input"
+  manual-entry form (per-gene numeric fields, no CSV required), visible run
+  progress, plain-language "What does this mean?" panels alongside the
+  existing technical detail. Following a request to also integrate seven
+  newly selected literature papers (`docs/REFERENCES.md`), added two real
+  backend components those papers motivate: a non-circular Prognosis
+  Prediction validation (concordance index + Kaplan-Meier/log-rank test of
+  the existing Cox risk score against real held-out patient survival) and a
+  new drug-resistance classification module (`src/drug_resistance.py`,
+  pooled + oxaliplatin-specific), both persisted/served the same way as the
+  existing classification and dose-response models, with results reported
+  honestly either way (the prognosis check: real but moderate signal; the
+  pooled resistance classifier: real but near-chance, with the
+  oxaliplatin-specific variant recovering real signal). 21 new/updated
+  tests; full suite 95/95 passing.
 
 ## Phase-by-phase status
 

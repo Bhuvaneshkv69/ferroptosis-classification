@@ -75,12 +75,15 @@ as the accuracy-optimal cutoff for this exact score.
 - **Engineered features**: `ferroptosis_score_mean` (mean per-gene z-score) and `ferroptosis_score_pc1` (first principal component of the standardized gene matrix; explains ~13.5% of variance — see `data/processed/feature_engineering_metadata.json`).
 - **Cox risk score**: univariate Cox screen (p < 0.10) on each gene vs `OS_MONTHS`/`OS_EVENT`, then a penalized multivariate `CoxPHFitter` (lifelines, `penalizer=0.1`) on the screened genes; risk score = z-scored expression · Cox coefficients; median split into High/Low risk.
 - **Experiment 2 vs Experiment 1 finding**: the compact engineered score performs **substantially worse** than the raw 35-gene panel for MSI classification (ROC-AUC ≈ 0.65 vs ≈ 0.90–0.92) — collapsing 35 genes into 1–2 summary numbers loses gene-specific signal relevant to MSI status. This is reported as a genuine (negative) finding, not smoothed over.
+- **Prognosis validation** (`feature_engineering.evaluate_prognosis`, `plot_kaplan_meier`): the risk score above, fit on a training fold only, is checked directly against held-out patients' `OS_MONTHS`/`OS_EVENT` via Harrell's concordance index (`lifelines.utils.concordance_index`, sign-corrected so higher risk score correctly maps to shorter survival) and a log-rank test (`lifelines.statistics.logrank_test`) between the High-/Low-risk groups. This is a different, non-circular question from Experiment 3's classification accuracy (§ below) — see `RESULTS.md` §9 and `docs/REFERENCES.md`.
 
 ## 6. Models
 
 **Classification** (`src/classification.py`): Logistic Regression, Random Forest, SVM (linear/RBF), XGBoost — each wrapped in a `StandardScaler` pipeline, tuned by `GridSearchCV` (5-fold stratified CV, `scoring="roc_auc"`) on the training set only, evaluated once on the held-out test set.
 
 **Regression** (`src/dose_response.py`): Linear Regression, Random Forest Regressor, XGBoost Regressor. Pooled model uses `ColumnTransformer` (`StandardScaler` on raw gene expression + concentration range, `OneHotEncoder` on drug pathway — all fit on the training fold only); hyperparameters tuned with `GroupKFold`(5) on the training cell lines only (never mixing folds across a cell line). Representative single-drug models use only the 31 ferroptosis genes with leave-one-out CV (samples per drug: 42–44, too small for a held-out split).
+
+**Drug-resistance classification** (`src/drug_resistance.py`): Logistic Regression, Random Forest, same `ColumnTransformer` feature pipeline as the dose-response regressor above. The binary target ("Resistant"/"Sensitive") is a per-drug median split of `LN_IC50`, with the threshold computed **exclusively from the training fold's cell lines** (`drug_resistance.label_resistance`) before being applied to the held-out test fold — the same train-only-fitting discipline used throughout this project (see `docs/DATA_LEAKAGE_AUDIT.md`). A separate oxaliplatin-only variant uses only the ferroptosis gene panel with leave-one-out CV, mirroring the representative single-drug regression treatment. See `RESULTS.md` §10, `docs/REFERENCES.md` papers 6-7.
 
 ## 7. Evaluation
 

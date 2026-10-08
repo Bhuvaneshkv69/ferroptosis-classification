@@ -1,0 +1,22 @@
+{
+  "n_patients_in_table": 592,
+  "n_unlabelled_excluded": 37,
+  "n_labelled": 555,
+  "label_counts": {
+    "MSI-H": 89,
+    "MSS/MSI-L": 466
+  },
+  "labels_match_mantis_threshold": true,
+  "sample_ids_unique": true,
+  "split_dev_test_disjoint": true,
+  "split_fingerprint_matches_file": true,
+  "n_dev": 416,
+  "n_test": 139,
+  "test_positives": 22,
+  "gene_columns": 35,
+  "missing_gene_values": 0,
+  "test_predictions_identical_to_stored": true,
+  "cv_accuracy_matches_stored": true,
+  "test_accuracy_matches_stored": true,
+  "all_passed": true
+}

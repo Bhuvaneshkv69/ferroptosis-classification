@@ -27,7 +27,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
+from model_zoo import PlattSVC
 from xgboost import XGBClassifier
 
 import evaluation as ev
@@ -68,7 +68,7 @@ def _model_grid():
             {"clf__n_estimators": [200, 400], "clf__max_depth": [3, 5, None]},
         ),
         "SVM": (
-            pipe(SVC(probability=True, class_weight="balanced", random_state=RANDOM_SEED)),
+            pipe(PlattSVC(class_weight="balanced", random_state=RANDOM_SEED)),
             {"clf__C": [0.1, 1.0, 10.0], "clf__kernel": ["linear", "rbf"]},
         ),
         "XGBoost": (

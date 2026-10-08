@@ -135,7 +135,6 @@ def fit_and_plot_real_curves(agg: pd.DataFrame):
     fit_rows = []
     for drug in DRUG_ID_TO_NAME.values():
         sub = agg[agg["DRUG_NAME"] == drug]
-        cell_lines = sub["CELL_LINE_NAME"].unique()
         # plot up to 4 representative cell lines (highest point-count) for legibility
         counts = sub.groupby("CELL_LINE_NAME").size().sort_values(ascending=False)
         picks = counts.head(4).index.tolist()

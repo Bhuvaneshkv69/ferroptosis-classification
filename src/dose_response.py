@@ -209,7 +209,7 @@ def main():
         except Exception as e:
             print(f"  (skipped illustrative curve for {drug}: {e})")
 
-    print(f"\nSaved regression results/figures/tables.")
+    print("\nSaved regression results/figures/tables.")
 
     return {
         "pooled_LN_IC50": (r_ic50, models_ic50, gene_cols),

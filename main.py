@@ -12,7 +12,8 @@ Stages:
     4. Feature engineering                      (src/feature_engineering.py)
     5. Classification (MSI + risk-group)        (src/classification.py)
     6. Dose-response regression                 (src/dose_response.py)
-    7. Interpretability                         (src/interpretability.py)
+    7. Drug-resistance classification           (src/drug_resistance.py)
+    8. Interpretability                         (src/interpretability.py)
 
 Each stage writes its outputs to data/processed/, results/, figures/, and
 tables/, so the pipeline can also be resumed from any intermediate stage by
@@ -90,21 +91,28 @@ def main():
     stages_run.append("feature_engineering")
 
     print("\n" + "=" * 70)
-    print("STAGE 5/7: Classification (MSI status + ferroptosis risk group)")
+    print("STAGE 5/8: Classification (MSI status + ferroptosis risk group / prognosis)")
     print("=" * 70)
     import classification
     classification.main()
     stages_run.append("classification")
 
     print("\n" + "=" * 70)
-    print("STAGE 6/7: Dose-response regression")
+    print("STAGE 6/8: Dose-response regression")
     print("=" * 70)
     import dose_response
     dose_response.main()
     stages_run.append("dose_response")
 
     print("\n" + "=" * 70)
-    print("STAGE 7/7: Interpretability")
+    print("STAGE 7/8: Drug-resistance classification")
+    print("=" * 70)
+    import drug_resistance
+    drug_resistance.main()
+    stages_run.append("drug_resistance")
+
+    print("\n" + "=" * 70)
+    print("STAGE 8/8: Interpretability")
     print("=" * 70)
     import interpretability
     interpretability.main()

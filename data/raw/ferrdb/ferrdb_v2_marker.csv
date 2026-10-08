@@ -1,0 +1,10 @@
+symbol,hgncid,name,experiments,gene_type
+CHAC1,HGNC:28680,ChaC glutathione specific gamma-glutamylcyclotransferase 1,1,marker
+FTH1,HGNC:3976,ferritin heavy chain 1,2,marker
+GPX4,HGNC:4556,glutathione peroxidase 4,2,marker
+HSPB1,HGNC:5246,heat shock protein family B (small) member 1,1,marker
+NFE2L2,HGNC:7782,NFE2 like bZIP transcription factor 2,1,marker
+PTGS2,HGNC:9605,prostaglandin-endoperoxide synthase 2,1,marker
+SLC40A1,HGNC:10909,solute carrier family 40 member 1,1,marker
+TF,HGNC:11740,transferrin,1,marker
+TFRC,HGNC:11763,transferrin receptor,1,marker

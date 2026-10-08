@@ -19,7 +19,6 @@ fabricated/synthetic sample):
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import numpy as np
@@ -122,13 +121,19 @@ def _score_classification(pipeline, X: pd.DataFrame, entry: dict):
         "reported_test_metrics": entry["metrics"],
     }
 
-    # Local, exact explanation for linear models; for non-linear models we
-    # point to the (real, precomputed) global permutation/SHAP importance
-    # instead of fabricating a per-sample explanation.
+    # Local, exact explanation for linear models fit directly on
+    # entry["feature_columns"] via a plain StandardScaler (the MSI-
+    # classification pipeline shape: named steps "scaler" + "clf"). A
+    # ColumnTransformer-based pipeline (named step "pre", used by the
+    # drug-resistance pooled model, which one-hot-encodes PATHWAY_NAME) does
+    # NOT produce one transformed column per entry in feature_columns, so a
+    # coefficient-times-value contribution table would silently misalign --
+    # that shape falls through to the real, precomputed global importance
+    # instead of a fabricated/misaligned per-sample explanation.
     clf = pipeline.named_steps.get("clf")
-    if clf is not None and hasattr(clf, "coef_"):
-        scaler = pipeline.named_steps.get("scaler")
-        X_scaled = scaler.transform(X) if scaler is not None else X.values
+    scaler = pipeline.named_steps.get("scaler")
+    if clf is not None and scaler is not None and hasattr(clf, "coef_"):
+        X_scaled = scaler.transform(X)
         contributions = (clf.coef_[0] * X_scaled[0])
         contrib_df = pd.DataFrame({
             "gene": entry["feature_columns"],
@@ -253,3 +258,62 @@ def _score_regression(pipeline, X: pd.DataFrame, entry: dict, actual=None):
         result["ensemble_spread_max"] = float(tree_preds.max())
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Drug-resistance classification (Resistant / Sensitive)
+# ---------------------------------------------------------------------------
+
+_RESISTANCE_EXPERIMENT = "pooled_resistance"
+
+
+def available_resistance_models() -> list[dict]:
+    return reg.list_models(task="drug_resistance", experiment=_RESISTANCE_EXPERIMENT)
+
+
+def load_resistance_model(model_name: str):
+    entry = reg.latest_model(task="drug_resistance", experiment=_RESISTANCE_EXPERIMENT, name=model_name)
+    if entry is None:
+        raise FileNotFoundError(
+            f"No persisted drug-resistance model '{model_name}'. Run `python scripts/train_and_persist.py` first."
+        )
+    return reg.load_model(entry), entry
+
+
+def predict_resistance_from_processed_row(row: pd.Series, drug_name: str, model_name: str):
+    """Scores a real (cell line, drug) row already in the processed GDSC
+    dataset. Ground truth here is the same train-fold-median-split label
+    src/drug_resistance.py used to train the model, recomputed from the
+    row's own LN_IC50 for display -- the UI shows it as a reference label,
+    exactly like predict_dose_response_from_processed_row's actual_value."""
+    pipeline, entry = load_resistance_model(model_name)
+    gene_cols = [c for c in entry["feature_columns"] if c not in ("MIN_CONC", "MAX_CONC", "PATHWAY_NAME")]
+    missing = [g for g in gene_cols if g not in row.index or pd.isna(row[g])]
+    if missing:
+        raise MissingGenesError(missing)
+    X = pd.DataFrame([{**{g: row[g] for g in gene_cols},
+                        "MIN_CONC": row["MIN_CONC"], "MAX_CONC": row["MAX_CONC"],
+                        "PATHWAY_NAME": row["PATHWAY_NAME"]}])
+    return _score_classification(pipeline, X, entry)
+
+
+def predict_resistance_from_raw_expression(gene_expression: dict[str, float], drug_name: str, model_name: str):
+    """Scores user-supplied gene expression (same log2-RMA scale as GDSC,
+    no additional transform) against a real, existing drug's pathway/
+    concentration-range annotation, mirroring
+    predict_dose_response_from_raw_expression."""
+    pipeline, entry = load_resistance_model(model_name)
+    gene_cols = [c for c in entry["feature_columns"] if c not in ("MIN_CONC", "MAX_CONC", "PATHWAY_NAME")]
+    missing = [g for g in gene_cols if g not in gene_expression or gene_expression[g] is None]
+    if missing:
+        raise MissingGenesError(missing)
+
+    drugs = get_available_drugs().set_index("DRUG_NAME")
+    if drug_name not in drugs.index:
+        raise ValueError(f"Drug '{drug_name}' is not in the well-covered GDSC drug panel used for training.")
+    drug_row = drugs.loc[drug_name]
+
+    X = pd.DataFrame([{**{g: float(gene_expression[g]) for g in gene_cols},
+                        "MIN_CONC": float(drug_row["MIN_CONC"]), "MAX_CONC": float(drug_row["MAX_CONC"]),
+                        "PATHWAY_NAME": drug_row["PATHWAY_NAME"]}])
+    return _score_classification(pipeline, X, entry)

@@ -5,7 +5,6 @@ lookup table. Needed because the GDSC cell-line expression matrix
 (sanger1018_brainarray_ensemblgene_rma.txt.gz) is indexed by Ensembl gene ID,
 not HUGO symbol.
 """
-import json
 from pathlib import Path
 
 import pandas as pd

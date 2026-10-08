@@ -1,0 +1,122 @@
+# Model-selection configuration.
+# Nothing here names a winner: the champion is whatever the benchmark's
+# selection rule picks from the nested-CV results (src/benchmark.py).
+
+random_seed: 42
+
+primary_metric:
+  classification: roc_auc        # any of: roc_auc, pr_auc, f1, balanced_accuracy, mcc, accuracy
+  regression: mae                # lower-is-better metrics: mae, rmse, brier; higher: r2, pearson, spearman
+
+secondary_metrics:
+  classification: [f1, balanced_accuracy, pr_auc, mcc]
+  regression: [rmse, r2, spearman]
+
+selection:
+  one_se_rule: true              # among candidates within 1 SE of the best primary score, prefer the simplest
+  max_cv_std: 0.08               # stability gate on the primary metric (std across outer folds)
+  promotion:                     # a retrained model replaces the production model only if ALL hold
+    min_cv_improvement: 0.005
+    max_test_drop: 0.0           # locked-test primary metric must not be worse than current production
+    max_std_ratio: 1.25          # cv std may not exceed 1.25x the current model's
+    require_leakage_checks: true
+
+classification:
+  target: msi_label              # MSI-H (positive) vs MSS/MSI-L, from the DNA-based MANTIS score
+  pos_label: MSI-H
+  locked_test_fraction: 0.25
+  outer_folds: 5
+  outer_repeats: 2
+  inner_folds: 5
+  search_iterations: 15
+  threshold_objective: mcc       # decision threshold is tuned INSIDE each training fold (never on test)
+  target_accuracy: 0.90          # reported honestly as achieved / not achieved; never tuned towards
+  feature_strategies:            # compared inside CV on reference learners only (no full cross-product)
+    - raw
+    - variance_filter
+    - select_k_best
+    - mutual_info
+    - elastic_net_select
+    - rfe
+    - pca
+    - signature_scores
+    - raw_plus_signature
+  reference_learners: [logreg_l2, svm_rbf, extra_trees]
+  imbalance_strategies: [none, class_weight, smote]
+  learners:                      # complexity rank: lower = simpler (used by the one-SE rule)
+    logreg_l2:            {rank: 1,  enabled: true}
+    logreg_l1:            {rank: 2,  enabled: true}
+    logreg_elasticnet:    {rank: 3,  enabled: true}
+    svm_linear:           {rank: 4,  enabled: true}
+    svm_rbf:              {rank: 5,  enabled: true}
+    random_forest:        {rank: 6,  enabled: true}
+    extra_trees:          {rank: 7,  enabled: true}
+    hist_gradient_boosting: {rank: 8, enabled: true}
+    gradient_boosting:    {rank: 9,  enabled: true}
+    xgboost:              {rank: 10, enabled: true}
+    lightgbm:             {rank: 11, enabled: true}
+    catboost:             {rank: 12, enabled: true}   # skipped automatically if the library cannot be installed
+    mlp:                  {rank: 13, enabled: true}   # small-data sanity check; expected to be rejected
+  ensembles:
+    voting:   {rank: 14, members: [logreg_l2, svm_rbf, random_forest, xgboost]}
+    stacking: {rank: 15, members: [logreg_l2, svm_rbf, extra_trees, xgboost]}
+  calibration_methods: [none, sigmoid, isotonic]
+  external:
+    - {name: CPTAC-2 colon (Cell 2019)}
+  site_grouped_cv: true          # leave-sites-out sensitivity check for batch/site leakage
+  permutation_canary_runs: 2     # label-permuted nested CV; AUC must be ~0.5
+
+ensemble_lab:                    # thresholds below were fixed BEFORE any ensemble result was looked at
+  feature_sets: [core, core_plus_mmr, extended_molecular, whole_transcriptome]
+  learners_default: [logreg_l2, logreg_elasticnet, svm_linear, svm_rbf, random_forest, extra_trees,
+                     hist_gradient_boosting, gradient_boosting, xgboost, lightgbm]
+  learners_core_extra: [catboost]          # CatBoost: evaluated on the 35-gene core only (slow, no benefit there)
+  learners_whole_transcriptome: [logreg_l2, logreg_elasticnet, svm_linear, svm_rbf, random_forest, extra_trees,
+                                 hist_gradient_boosting, xgboost, lightgbm]
+  reference_members: [logreg_l2, svm_rbf, random_forest, extra_trees, xgboost]
+  auto_members: {max_members: 5, max_proba_corr: 0.97, auc_margin: 0.05}
+  calibration: sigmoid
+  decision_objective: mcc                  # predefined; accuracy / balanced accuracy / F1 are reported as trade-offs
+  gate:                                    # an ensemble replaces the best single model only if ALL hold
+    min_cv_auc_gain: 0.003
+    max_cv_balanced_accuracy_drop: 0.01
+    min_recall_ratio: 0.8                  # CV recall >= 0.8 x the single model's (no collapse of MSI-High recall)
+    max_std_ratio: 1.25
+    min_member_disagreement: 0.02          # members must not be near-duplicates
+    min_fraction_folds_improved: 0.6
+    max_test_auc_drop: 0.02                # locked test: comparable or better (checked once, for the CV-chosen candidate)
+    max_test_balanced_accuracy_drop: 0.03
+    permutation_canary_tolerance: 0.08
+
+regression:
+  target: LN_IC50
+  locked_test_fraction: 0.20     # whole cell lines held out
+  outer_folds: 5
+  inner_folds: 3
+  search_iterations: 8
+  learners:
+    elastic_net:          {rank: 1}
+    random_forest:        {rank: 2}
+    extra_trees:          {rank: 3}
+    hist_gradient_boosting: {rank: 4}
+    gradient_boosting:    {rank: 5}
+    xgboost:              {rank: 6}
+    lightgbm:             {rank: 7}
+    catboost:             {rank: 8}
+  ensemble: {rank: 9, members: [elastic_net, random_forest, hist_gradient_boosting]}
+
+metric_help:                     # shown in the UI info tooltips
+  roc_auc: How well the model separates the two classes (0.5 = coin flip, 1.0 = perfect).
+  pr_auc: How well the model finds the rarer class without raising false alarms.
+  f1: Balances precision and recall.
+  balanced_accuracy: Average of sensitivity and specificity; not fooled by class imbalance.
+  accuracy: Share of samples classified correctly. Misleading when one class is much more common.
+  mcc: Correlation between prediction and truth; robust to class imbalance (0 = chance, 1 = perfect).
+  sensitivity: Share of true positives that were found.
+  specificity: Share of true negatives that were correctly ruled out.
+  brier: Average squared error of predicted probabilities (lower is better).
+  mae: Average size of prediction error.
+  rmse: Like MAE but penalises large errors more.
+  r2: Share of variation explained (0 = no better than predicting the mean).
+  pearson: Linear correlation between predicted and measured values.
+  spearman: Rank correlation between predicted and measured values.

@@ -41,7 +41,7 @@
   "ferroptosis_genes_missing_from_profile": [],
   "msi_mantis_threshold": 0.4,
   "msi_label_counts": {
-    "MSS/MSI-L": 503,
+    "MSS/MSI-L": 466,
     "MSI-H": 89
   },
   "random_seed": 42

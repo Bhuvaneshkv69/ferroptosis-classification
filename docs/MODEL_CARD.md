@@ -1,5 +1,18 @@
 # Model Card
 
+## Current production models (authoritative: `models/champions.json`, `docs/MODEL_SELECTION.md`)
+
+| Task | Model | Evidence |
+|---|---|---|
+| **Ferroptosis Core Classifier** (35 ferroptosis genes; served by default) | combined (equal-weight soft-voting) model of 5 calibrated learners; passed the predefined ensemble gate | nested-CV accuracy 0.877 ± 0.032; locked test (n=139, 22 MSI-H) accuracy 0.863 (95% interval 0.82–0.91), AUC 0.832, sensitivity 0.36 |
+| Reference baseline for the core (single model) | L2 logistic regression, sigmoid-calibrated, MCC-tuned threshold | nested-CV AUC 0.877 ± 0.032; locked test accuracy 0.871, AUC 0.826, sensitivity 0.32: differs from the ensemble by about one patient |
+| **35-gene + MMR Extended Model** (39 genes; optional) and **Extended Molecular Model** (53 features; benchmarked, not served) | single logistic regression / combined model | CV accuracy 0.930 / 0.931; locked-test accuracy 0.914 / 0.921. These add mismatch-repair (and immune) genes and are **not** ferroptosis-only classifiers. Authoritative values: `results/final_model_registry.json` |
+| Drug-response regression (in-vitro LN(IC50)) | Single Extra-Trees regressor on expression + compound identity (not a multi-model ensemble) | held-out cell lines MAE 0.866, R² 0.818 — equal to the per-compound-mean baseline (MAE 0.868) |
+
+Intended use, limits: research only; low sensitivity at the chosen threshold; the 90% accuracy target was **not**
+achieved; drug-response cell-line-specific signal is weak; tumour-to-cell-line scale mapping is unvalidated.
+The sections below describe the earlier pipeline and are superseded.
+
 Numbers below are read directly from `models/registry.json` and
 `results/*.csv` (the exact same fitted objects the application serves) --
 regenerate with `python scripts/train_and_persist.py`; if you change any
@@ -20,11 +33,14 @@ treatment selection, or patient-specific dosing. See `docs/LIMITATIONS.md`.
 | Classification | `exp1_msi_raw_genes` | LogisticRegression (default), RandomForest, SVM, XGBoost all selectable | Highest ROC-AUC, non-circular task -- see `configs/model_config.yaml::deployed_models` |
 | Dose-response | `pooled_LN_IC50` | RandomForest (default), LinearRegression, XGBoost all selectable | Highest R² / lowest MAE on held-out cell lines |
 | Dose-response | `pooled_AUC` | RandomForest (default), LinearRegression, XGBoost all selectable | Highest R² / lowest MAE on held-out cell lines |
+| Drug resistance | `pooled_resistance` | RandomForest (default), LogisticRegression selectable | New this session (2026-09-17) -- see `RESULTS.md` §10, `docs/REFERENCES.md` papers 6-7 |
 
 The circular `exp3_riskgroup_raw_genes` classification models are persisted
-(for reproducibility/comparison) but are **not** exposed on the interactive
-Ferroptosis Classification page -- only on the read-only Model Performance
-page, with an explicit circularity warning.
+(for reproducibility/comparison) but are **not** exposed on the New Analysis
+page -- only on the read-only Models/Results pages, with an explicit
+circularity warning (the app's Results → Prognosis tab instead shows the
+genuinely non-circular validation of the same underlying risk score, see
+`RESULTS.md` §9).
 
 ## Classification models -- MSI status (Experiment 1, raw ferroptosis genes, n_train=473, n_test=119)
 
@@ -93,15 +109,26 @@ profile in any capacity.
 - **Whole-transcriptome baseline (Experiment 4):** the same MSI target,
   classified from ~19,200 genes (PCA-50, train-fold-only) instead of the
   35-gene panel. Best ROC-AUC 0.986 (Random Forest) vs. 0.917 for the panel
-  — see `RESULTS.md` §4c. Not a deployed/interactive model; evaluation-only.
+  — see `RESULTS.md` §4c. Not a deployed/interactive model; evaluation-only. **Superseded:** this figure predates the corrected labels and locked protocol and must not be quoted; the re-run did not complete (see `results/final_model_report.md`).
 - **External validation (`exp1_msi_raw_genes_cptac28`):** a 28-gene
   intersection variant of Experiment 1, scored on the independent CPTAC-2
   cohort with zero retraining/tuning on that cohort. External ROC-AUC
-  0.94–0.96; internal (TCGA) ROC-AUC for this same variant 0.84–0.90. See
+  0.94–0.96 (earlier pipeline); internal (TCGA) ROC-AUC for this same variant 0.84–0.90. See
   `RESULTS.md` §4d and the application's External Validation page. This
   variant is registered in `models/registry.json` under task
   `classification`, experiment `exp1_msi_raw_genes_cptac28` — separate from,
   and not used by, the deployed 35-gene Experiment 1 models.
+- **Prognosis validation (2026-09-17):** the Cox ferroptosis risk score
+  (fit on a training fold of TCGA patients only) checked against real
+  held-out patients' overall survival -- concordance index 0.692, log-rank
+  p=0.039 (n=118 held-out patients). Genuinely non-circular (unlike
+  Experiment 3 above); not a deployed classifier, evaluation-only. See
+  `RESULTS.md` §9, `docs/REFERENCES.md` papers 1-3.
+- **Drug-resistance classification (2026-09-17):** new task, `pooled_resistance`
+  (deployed) and an oxaliplatin-specific leave-one-out variant
+  (evaluation-only). See the deployed-models table above and `RESULTS.md`
+  §10 for the honest split result (pooled: close to chance; oxaliplatin-only:
+  real signal).
 
 ## Caveats
 
@@ -116,3 +143,13 @@ profile in any capacity.
   pathway/concentration-range annotation; it cannot score a drug outside the
   268-drug training panel (the application enforces this and reports a
   clear error rather than a silent/incorrect prediction).
+- The pooled `drug_resistance` classifier's ROC-AUC (0.45-0.54) is close to
+  chance -- it is deployed for transparency and completeness, not because it
+  is a strong model; the application surfaces this limitation directly
+  rather than hiding it. Only the oxaliplatin-specific, evaluation-only
+  variant shows real signal, and even that is a correlational classifier
+  over expression values, not a mechanistic resistance model.
+- "Resistant"/"Sensitive" and "High risk"/"Low risk" are this project's own
+  transparent, reproducible definitions (median split; Cox regression on
+  TCGA overall survival) -- neither is a clinical resistance or prognosis
+  determination for any individual patient.

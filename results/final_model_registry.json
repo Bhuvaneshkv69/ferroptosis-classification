@@ -1,0 +1,754 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-07T16:53:23.866318+00:00",
+  "generated_by": "scripts/build_final_registry.py",
+  "rule": "Exactly one entry per model carries result_status = AUTHORITATIVE_FINAL_RESULT: the model chosen by the predefined, cross-validation-based selection and gate. A number is never authoritative because it is the highest in a table.",
+  "locked_split": {
+    "fingerprint": "9fbc975e2a0b2c98a4c13cd43cd1487bb0cedc24037d9d3456fe5c3b60e15ca2",
+    "n_dev": 416,
+    "n_test": 139,
+    "test_msi_h": 22,
+    "logged_test_scoring_events": 7,
+    "audit_trail": {
+      "logged_locked_test_scoring_events": 7,
+      "events": [
+        {
+          "at_utc": "2026-10-07T06:34:40.735839+00:00",
+          "tag": "benchmark_20261007_063440"
+        },
+        {
+          "at_utc": "2026-10-07T06:38:14.251073+00:00",
+          "tag": "benchmark_20261007_063814"
+        },
+        {
+          "at_utc": "2026-10-07T07:35:52.711558+00:00",
+          "tag": "benchmark_20261007_073552"
+        },
+        {
+          "at_utc": "2026-10-07T08:24:50.033267+00:00",
+          "tag": "baseline_reproduction"
+        },
+        {
+          "at_utc": "2026-10-07T08:58:04.084064+00:00",
+          "tag": "ensemble_lab_core_20261007_085804"
+        },
+        {
+          "at_utc": "2026-10-07T09:32:54.824308+00:00",
+          "tag": "ensemble_lab_core_plus_mmr_20261007_093254"
+        },
+        {
+          "at_utc": "2026-10-07T10:05:24.157201+00:00",
+          "tag": "ensemble_lab_extended_molecular_20261007_100524"
+        }
+      ],
+      "extended_model_crash": {
+        "what_happened": "The first ensemble-lab run crashed in the extended-feature step on a floating-point rounding error (a probability of 1.0000000000000002 rejected by a metric function). The traceback is in results/ensemble_lab_full.log and points at the cross-validation-only calibration study.",
+        "locked_test_accessed_before_crash": false,
+        "fix": "probabilities are clipped to [0, 1] inside benchmark.clf_metrics (numerical safety only; no change to data, features, models, selection rules or thresholds)",
+        "rerun": "the second run resumed from cached cross-validation results, selected the same candidate on cross-validation alone (auto:soft_equal, as in both run logs), scored the locked test ONCE (logged) and then ran the leakage canary for about four hours; the predictions file, summary and registry entry carry later timestamps only because they are written at the end of that long step",
+        "unlogged_rescoring_found": false,
+        "stored_final_equals_logged_scoring": true,
+        "used_to_tune": false
+      },
+      "caveats": [
+        "The core and 39-gene results were produced before the probability-clipping fix and were not recomputed; the fix can only change a probability that exceeded 1 by rounding error (about 1e-16).",
+        "Every candidate model was scored once on the locked test for reporting (screening tables); selection used cross-validation only.",
+        "The locked cell-line test of the drug-response model was logged twice (two benchmark runs of the same procedure)."
+      ]
+    }
+  },
+  "production_decision": {
+    "core": {
+      "serving": true,
+      "slot": "classification",
+      "reason": "serving: the ensemble passed the predefined ensemble gate (CV, balanced accuracy, recall, stability, complementarity, locked test, leakage, reproducibility); its CV AUC gain over the single model is only about +0.004"
+    },
+    "extended_slot": {
+      "serving": true,
+      "slot": "classification_extended",
+      "reason": "serving as the optional extended model: the pre-registered one-SE rule picks the simplest candidate within 1 SE of the best CV AUC"
+    },
+    "candidate_not_serving": {
+      "model": "Extended Molecular Model",
+      "reason": "NOT serving: benchmarked candidate; its CV AUC is within 1 SE of the 39-gene model, so the one-SE rule keeps the simpler model. Promotion would need an explicit researcher decision"
+    },
+    "changed_automatically": false,
+    "note": "Production routing follows the stored champion record; nothing in this registry changes it."
+  },
+  "external_cohort": {
+    "wording": "External-cohort data were evaluated separately from the primary locked-test evaluation and were not used for model selection or the primary performance claims.",
+    "cohort": "CPTAC-2 colon (Vasaikar et al., Cell 2019); cBioPortal study coad_cptac_2019",
+    "sample_accounting": {
+      "raw_samples": 110,
+      "with_msi_status_label": 105,
+      "without_msi_status_label": 5,
+      "evaluated": 105,
+      "msi_h": 24,
+      "mss": 81,
+      "verified_from": [
+        "data/external/cptac_coad_2019/clinical_sample_long.csv",
+        "data/external/cptac_coad_2019/mrna_expression_long.csv",
+        "data/processed/external_cptac_coad_2019_processed.csv"
+      ]
+    },
+    "label_definition": "the cohort's own clinical MSI_STATUS call (MSS / MSI-H); the TCGA training labels are MANTIS >= 0.4, so the two label definitions differ",
+    "id_overlap_with_tcga": {
+      "sample_ids": 0,
+      "patient_ids": 0
+    },
+    "independence_note": "docs/DATASET.md describes the cohort as independent (different consortium and patient population). This audit verified only that no sample or patient IDs overlap with the TCGA table.",
+    "protocol": "the model procedure is refit on development data restricted to the genes shared with the cohort, then scored; the served models themselves are not scored on the cohort",
+    "shared_genes_by_model": {
+      "core": "28 of 35",
+      "core_plus_mmr": "32 of 39",
+      "extended_molecular": "43 of 53"
+    },
+    "not_used_for": "model selection, the ensemble gate, thresholds or promotion: none of select_best, cv_gate, test_gate or evaluate_promotion reads external metrics (checked in the code)",
+    "role_in_claims": "supplementary; excluded from the primary performance claims"
+  },
+  "feature_set_provenance": {
+    "gene_list": "data/unified_gene_signature.csv (35 genes)",
+    "wording": "derived from the literature; no gene was chosen using this study's expression data or MSI labels",
+    "construction": "union of 8 core-mechanism genes (a published mechanistic review) and 27 genes from four published colorectal-cancer ferroptosis prognostic/metastasis signatures; src/ferroptosis.py reads only the literature table (data/ferroptosis_genes_literature.csv)",
+    "not_independent_of_tcga": "docs/DATASET.md states that TCGA COADREAD is the cohort used by all four source signature papers, so the panel is literature-derived but not independent of the TCGA cohort (the original selection was for prognosis/metastasis, not MSI)",
+    "not_claimed": "that the list was fixed before any modelling: the repository does not prove it (the gene files first appear in the 2026-09-06 baseline commit)"
+  },
+  "interval_methods": {
+    "classification_locked_test_intervals": {
+      "label": "95% percentile-bootstrap interval",
+      "method": "class-stratified nonparametric percentile bootstrap",
+      "resamples": 2000,
+      "seed": 0,
+      "interval": "2.5th to 97.5th percentile of the resampled metric",
+      "resampled_unit": "locked-test patients (MSI-H and non-MSI-H resampled separately)",
+      "code": "src/benchmark.py::bootstrap_ci",
+      "covers": "test-set sampling variation for a fixed fitted model and fixed predictions; not training variability"
+    },
+    "drug_response_locked_test_interval": {
+      "label": "95% percentile-bootstrap interval",
+      "method": "cluster (cell-line) nonparametric percentile bootstrap",
+      "resamples": 1000,
+      "seed": 0,
+      "interval": "2.5th to 97.5th percentile",
+      "resampled_unit": "whole cell lines with all their drug rows",
+      "code": "src/regression_benchmark.py::cell_line_bootstrap",
+      "covers": "variation over the 9 test cell lines for a fixed model"
+    },
+    "cv_plus_minus": {
+      "what": "standard deviation (ddof=1) of the per-fold metric across the outer folds (5 folds x 2 repeats = 10)",
+      "note": "descriptive spread, not an interval; folds from repeated cross-validation overlap and are not independent"
+    }
+  },
+  "models": [
+    {
+      "id": "core",
+      "display_name": "Ferroptosis Core Classifier",
+      "result_status": "AUTHORITATIVE_FINAL_RESULT",
+      "feature_set": "35 ferroptosis genes",
+      "n_features": 35,
+      "genes_added_to_ferroptosis_core": [],
+      "is_ferroptosis_only_classifier": true,
+      "model_type": "ensemble",
+      "model_name": "reference:soft_equal",
+      "ensemble_members": [
+        "logreg_l2",
+        "svm_rbf",
+        "random_forest",
+        "extra_trees",
+        "xgboost"
+      ],
+      "ensemble_method": "soft_equal",
+      "calibration": "sigmoid",
+      "decision_threshold": 0.375,
+      "version": "v20261007_091355",
+      "trained_at": "2026-10-07T09:13:56.347357+00:00",
+      "artifact": "models/classification/msi_benchmark/reference_soft_equal__v20261007_091355.joblib",
+      "artifact_exists": true,
+      "dataset": "TCGA COAD/READ, 555 labelled patients (MSI-H = MANTIS >= 0.4)",
+      "split": {
+        "fingerprint": "9fbc975e2a0b2c98a4c13cd43cd1487bb0cedc24037d9d3456fe5c3b60e15ca2",
+        "n_dev": 416,
+        "n_test": 139,
+        "test_msi_h": 22
+      },
+      "validation_protocol": "nested stratified CV (5 outer folds x 2 repeats, inner tuning) on the development set; one locked test; all preprocessing, tuning, calibration, weights and thresholds fit inside training folds",
+      "cv": {
+        "accuracy_mean": 0.8773952954675848,
+        "accuracy_std": 0.03186653840665558,
+        "roc_auc_mean": 0.8802957704821059,
+        "roc_auc_std": 0.028103873012690715,
+        "balanced_accuracy_mean": 0.7434543717152413,
+        "recall_mean": 0.5456043956043957,
+        "mcc_mean": 0.5353805880742557,
+        "n_folds": 10
+      },
+      "locked_test": {
+        "accuracy": 0.8633093525179856,
+        "balanced_accuracy": 0.6604506604506605,
+        "precision": 0.6153846153846154,
+        "recall": 0.36363636363636365,
+        "specificity": 0.9572649572649573,
+        "f1": 0.45714285714285713,
+        "roc_auc": 0.8317793317793317,
+        "pr_auc": 0.5711130868756762,
+        "mcc": 0.40227109468231176,
+        "n": 139,
+        "n_positive": 22,
+        "tp": 8.0,
+        "fp": 5.0,
+        "tn": 112.0,
+        "fn": 14.0,
+        "accuracy_ci95": [
+          0.8201438848920863,
+          0.9064748201438849
+        ],
+        "roc_auc_ci95": [
+          0.7291763791763791,
+          0.9160936285936285
+        ]
+      },
+      "external_cptac2": {
+        "accuracy": 0.819047619047619,
+        "roc_auc": 0.9711934156378601,
+        "recall": 1.0,
+        "n": 105
+      },
+      "metric_source": {
+        "registry": "models/registry.json::reference_soft_equal::v20261007_091355",
+        "summary": "results/ensemble_lab/core/summary.json"
+      },
+      "sample_count": {
+        "labelled_patients": 555,
+        "msi_h_total": 89,
+        "development": 416,
+        "locked_test": 139,
+        "locked_test_msi_h": 22
+      },
+      "provenance": {
+        "locked_test_scoring_events_for_this_model": 1,
+        "locked_test_log_tag": "ensemble_lab_core_20261007_085804",
+        "locked_test_scored_at_utc": "2026-10-07T08:58:04.084064+00:00",
+        "stored_final_equals_logged_scoring": true,
+        "max_abs_difference_vs_logged_scoring": 5.551115123125783e-17,
+        "logged_scoring_file": "results/ensemble_lab/core/locked_test_all_candidates.csv",
+        "lab_summary": "results/ensemble_lab/core/summary.json",
+        "selection_basis": "cross-validation and the predefined gate only",
+        "permutation_canary_auc": 0.47624087093031187,
+        "leakage_checks_passed": true
+      },
+      "observations": {
+        "cv_vs_locked_test_discrimination": {
+          "cv_roc_auc_mean": 0.8802957704821059,
+          "cv_roc_auc_sd": 0.028103873012690715,
+          "locked_test_roc_auc": 0.8317793317793317,
+          "locked_test_roc_auc_interval95": [
+            0.7291763791763791,
+            0.9160936285936285
+          ],
+          "gap_cv_minus_test": 0.04851643870277422,
+          "gap_in_cv_sd_units": 1.726325716062904,
+          "cv_accuracy_mean": 0.8773952954675848,
+          "locked_test_accuracy": 0.8633093525179856,
+          "cv_recall_mean": 0.5456043956043957,
+          "locked_test_recall": 0.36363636363636365,
+          "note": "Locked-test AUC is below the cross-validated AUC for every model while accuracy barely moves, because accuracy is dominated by the majority class. With 22 MSI-H test patients the AUC interval is wide, so this is reported as an observation (possible mild optimism of the cross-validated discrimination, or sampling variation), not as a finding."
+        }
+      },
+      "status": "completed",
+      "production": {
+        "serving": true,
+        "slot": "classification",
+        "reason": "serving: the ensemble passed the predefined ensemble gate (CV, balanced accuracy, recall, stability, complementarity, locked test, leakage, reproducibility); its CV AUC gain over the single model is only about +0.004"
+      },
+      "majority_class_accuracy": 0.8396396396396396
+    },
+    {
+      "id": "core_plus_mmr",
+      "display_name": "35-gene + MMR Extended Model",
+      "result_status": "AUTHORITATIVE_FINAL_RESULT",
+      "feature_set": "35 ferroptosis genes + MLH1, MSH2, MSH6, PMS2 (39 genes)",
+      "n_features": 39,
+      "genes_added_to_ferroptosis_core": [
+        "MLH1",
+        "MSH2",
+        "MSH6",
+        "PMS2"
+      ],
+      "is_ferroptosis_only_classifier": false,
+      "model_type": "single",
+      "model_name": "logreg_l2",
+      "ensemble_members": null,
+      "ensemble_method": null,
+      "calibration": "sigmoid",
+      "decision_threshold": 0.45860896057679956,
+      "version": "v20261007_093328",
+      "trained_at": "2026-10-07T09:33:28.249754+00:00",
+      "artifact": "models/classification_extended/classification_extended_benchmark/logreg_l2__v20261007_093328.joblib",
+      "artifact_exists": true,
+      "dataset": "TCGA COAD/READ, 555 labelled patients (MSI-H = MANTIS >= 0.4)",
+      "split": {
+        "fingerprint": "9fbc975e2a0b2c98a4c13cd43cd1487bb0cedc24037d9d3456fe5c3b60e15ca2",
+        "n_dev": 416,
+        "n_test": 139,
+        "test_msi_h": 22
+      },
+      "validation_protocol": "nested stratified CV (5 outer folds x 2 repeats, inner tuning) on the development set; one locked test; all preprocessing, tuning, calibration, weights and thresholds fit inside training folds",
+      "cv": {
+        "accuracy_mean": 0.9302925989672979,
+        "accuracy_std": 0.01673387427037043,
+        "roc_auc_mean": 0.9204967806520603,
+        "roc_auc_std": 0.03049589930155018,
+        "balanced_accuracy_mean": 0.8165727026596592,
+        "recall_mean": 0.648901098901099,
+        "mcc_mean": 0.725049235434082,
+        "n_folds": 10
+      },
+      "locked_test": {
+        "accuracy": 0.9136690647482014,
+        "balanced_accuracy": 0.7641802641802642,
+        "precision": 0.8571428571428571,
+        "recall": 0.5454545454545454,
+        "specificity": 0.9829059829059829,
+        "f1": 0.6666666666666666,
+        "roc_auc": 0.8861693861693861,
+        "pr_auc": 0.7120424527460649,
+        "mcc": 0.640789833417799,
+        "n": 139,
+        "n_positive": 22,
+        "tp": 12.0,
+        "fp": 2.0,
+        "tn": 115.0,
+        "fn": 10.0,
+        "accuracy_ci95": [
+          0.8776978417266187,
+          0.9496402877697842
+        ],
+        "roc_auc_ci95": [
+          0.8010780885780886,
+          0.951048951048951
+        ]
+      },
+      "external_cptac2": {
+        "accuracy": 0.9619047619047619,
+        "roc_auc": 0.9974279835390947,
+        "recall": 0.875,
+        "n": 105
+      },
+      "metric_source": {
+        "registry": "models/registry.json::logreg_l2::v20261007_093328",
+        "summary": "results/ensemble_lab/core_plus_mmr/summary.json"
+      },
+      "sample_count": {
+        "labelled_patients": 555,
+        "msi_h_total": 89,
+        "development": 416,
+        "locked_test": 139,
+        "locked_test_msi_h": 22
+      },
+      "provenance": {
+        "locked_test_scoring_events_for_this_model": 1,
+        "locked_test_log_tag": "ensemble_lab_core_plus_mmr_20261007_093254",
+        "locked_test_scored_at_utc": "2026-10-07T09:32:54.824308+00:00",
+        "stored_final_equals_logged_scoring": true,
+        "max_abs_difference_vs_logged_scoring": 0.0,
+        "logged_scoring_file": "results/ensemble_lab/core_plus_mmr/locked_test_all_candidates.csv",
+        "lab_summary": "results/ensemble_lab/core_plus_mmr/summary.json",
+        "selection_basis": "cross-validation and the predefined gate only",
+        "permutation_canary_auc": 0.5237139671922281,
+        "leakage_checks_passed": true
+      },
+      "observations": {
+        "cv_vs_locked_test_discrimination": {
+          "cv_roc_auc_mean": 0.9204967806520603,
+          "cv_roc_auc_sd": 0.03049589930155018,
+          "locked_test_roc_auc": 0.8861693861693861,
+          "locked_test_roc_auc_interval95": [
+            0.8010780885780886,
+            0.951048951048951
+          ],
+          "gap_cv_minus_test": 0.03432739448267419,
+          "gap_in_cv_sd_units": 1.1256396849700132,
+          "cv_accuracy_mean": 0.9302925989672979,
+          "locked_test_accuracy": 0.9136690647482014,
+          "cv_recall_mean": 0.648901098901099,
+          "locked_test_recall": 0.5454545454545454,
+          "note": "Locked-test AUC is below the cross-validated AUC for every model while accuracy barely moves, because accuracy is dominated by the majority class. With 22 MSI-H test patients the AUC interval is wide, so this is reported as an observation (possible mild optimism of the cross-validated discrimination, or sampling variation), not as a finding."
+        }
+      },
+      "status": "completed",
+      "production": {
+        "serving": true,
+        "slot": "classification_extended",
+        "reason": "serving as the optional extended model: the pre-registered one-SE rule picks the simplest candidate within 1 SE of the best CV AUC"
+      },
+      "majority_class_accuracy": 0.8396396396396396
+    },
+    {
+      "id": "extended_molecular",
+      "display_name": "Extended Molecular Model",
+      "result_status": "AUTHORITATIVE_FINAL_RESULT",
+      "feature_set": "35 ferroptosis + 4 mismatch-repair + 14 immune genes (53 features)",
+      "n_features": 53,
+      "genes_added_to_ferroptosis_core": "4 MMR genes + 14 immune genes (see configs/feature_sets.yaml)",
+      "is_ferroptosis_only_classifier": false,
+      "model_type": "ensemble",
+      "model_name": "auto:soft_equal",
+      "ensemble_members": [
+        "svm_linear",
+        "logreg_elasticnet",
+        "logreg_l2",
+        "extra_trees",
+        "xgboost"
+      ],
+      "ensemble_method": "soft_equal",
+      "calibration": "sigmoid",
+      "decision_threshold": 0.49000000000000005,
+      "version": "v20261007_140653",
+      "trained_at": "2026-10-07T14:06:53.854454+00:00",
+      "artifact": "models/classification_extended/classification_extended_benchmark/auto_soft_equal__v20261007_140653.joblib",
+      "artifact_exists": true,
+      "dataset": "TCGA COAD/READ, 555 labelled patients (MSI-H = MANTIS >= 0.4)",
+      "split": {
+        "fingerprint": "9fbc975e2a0b2c98a4c13cd43cd1487bb0cedc24037d9d3456fe5c3b60e15ca2",
+        "n_dev": 416,
+        "n_test": 139,
+        "test_msi_h": 22
+      },
+      "validation_protocol": "nested stratified CV (5 outer folds x 2 repeats, inner tuning) on the development set; one locked test; all preprocessing, tuning, calibration, weights and thresholds fit inside training folds",
+      "cv": {
+        "accuracy_mean": 0.9314974182444062,
+        "accuracy_std": 0.024088055246384906,
+        "roc_auc_mean": 0.9235822355698133,
+        "roc_auc_std": 0.03360604075738448,
+        "balanced_accuracy_mean": 0.8209786590221373,
+        "recall_mean": 0.6576923076923077,
+        "mcc_mean": 0.7290074772914765,
+        "n_folds": 10
+      },
+      "locked_test": {
+        "accuracy": 0.920863309352518,
+        "balanced_accuracy": 0.7869075369075369,
+        "precision": 0.8666666666666667,
+        "recall": 0.5909090909090909,
+        "specificity": 0.9829059829059829,
+        "f1": 0.7027027027027027,
+        "roc_auc": 0.8861693861693862,
+        "pr_auc": 0.8026628682775315,
+        "mcc": 0.675024835873189,
+        "n": 139,
+        "n_positive": 22,
+        "tp": 13.0,
+        "fp": 2.0,
+        "tn": 115.0,
+        "fn": 9.0,
+        "accuracy_ci95": [
+          0.8848920863309353,
+          0.9568345323741008
+        ],
+        "roc_auc_ci95": [
+          0.7793317793317793,
+          0.9697066822066822
+        ]
+      },
+      "external_cptac2": {
+        "accuracy": 0.9809523809523809,
+        "roc_auc": 0.9969135802469136,
+        "recall": 1.0,
+        "n": 105
+      },
+      "metric_source": {
+        "registry": "models/registry.json::auto_soft_equal::v20261007_140653",
+        "summary": "results/ensemble_lab/extended_molecular/summary.json"
+      },
+      "sample_count": {
+        "labelled_patients": 555,
+        "msi_h_total": 89,
+        "development": 416,
+        "locked_test": 139,
+        "locked_test_msi_h": 22
+      },
+      "provenance": {
+        "locked_test_scoring_events_for_this_model": 1,
+        "locked_test_log_tag": "ensemble_lab_extended_molecular_20261007_100524",
+        "locked_test_scored_at_utc": "2026-10-07T10:05:24.157201+00:00",
+        "stored_final_equals_logged_scoring": true,
+        "max_abs_difference_vs_logged_scoring": 0.0,
+        "logged_scoring_file": "results/ensemble_lab/extended_molecular/locked_test_all_candidates.csv",
+        "lab_summary": "results/ensemble_lab/extended_molecular/summary.json",
+        "selection_basis": "cross-validation and the predefined gate only",
+        "permutation_canary_auc": 0.5195140263463245,
+        "leakage_checks_passed": true
+      },
+      "observations": {
+        "cv_vs_locked_test_discrimination": {
+          "cv_roc_auc_mean": 0.9235822355698133,
+          "cv_roc_auc_sd": 0.03360604075738448,
+          "locked_test_roc_auc": 0.8861693861693862,
+          "locked_test_roc_auc_interval95": [
+            0.7793317793317793,
+            0.9697066822066822
+          ],
+          "gap_cv_minus_test": 0.037412849400427106,
+          "gap_in_cv_sd_units": 1.1132775107465205,
+          "cv_accuracy_mean": 0.9314974182444062,
+          "locked_test_accuracy": 0.920863309352518,
+          "cv_recall_mean": 0.6576923076923077,
+          "locked_test_recall": 0.5909090909090909,
+          "note": "Locked-test AUC is below the cross-validated AUC for every model while accuracy barely moves, because accuracy is dominated by the majority class. With 22 MSI-H test patients the AUC interval is wide, so this is reported as an observation (possible mild optimism of the cross-validated discrimination, or sampling variation), not as a finding."
+        }
+      },
+      "status": "completed",
+      "production": {
+        "serving": false,
+        "slot": "classification_extended",
+        "reason": "NOT serving: benchmarked candidate; its CV AUC is within 1 SE of the 39-gene model, so the one-SE rule keeps the simpler model. Promotion would need an explicit researcher decision"
+      },
+      "majority_class_accuracy": 0.8396396396396396
+    }
+  ],
+  "whole_transcriptome": {
+    "id": "whole_transcriptome",
+    "display_name": "Whole-transcriptome model (experimental)",
+    "status": "not_completed",
+    "result_status": "not_completed",
+    "reason": "The nested, leakage-safe re-run under the corrected labels was stopped before finishing (runtime). No metrics exist or are claimed.",
+    "metrics": null,
+    "production": {
+      "serving": false,
+      "reason": "never served"
+    }
+  },
+  "drug_response": {
+    "id": "drug_response",
+    "display_name": "Drug-response regression",
+    "result_status": "AUTHORITATIVE_FINAL_RESULT",
+    "status": "completed",
+    "model_type": "single regressor (Extra Trees); NOT a multi-model ensemble",
+    "model_name": "extra_trees",
+    "version": "v20261007_071618",
+    "artifact": "models/dose_response/dose_response_benchmark/extra_trees__v20261007_071618.joblib",
+    "artifact_exists": true,
+    "dataset": "gdsc_colorectal_dose_response_processed",
+    "response_target": "LN_IC50 (ln IC50 of the cell line, in vitro; not a dose)",
+    "features": "35 ferroptosis-gene expression values + drug identity",
+    "n_cell_lines": 44,
+    "validation_protocol": "whole cell lines held out (grouped CV: 5 folds, grouped inner tuning); locked test of unseen cell lines",
+    "cv": {
+      "mae_mean": 1.0093562000462846,
+      "mae_std": 0.16759967997356093,
+      "baseline_per_drug_mean_mae": 1.0700264559431034,
+      "improvement_over_baseline": 0.05669977182325371,
+      "folds_where_expression_helped": "5 of 5"
+    },
+    "locked_test": {
+      "mae": 0.8658329246875238,
+      "baseline_per_drug_mean_mae": 0.8677610336680309,
+      "improvement_over_baseline": 0.0022219354242687945,
+      "n_cell_lines": 9,
+      "mae_ci95": [
+        0.7576255603002231,
+        0.972947588324742
+      ]
+    },
+    "production": {
+      "serving": true,
+      "slot": "dose_response",
+      "reason": "no comparable incumbent: first validated model is promoted"
+    },
+    "ensemble_check": {
+      "status": "not_completed"
+    },
+    "validation_splits": {
+      "cross_validation": {
+        "data": "development cell lines only (35 lines)",
+        "protocol": "5 folds grouped by cell line (a line is never in training and validation together), grouped inner tuning",
+        "mae": "mean over the 5 folds of the MAE on each fold's held-out cell lines (ln IC50 units)",
+        "paired_gain_over_baseline_per_fold": {
+          "mean": 0.060670255896818806,
+          "sd": 0.037530734308722995
+        }
+      },
+      "locked_test": {
+        "data": "9 cell lines (2368 line-drug rows) held out before any modelling",
+        "relation_to_cv": "DISJOINT from the cross-validation data: the 9 lines are not a subset of the CV result, and the two numbers must not be mixed or presented as one result",
+        "locked_test_scoring_events_logged": 2
+      }
+    },
+    "strength": "preliminary / weak",
+    "honest_summary": "Preliminary, weak predictive result. Most of the accuracy comes from knowing WHICH DRUG it is; the per-drug mean alone already scores close to it. Expression adds a modest gain in cross-validation (5.7%, better in 5 of 5 folds, 35 development cell lines) and almost none on the separate 9-cell-line locked test (0.2%, well inside its 95% interval). Use only as an exploratory computational in-vitro estimate.",
+    "metric_source": "models/registry.json::extra_trees::v20261007_071618; results/benchmark/regression_summary.json"
+  },
+  "other_results": [
+    {
+      "id": "core_single_logreg_baseline",
+      "display_name": "35-gene single logistic regression (reproduced baseline)",
+      "result_status": "reference_baseline",
+      "cv_accuracy": 0.8797762478485371,
+      "cv_accuracy_std": 0.021348544035702976,
+      "locked_test_accuracy": 0.8705035971223022,
+      "source": "results/baseline_35_gene/baseline_metrics.json",
+      "note": "Best single model on the same locked split. It was the production model until the ensemble passed the lab gate; the ensemble differs from it by about one patient on the locked test."
+    },
+    {
+      "id": "core_single_final_comparator",
+      "display_name": "Ferroptosis Core Classifier: best single model (calibrated)",
+      "result_status": "comparator",
+      "cv_accuracy": 0.8797762478485371,
+      "locked_test_accuracy": 0.8705035971223022,
+      "source": "results/ensemble_lab/core/summary.json (single_cv / single_test)",
+      "note": "Gate reference used to decide whether an ensemble is adopted."
+    },
+    {
+      "id": "core_screening_table",
+      "display_name": "Ferroptosis Core Classifier: all-candidates screening table",
+      "result_status": "screening_not_authoritative",
+      "n_candidates": 20,
+      "highest_row": {
+        "name": "reference:stacking",
+        "locked_test_accuracy": 0.8776978417266187
+      },
+      "source": "results/ensemble_lab/core/locked_test_all_candidates.csv",
+      "note": "Every candidate was scored once on the locked test for REPORTING. Single-learner rows here are UNCALIBRATED; model selection used cross-validation only. The best row of a table is not a result: quoting it would be picking after looking."
+    },
+    {
+      "id": "core_plus_mmr_single_final_comparator",
+      "display_name": "35-gene + MMR Extended Model: best single model (calibrated)",
+      "result_status": "comparator",
+      "cv_accuracy": 0.9302925989672979,
+      "locked_test_accuracy": 0.9136690647482014,
+      "source": "results/ensemble_lab/core_plus_mmr/summary.json (single_cv / single_test)",
+      "note": "Gate reference used to decide whether an ensemble is adopted."
+    },
+    {
+      "id": "core_plus_mmr_screening_table",
+      "display_name": "35-gene + MMR Extended Model: all-candidates screening table",
+      "result_status": "screening_not_authoritative",
+      "n_candidates": 19,
+      "highest_row": {
+        "name": "single:logreg_l2",
+        "locked_test_accuracy": 0.9280575539568344
+      },
+      "source": "results/ensemble_lab/core_plus_mmr/locked_test_all_candidates.csv",
+      "note": "Every candidate was scored once on the locked test for REPORTING. Single-learner rows here are UNCALIBRATED; model selection used cross-validation only. The best row of a table is not a result: quoting it would be picking after looking."
+    },
+    {
+      "id": "extended_molecular_single_final_comparator",
+      "display_name": "Extended Molecular Model: best single model (calibrated)",
+      "result_status": "comparator",
+      "cv_accuracy": 0.918344807802639,
+      "locked_test_accuracy": 0.9280575539568345,
+      "source": "results/ensemble_lab/extended_molecular/summary.json (single_cv / single_test)",
+      "note": "Gate reference used to decide whether an ensemble is adopted."
+    },
+    {
+      "id": "extended_molecular_screening_table",
+      "display_name": "Extended Molecular Model: all-candidates screening table",
+      "result_status": "screening_not_authoritative",
+      "n_candidates": 19,
+      "highest_row": {
+        "name": "single:logreg_l2",
+        "locked_test_accuracy": 0.935251798561151
+      },
+      "source": "results/ensemble_lab/extended_molecular/locked_test_all_candidates.csv",
+      "note": "Every candidate was scored once on the locked test for REPORTING. Single-learner rows here are UNCALIBRATED; model selection used cross-validation only. The best row of a table is not a result: quoting it would be picking after looking."
+    },
+    {
+      "id": "sept_2026_pipeline",
+      "display_name": "Earlier pipeline (September 2026, 35 genes)",
+      "result_status": "historical_superseded",
+      "n_test": "119",
+      "n_train": "473",
+      "note": "Predates the corrected MSI labels and the locked protocol (different samples, different split). Kept for history; not comparable."
+    },
+    {
+      "id": "benchmark_single_registrations",
+      "display_name": "Single-model benchmark registrations (35 genes)",
+      "result_status": "superseded_duplicate",
+      "note": "Repeated runs of the same logistic regression before the ensemble lab; v20261007_073737 is the run behind the baseline figures."
+    },
+    {
+      "id": "whole_transcriptome_pre_correction",
+      "display_name": "Earlier whole-transcriptome baseline",
+      "result_status": "historical_pre_correction_do_not_quote",
+      "source": "results/whole_transcriptome_baseline_results.csv",
+      "note": "Predates the corrected labels and the locked protocol. No figure from it is used anywhere as a current result."
+    }
+  ],
+  "number_reconciliation": {
+    "numbers": [
+      {
+        "value": 0.871,
+        "what": "LOCKED-TEST accuracy of the 35-gene single logistic regression (baseline)",
+        "status": "reference_baseline",
+        "source": "results/baseline_35_gene"
+      },
+      {
+        "value": 0.863,
+        "what": "LOCKED-TEST accuracy of the 35-gene ensemble (production core)",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "results/ensemble_lab/core/summary.json"
+      },
+      {
+        "value": 0.93,
+        "what": "CROSS-VALIDATION accuracy of the 39-gene +MMR model (a CV figure, not a test figure)",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "results/ensemble_lab/core_plus_mmr/summary.json"
+      },
+      {
+        "value": 0.914,
+        "what": "LOCKED-TEST accuracy of the 39-gene +MMR model (calibrated final)",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "results/ensemble_lab/core_plus_mmr/summary.json"
+      },
+      {
+        "value": 0.928,
+        "what": "locked-test accuracy of the UNCALIBRATED 39-gene logistic regression (screening row)",
+        "status": "screening_not_authoritative",
+        "source": "core_plus_mmr/locked_test_all_candidates.csv"
+      },
+      {
+        "value": 0.931,
+        "what": "CROSS-VALIDATION accuracy of the 53-feature ensemble",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "results/ensemble_lab/extended_molecular/summary.json"
+      },
+      {
+        "value": 0.921,
+        "what": "LOCKED-TEST accuracy of the 53-feature ensemble",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "results/ensemble_lab/extended_molecular/summary.json"
+      },
+      {
+        "value": 0.928,
+        "what": "locked-test accuracy of the calibrated 53-feature single logistic regression (gate comparator)",
+        "status": "comparator",
+        "source": "extended_molecular/summary.json (single_test)"
+      },
+      {
+        "value": 0.935,
+        "what": "locked-test accuracy of the UNCALIBRATED 53-feature logistic regression (screening row): the source of the earlier '0.935'",
+        "status": "screening_not_authoritative",
+        "source": "extended_molecular/locked_test_all_candidates.csv"
+      },
+      {
+        "value": 0.935,
+        "what": "CV accuracy of the 39-gene model with the threshold optimised for accuracy: a second, unrelated '0.935'",
+        "status": "threshold_trade_off_not_final",
+        "source": "core_plus_mmr/threshold_tradeoff.csv"
+      },
+      {
+        "value": 0.866,
+        "what": "drug-response LOCKED-TEST MAE (ln IC50 units) on 9 cell lines",
+        "status": "AUTHORITATIVE_FINAL_RESULT",
+        "source": "models/registry.json (dose_response)"
+      }
+    ],
+    "why_numbers_differ": [
+      "Different MODELS on the SAME locked split: the 35-gene single logistic regression (0.871) and the 35-gene ensemble (0.863) are different models; they differ by about one patient.",
+      "Different ROWS of the SAME table: the all-candidates screening table scores every learner UNCALIBRATED (0.928 for the 39-gene and 0.935 for the 53-feature logistic regression); the production models are calibrated with a CV-chosen threshold (0.914 / 0.921).",
+      "CV vs test: 0.930 and 0.931 are cross-validation accuracies of the 39- and 53-feature models; their locked-test accuracies are 0.914 and 0.921.",
+      "Earlier September-2026 registry entries (0.849 etc.) used different samples/labels (pre-correction, 119 test patients) and are historical.",
+      "No result was overwritten: all current results use the same development/test split (fingerprint verified)."
+    ]
+  }
+}

@@ -1,6 +1,3 @@
-import pandas as pd
-import pytest
-
 import data_loader as dl
 
 
